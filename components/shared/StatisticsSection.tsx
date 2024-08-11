@@ -64,7 +64,7 @@ const StatisticsSection = () => {
                 </Typography>
 
                 <Typography as="lable" className='text-primary'>
-                    Metus dictum at tempor commodo ullamcorper a lacus vestibulum. In hendrerit gravida rutrum quisque non tellus.
+                    Metus dictum at tempor commodo ullamcorper a lacus vestibulum.
                 </Typography>
 
                 <div className='grid gap-5 grid-cols-1 items-center md:grid-cols-2 mt-10 '>
