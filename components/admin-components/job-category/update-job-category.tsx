@@ -1,3 +1,5 @@
+'use client'
+
 import BreadCrumb from '@/components/BreadCrumb';
 import Loader from '@/components/Loader';
 import MutateJobCategory from '@/components/job-category/mutate-job-category';
