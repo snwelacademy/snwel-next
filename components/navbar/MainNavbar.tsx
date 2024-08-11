@@ -116,7 +116,7 @@ const MainNavbar = () => {
           trigger={<Button className='hero-btn-1' size={'hero'} variant={'destructive'}>Register</Button>}
           courseId=''
         />
-        <AuthButton/>
+        {/* <AuthButton/> */}
       </div>
 
     </div>

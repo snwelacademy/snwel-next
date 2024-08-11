@@ -85,7 +85,7 @@ const OTPForm = ({token, onVerified}: {token: string, onVerified?: (data:  {isVe
                         )}
                     />
 
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit" className="w-full">Submit</Button>
                 </form>
             </Form>
     

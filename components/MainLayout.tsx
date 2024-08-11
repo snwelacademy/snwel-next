@@ -13,7 +13,7 @@ const MainLayout = ({
 
     return (
         <div className='relative'>
-            <TopStrip />
+            {/* <TopStrip /> */}
             <nav className={cn([
                 'bg-transparent z-50 sticky top-0',
             ])}>

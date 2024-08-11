@@ -27,14 +27,14 @@ export const columns: ColumnDef<CourseEnrollment>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "courseId",
-    header: "COURSE",
-    cell: ({ row }) => row.original.courseId.title
-  },
-  {
     accessorKey: "userId.name",
     header: "NAME",
     cell: ({ row }) => row.original.userId.name
+  },
+  {
+    accessorKey: "courseId",
+    header: "COURSE",
+    cell: ({ row }) => row.original.courseId.title
   },
   {
     accessorKey: "userId.email",
@@ -61,11 +61,11 @@ export const columns: ColumnDef<CourseEnrollment>[] = [
     header: "OTP VERIFIED",
     // cell: ({row}) => row.original. || '-'
   },
-  {
-    accessorKey: "expiredAt",
-    header: "EXPIRE AT",
-    cell: ({ row }) => formatDate(row.original.createdAt)
-  },
+  // {
+  //   accessorKey: "expiredAt",
+  //   header: "EXPIRE AT",
+  //   cell: ({ row }) => formatDate(row.original.expiredAt)
+  // },
   {
     accessorKey: "createdAt",
     header: "CREATED AT",

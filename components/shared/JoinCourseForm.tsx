@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 import PhoneInput from '../ui/phoneInput';
 import { createEnrollmentAnonymous } from '@/services/course-enrollment-service';
 import { useToast } from '../ui/use-toast';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import OTPForm from '../otp/OtpForm';
 import { CheckCircle } from 'lucide-react';
 import { Checkbox } from '../ui/checkbox';
@@ -34,39 +34,48 @@ const formSchema = z.object({
   email: z.string().email(),
   courseId: z.string(),
   phone: z.string(),
-  agree: z.boolean(),
-  mode: z.string(),
-  status: z.string(),
   location: z.object({
     addr: z.string().optional(),
-    city: z.string({message: 'City Required'}),
-    state: z.string({message: 'State Required'}),
-    country: z.string({message: 'Country Required'})
-}),
-  qualification: z.string()
+    city: z.string({ message: 'City Required' }),
+    state: z.string({ message: 'State Required' }),
+    country: z.string({ message: 'Country Required' })
+  }),
+  extra: z.object({
+    agree: z.boolean(),
+  }),
+  qualification: z.string(),
+    mode: z.string(),
+    occupation: z.string(),
+
 })
 
 const JoinCourseForm = ({ className, value, onClose }: { className?: string, value?: z.infer<typeof formSchema>, onClose?: () => void }) => {
-  const { toast } = useToast()
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: value || {}
   });
-  
+
 
   const [state, setState] = useState<{ isVerified: boolean, token?: string, invalidOtp?: boolean, invalidToken?: boolean, enrollmentId?: string } | null>(null);
 
   async function onSubmit(value: z.infer<typeof formSchema>) {
     try {
+      setLoading(true)
       const res = await createEnrollmentAnonymous(value);
       setState(res);
     } catch (error: any) {
       toast({ title: error.message || "Something went wrong!", variant: 'destructive' })
+    } finally {
+      setLoading(false)
     }
   }
 
   if (state?.token) {
-    return <OTPForm token={state.token} onVerified={setState} />
+    return <div className='mx-auto'>
+      <OTPForm token={state.token} onVerified={setState} />
+    </div>
   }
 
   // if(state?.isVerified && state.enrollmentId){
@@ -105,13 +114,13 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
         <div className="grid grid-cols-2 gap-5">
           <FormField
             control={form.control}
-            name={`status`}
+            name={`occupation`}
             render={({ field }) => (
               <FormItem className='max-w-full'>
                 {/* <FormLabel>Present Status</FormLabel> */}
                 <FormControl>
                   <MasterDropdown
-                  placeholder='Present Status'
+                    placeholder='Present Status'
                     type={"SUB_MASTER"}
                     parentCode={MASTER_CODES.CANDIDATE_STATUS}
                     selectorKey="_id"
@@ -130,7 +139,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
                 {/* <FormLabel>Qualifications</FormLabel> */}
                 <FormControl>
                   <MasterDropdown
-                  placeholder='Qualifications'
+                    placeholder='Qualifications'
                     type={"SUB_MASTER"}
                     parentCode={MASTER_CODES.QUALIFICATIONS}
                     selectorKey="_id"
@@ -143,41 +152,41 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
           />
         </div>
 
-       <div className="grid grid-cols-2 gap-5">
-       <FormField
-          control={form.control}
-          name="courseId"
-          render={({ field }) => (
-            <FormItem>
-              {/* <FormLabel>Select Course </FormLabel> */}
-              <FormControl>
-                <CourseSelector {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-2 gap-5">
+          <FormField
+            control={form.control}
+            name="courseId"
+            render={({ field }) => (
+              <FormItem>
+                {/* <FormLabel>Select Course </FormLabel> */}
+                <FormControl>
+                  <CourseSelector {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name={`mode`}
-          render={({ field }) => (
-            <FormItem className='max-w-full'>
-              {/* <FormLabel>Preferred Training Mode</FormLabel> */}
-              <FormControl>
-                <MasterDropdown
-                placeholder='Preferred Training Mode'
-                  type={"SUB_MASTER"}
-                  parentCode={MASTER_CODES.TRAINING_MODE}
-                  selectorKey="_id"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-       </div>
+          <FormField
+            control={form.control}
+            name={`mode`}
+            render={({ field }) => (
+              <FormItem className='max-w-full'>
+                {/* <FormLabel>Preferred Training Mode</FormLabel> */}
+                <FormControl>
+                  <MasterDropdown
+                    placeholder='Preferred Training Mode'
+                    type={"SUB_MASTER"}
+                    parentCode={MASTER_CODES.TRAINING_MODE}
+                    selectorKey="_id"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
@@ -210,58 +219,58 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
         />
 
         <div className="grid grid-cols-3 gap-3">
-        <FormField
-          control={form.control}
-          name="location.country"
-          render={({ field }) => (
-            <FormItem>
-              {/* <FormLabel>City</FormLabel> */}
-              <FormControl>
-                <CountrySelector placeholder="Your Country"  {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="location.state"
-          render={({ field }) => (
-            <FormItem>
-              {/* <FormLabel>City</FormLabel> */}
-              <FormControl>
-                <StateSelector countryCode={form.getValues().location?.country}  placeholder="Your State"  {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="location.city"
-          render={({ field }) => (
-            <FormItem>
-              {/* <FormLabel>City</FormLabel> */}
-              <FormControl>
-                <CitySelector countryCode={form.getValues().location?.country} stateCode={form.getValues().location?.state} placeholder="Your City"  {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="location.country"
+            render={({ field }) => (
+              <FormItem>
+                {/* <FormLabel>City</FormLabel> */}
+                <FormControl>
+                  <CountrySelector placeholder="Your Country"  {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="location.state"
+            render={({ field }) => (
+              <FormItem>
+                {/* <FormLabel>City</FormLabel> */}
+                <FormControl>
+                  <StateSelector countryCode={form.getValues().location?.country} placeholder="Your State"  {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="location.city"
+            render={({ field }) => (
+              <FormItem>
+                {/* <FormLabel>City</FormLabel> */}
+                <FormControl>
+                  <CitySelector countryCode={form.getValues().location?.country} stateCode={form.getValues().location?.state} placeholder="Your City"  {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
         <FormField
 
           control={form.control}
-          name="agree"
+          name="extra.agree"
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Checkbox 
-                 checked={field.value}
-                 onCheckedChange={field.onChange}
-                 />
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
               </FormControl>
               <FormLabel className='ml-2 font-bold text-primary'>I consent to be contacted by a snwel Academy representative for further steps.
               </FormLabel>
@@ -273,7 +282,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
 
 
         <div className='pt-5 space-y-3'>
-          <Button type="submit" size={'lg'} className='w-full'>Submit</Button>
+          <Button type="submit" size={'lg'} className='w-full' disabled={loading}>Submit</Button>
           <Typography as="lable" className='text-primary block'>By sharing your email, you agree to our Privacy Policy and Terms and Service.</Typography>
         </div>
       </form>

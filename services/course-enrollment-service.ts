@@ -2,12 +2,7 @@
 import { api } from "@/lib/api"
 import { ApiResponse } from "@/types/ApiResponses";
 
-export async function createEnrollmentAnonymous(input: {
-    email: string,
-    name: string,
-    phone: string,
-    courseId: string
-}){
+export async function createEnrollmentAnonymous(input: any){
     try {
         const res = await api.post<ApiResponse<{token?: string, isVerified: boolean}>>("/course-enroll/anon", input);
     return res.data.data;

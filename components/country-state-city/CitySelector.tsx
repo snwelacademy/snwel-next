@@ -33,17 +33,19 @@ export function CitySelector({ onChange, value, placeholder, countryCode, stateC
     const [search, setSearch] = React.useState("");
 
     const cities = React.useMemo(() => {
-        return City.getAllCities().map(city => ({
+        console.log({countryCode, stateCode})
+        if(!countryCode || !stateCode) return [];
+        return City.getCitiesOfState(countryCode, stateCode).map(city => ({
             value: city.name,
             displayValue: city.name,
         }));
-    }, [countryCode, stateCode]);
+    }, [countryCode, stateCode, open]);
 
     const filteredCities = React.useMemo(() => {
-        return cities.filter(city =>
+        return Boolean(search) ? cities.filter(city =>
             city.displayValue.toLowerCase().includes(search.toLowerCase())
-        );
-    }, [search, cities]);
+        ) : cities;
+    }, [cities, search, open]);
 
     const parentRef = React.useRef(null);
 
@@ -56,7 +58,7 @@ export function CitySelector({ onChange, value, placeholder, countryCode, stateC
 
     React.useEffect(() => {
         console.log(cities.length, filteredCities.length)
-    }, [cities])
+    }, [filteredCities])
 
     return (
         <div className="relative">
@@ -87,7 +89,7 @@ export function CitySelector({ onChange, value, placeholder, countryCode, stateC
 
                             <CommandGroup
                                 ref={parentRef}
-                                style={{ maxHeight: '400px', overflow: 'auto' }}
+                                
                             >
                                 <div
                                     style={{
@@ -98,6 +100,7 @@ export function CitySelector({ onChange, value, placeholder, countryCode, stateC
                                 >
                                     {rowVirtualizer?.getVirtualItems()?.map((virtualRow) => {
                                         const city = filteredCities[virtualRow.index];
+                                        console.log(virtualRow.index)
                                         return (
                                             <CommandItem
                                                 key={city.value}

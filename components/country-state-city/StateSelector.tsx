@@ -38,7 +38,7 @@ export function StateSelector({  onChange, value, placeholder, countryCode }: Dr
             value: state.isoCode,
             displayValue: `${state.name} - ${state.isoCode}`
         }))
-    }, []);
+    }, [countryCode]);
 
     return (
         <div className="relative">
@@ -64,7 +64,7 @@ export function StateSelector({  onChange, value, placeholder, countryCode }: Dr
                             className="w-full"
                             onChangeCapture={(e) => setSearch(e.currentTarget.value)}
                         />
-                        <CommandList>
+                        <CommandList className="max-h-[400px] overflow-auto">
                             <CommandEmpty>No State found.</CommandEmpty>
                             <CommandGroup>
                                 {data?.map((item) => {
