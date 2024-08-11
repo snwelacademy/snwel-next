@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export enum SETTINGS {
     INTEGRATION = 'INTEGRATION',
     GENERAL = 'GENERAL',

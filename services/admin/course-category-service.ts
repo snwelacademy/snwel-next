@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { CourseCategory } from '@/types';
 import { DEFAULT_LIST_OPTIONS } from './../../types/ListOptions';
 import { protectedApi } from "@/lib/api";

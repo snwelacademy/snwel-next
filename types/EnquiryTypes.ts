@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 // types/EnquiryTypes.ts
 import { z } from 'zod';
 import { Webinar } from './Webinar';

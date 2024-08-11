@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export type ApiResponse<T=any> = {
     status: number,
     message: string,

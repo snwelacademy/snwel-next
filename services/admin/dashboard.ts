@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { protectedApi } from "@/lib/api";
 import { CourseByCategory, ImportantEntitiesCount, PopularCourse, RecentSale, TopRatedCourse, TotalCourses, TotalRevenue, TotalUsers, UpcomingWebinar, UserEnrollment } from "@/types/AnalyticsTypes";
 import { ApiResponse, ListResponse } from '@/types/ApiResponses';

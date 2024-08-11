@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import {useYearlySalesData } from '@/hooks/useAnalytics';
 import { getCurrencySymbol } from '@/lib/utils';
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';

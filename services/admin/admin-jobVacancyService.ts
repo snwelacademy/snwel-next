@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { protectedApi } from "@/lib/api";
 import { ApiResponse, ListResponse } from '@/types/ApiResponses';
 import { ListOptions, DEFAULT_LIST_OPTIONS } from '@/types/ListOptions';

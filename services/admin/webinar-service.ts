@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Webinar } from '@/types';
 import { DEFAULT_LIST_OPTIONS } from './../../types/ListOptions';
 import { api, protectedApi } from "@/lib/api";

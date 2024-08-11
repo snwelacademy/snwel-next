@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { AxiosResponse } from 'axios';
 import { protectedApi } from '@/lib/api';
 import { CreateWidget, UpdateWidget, Widget, WidgetType } from '@/types/WidgetTypes';
