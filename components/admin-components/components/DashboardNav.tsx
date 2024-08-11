@@ -3,8 +3,9 @@
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { NavItem } from "@/types/Nav";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
-import { Link, useLocation } from "react-router-dom";
 
 interface DashboardNavProps {
   items: NavItem[];
@@ -12,7 +13,7 @@ interface DashboardNavProps {
 }
 
 export function DashboardNav({ items, setOpen }: DashboardNavProps) {
-  const {pathname} = useLocation();
+  const pathname = usePathname();
 
   if (!items?.length) {
     return null;
@@ -26,7 +27,7 @@ export function DashboardNav({ items, setOpen }: DashboardNavProps) {
           item.href && (
             <Link
               key={index}
-              to={item.disabled ? "/" : item.href}
+              href={item.disabled ? "/" : item.href}
               onClick={() => {
                 if (setOpen) setOpen(false);
               }}
