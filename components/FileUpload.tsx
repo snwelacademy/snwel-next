@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+'use client'
 import { uploadFile } from '@/services/file';
 import React, { useState } from 'react'
 import { useToast } from './ui/use-toast';

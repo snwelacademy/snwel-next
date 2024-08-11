@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+'use client'
 import { InfinitySpin } from 'react-loader-spinner'
 
 const Loader = (_op: { type: 'table' | 'page' | 'default' }) => {
