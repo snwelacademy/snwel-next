@@ -22,7 +22,7 @@ const EnrollCourseModal = ({
             <div className='flex items-center justify-center'><Logo/></div>
             <DialogTitle className='font-bold text-center'>Start Your Career Journey With Industry Experts!</DialogTitle>
           </DialogHeader>
-            <JoinCourseForm value={{name: '', email: '', courseId, phone: '', agree: '', mode: '', status: '', location: '', qualification: ''}} onClose={() => setOpen(false)} />
+            <JoinCourseForm value={{name: '', email: '', courseId, phone: '', agree: false, mode: '', status: '', location: {} as any, qualification: ''}} onClose={() => setOpen(false)} />
         </DialogContent>
     </Dialog>
   )
