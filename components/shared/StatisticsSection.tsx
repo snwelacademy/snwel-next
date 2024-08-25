@@ -60,7 +60,7 @@ const StatisticsSection = () => {
             <div >
                 <HeadingSubtitle className='text-primary before:bg-primary ' title="Flexible supported learning" />
                 <Typography as="title" className='mb-7'>
-                    Expertise Across <HighlightedText>All Disciplines</HighlightedText>
+                    Expertise Across <HighlightedText>All</HighlightedText>
                 </Typography>
 
                 <Typography as="lable" className='text-primary'>
