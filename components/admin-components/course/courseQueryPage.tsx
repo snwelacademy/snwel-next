@@ -4,7 +4,7 @@ import Loader from '@/components/Loader'
 import { DataTable } from '@/components/shared/DataTable'
 import { columns } from '@/components/tables/course-query-table/columns'
 import { Heading } from '@/components/ui/Heading'
-import {  getListOptionsFromSearchParams, getTotalPages } from '@/lib/utils'
+import {  getListOptionsFromSearchParams, getTotalPages, queryStringToObject } from '@/lib/utils'
 import { getAllEnrollments } from '@/services/admin/course-enrollment'
 import { Separator } from '@radix-ui/react-separator'
 import { useQuery } from '@tanstack/react-query'
@@ -16,8 +16,8 @@ const CourseQueryPage = () => {
   const totalUsers = 10;
   const searchParams = useSearchParams();
   const {data, isLoading} = useQuery({
-    queryKey: ['/admin/enrollments'], 
-    queryFn: () => getAllEnrollments(getListOptionsFromSearchParams(searchParams))
+    queryKey: ['/admin/enrollments', searchParams.toString()], 
+    queryFn: () => getAllEnrollments(queryStringToObject(searchParams.toString()))
   })
 
 
@@ -46,6 +46,20 @@ const CourseQueryPage = () => {
         total={data?.total||0}
         data={data?.docs||[]}
         pageCount={data?.total ? getTotalPages(data.total, data.limit): 0}
+        filter={[
+          {
+            lable: 'Verified',
+            identifier: "verified",
+            filterKey: 'status',
+            filterValue: 'ACTIVE'
+          },
+          {
+            lable: 'Pending',
+            identifier: "pending",
+            filterKey: 'status',
+            filterValue: 'PENDING'
+          },
+        ]}
       />
       }
     </div>

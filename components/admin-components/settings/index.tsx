@@ -7,6 +7,7 @@ import { SETTINGS } from "@/types";
 import GeneralSettingForm from "@/components/settings/GeneralSettings";
 import EmailSettingForm from "@/components/settings/EmailSetting";
 import IntegrationSettingForm from "@/components/settings/IntegrationSetting";
+import {MenuBuilderComponent} from "../MenuBuilder";
 
 
 
@@ -31,10 +32,12 @@ const Settings = () => {
                     <TabsTrigger value={SETTINGS.GENERAL}>General Settings</TabsTrigger>
                     <TabsTrigger value={SETTINGS.EMAIL}>Email Setting</TabsTrigger>
                     <TabsTrigger value={SETTINGS.INTEGRATION}>Integration Setting</TabsTrigger>
+                    <TabsTrigger value={SETTINGS.MENUBUILDER}>Menu Builder</TabsTrigger>
                 </TabsList>
                 <TabsContent value={SETTINGS.GENERAL}><GeneralSettingForm/></TabsContent>
                 <TabsContent value={SETTINGS.EMAIL}><EmailSettingForm/></TabsContent>
                 <TabsContent value={SETTINGS.INTEGRATION}><IntegrationSettingForm/></TabsContent>
+                <TabsContent value={SETTINGS.MENUBUILDER}><MenuBuilderComponent/></TabsContent>
             </Tabs>
         </div>
         </>

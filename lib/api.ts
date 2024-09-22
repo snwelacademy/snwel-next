@@ -2,6 +2,9 @@
 import { constants } from '@/config/constants';
 import axios, { CreateAxiosDefaults } from 'axios';
 import { getSession } from 'next-auth/react';
+let cachedSession: any = null;
+
+
 
 
 const createAxiosInstance = (options: CreateAxiosDefaults = {}) => {
@@ -20,8 +23,13 @@ const createAxiosInstance = (options: CreateAxiosDefaults = {}) => {
 const axiosInstance = createAxiosInstance();
 
 axiosInstance.interceptors.request.use( async(config) => {  
-  const session = await getSession()
-  console.log({axios_session: session?.user})
+  let session = cachedSession;
+  console.log("Old session", Boolean(cachedSession))
+  if(!cachedSession) {
+    session = await getSession();
+    cachedSession = session;
+    console.log("Fectched new session")
+  }
   if (session && session.user.jwt) {  
     if (config.headers) config.headers['Authorization'] =`Bearer ${session.user.jwt}`;  
   }  
@@ -31,15 +39,6 @@ axiosInstance.interceptors.request.use( async(config) => {
   return Promise.reject(error);  
 } );
 
-
-axiosInstance.interceptors.response.use(  
-  (response) => {  
-    return response;  
-  },  
-  (error) => {  
-    return Promise.reject(error);  
-  }  
-);
 
 const api = axiosInstance;
 const protectedApi = axiosInstance;

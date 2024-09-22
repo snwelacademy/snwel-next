@@ -10,6 +10,10 @@ import NewsLetterForm from '../shared/NewsLetterForm'
 import { useQuery } from '@tanstack/react-query'
 import { getAllCourseCategories } from '@/services/admin/course-category-service'
 import Link from 'next/link'
+import FooterCopyright from '../FooterCopyright'
+import { getSetting } from '@/services/admin/setting-service'
+import { SETTINGS } from '@/types'
+import { SocialMediaLinks } from '../SocialMediaLinks'
 
 const socialIcons: { link: string, icon: ReactNode }[] = [
     {
@@ -56,18 +60,19 @@ const Footer = () => {
         queryKey: ['admin/course-category'],
         queryFn: () => getAllCourseCategories()
     })
+    const { data: settingData, isLoading } = useQuery({
+        queryKey: ['admin/setting/general'],
+        queryFn: () => getSetting<any>(SETTINGS.GENERAL)
+    })
     return (
-        <div className='grid grid-cols-1 items-start md:grid-cols-2 lg:grid-cols-4 gap-5 py-10 container mx-auto text-white'>
+       <>
+        <div className='grid grid-cols-1 items-start md:grid-cols-2 lg:grid-cols-3 justify-center gap-5 py-10 container mx-auto text-white'>
             <div className='space-y-3'>
                 <div><Logo /></div>
                 <Typography as="p" className='text-muted'>We are passionate about bridging the gap between academic knowledge and practical industry applications. We achieve this by:</Typography>
 
                 <div className='space-x-2'>
-                    {
-                        socialIcons.map(sci => {
-                            return <Button key={nanoid()} size={'icon'} className='bg-gradient'>{sci.icon}</Button>
-                        })
-                    }
+                    <SocialMediaLinks className='justify-start' links={settingData?.data?.socialLinks} hideLable/>
                 </div>
             </div>
 
@@ -91,13 +96,16 @@ const Footer = () => {
                     }
                 </div>
             </div>
-            <div>
+            {/* <div>
                 <Typography as="h4" className=''>Our NewsLetter</Typography>
                 <div className='flex flex-col items-start mt-4'>
                     <div className=''><NewsLetterForm /></div>
                 </div>
-            </div>
+            </div> */}
+
         </div>
+            <FooterCopyright companyName={settingData?.data.siteName}  />
+       </>
     )
 }
 

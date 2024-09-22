@@ -40,13 +40,15 @@ import { AfterCourseCreatedModal } from "../modal/AfterCourseCreated";
 import CategorySelectorFormElement from "../course-category/CategorySelector";
 import TimeUnitSelector from "../TimeUnitSelector";
 import { MasterDropdown } from "../master/master-dropdown";
-import { MASTER_CODES } from "@/types/master";
+import { Master, MASTER_CODES } from "@/types/master";
 import { DragHandleDots2Icon, PlusIcon } from "@radix-ui/react-icons";
 import { Clock10, Notebook, Trash2 } from "lucide-react";
 import { Separator } from "../ui/separator";
 import CourseTabBuilderForm from "./CourseTabBuilderForm";
 import CourseInfoBuilder from "./CourseInfoBuilder";
 import DraggableList from "../DraggableList";
+import { MultiSelectMaster } from "../master/MultiSelectMaster";
+import { WidgetDropDown } from "../widget/widget-dropdown";
 
 const createCourseSchema = z.object({
   image: z.string().optional(),
@@ -72,17 +74,20 @@ const createCourseSchema = z.object({
       iconImage: z.string().optional(),
     })
     .optional(),
+  qualifications: z.array(z.string()).default([]).optional(),
+  trainingModes: z.array(z.string()).default([]).optional(),
   curriculum: z
     .array(
       z.object({
         title: z.string(),
         duration: z.string(),
         unit: z.string().optional(),
-        curriculumType: z.string().optional(),
+        curriculumType: z.any().optional(),
         classCount: z.string().optional(),
       })
     )
     .default([]),
+  widget: z.string().optional(),
   content: z
     .object({
       tabs: z.array(CourseTabSchema),
@@ -160,16 +165,19 @@ const MutateCourse = ({ courseData }: { courseData?: Course }) => {
             key,
             courseData["categories"].map((ctg) => ctg._id)
           );
-        } else {
+        } else if(key === "curriculum" ){
+          form.setValue('curriculum', courseData['curriculum'].map(crc => ({...crc, curriculumType: (typeof crc.curriculumType === 'object' && Boolean(crc.curriculumType)) ? crc.curriculumType['_id'] : crc.curriculumType})))
+        } else if(key === "qualifications"){
+          form.setValue('qualifications', courseData.qualifications?.map(crc => (typeof crc === 'object' ? crc['_id'] : crc)))
+        } else if(key === "trainingModes"){
+          form.setValue('trainingModes', courseData.trainingModes?.map(crc => typeof crc === 'object' ? crc['_id'] : crc))
+        }
+         else {
           form.setValue(key, courseData[key as keyof Course]);
         }
       });
     }
   }, [courseData]);
-
-  useEffect(() => {
-    console.log("Error", form.formState.errors);
-  }, [form.formState.errors]);
 
   return (
     <div>
@@ -379,6 +387,55 @@ const MutateCourse = ({ courseData }: { courseData?: Course }) => {
                       </FormItem>
                     )}
                   />
+                  <FormField
+                    control={form.control}
+                    name="qualifications"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>Qualifications</FormLabel>
+                        <FormControl>
+                          <MultiSelectMaster 
+                          parentCode={MASTER_CODES.QUALIFICATIONS} 
+                          type="SUB_MASTER" 
+                          {...field}
+                           />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="trainingModes"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>Training Mode</FormLabel>
+                        <FormControl>
+                          <MultiSelectMaster 
+                          parentCode={MASTER_CODES.TRAINING_MODE} 
+                          type="SUB_MASTER"  
+                          {...field} 
+                           />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="widget"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormLabel>Select Widget</FormLabel>
+                        <FormControl>
+                          <WidgetDropDown 
+                          {...field} 
+                           />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </div>
 
                 <div className="flex items-center gap-5 ">
@@ -532,6 +589,7 @@ const MutateCourse = ({ courseData }: { courseData?: Course }) => {
                                   parentCode={MASTER_CODES.CURRICULUM_TYPE}
                                   selectorKey="_id"
                                   {...field}
+                                  value={typeof field.value === 'string' ? field.value : field.value?._id}
                                 />
                               </FormControl>
                               <FormMessage />

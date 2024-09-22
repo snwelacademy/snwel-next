@@ -1,4 +1,4 @@
-
+'use client'
 import EnrollCourseModal from '../courses/EnrollCourseModal'
 import Typography from '../typography'
 import { Button } from '../ui/button'

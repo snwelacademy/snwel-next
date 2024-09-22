@@ -17,7 +17,7 @@ const Testimonial = () => {
         <div className='grid grid-cols-1 lg:grid-cols-3 gap-5 '>
             <div className='col-span-2 flex-col gap-4'>
                 <SectionTitle title='What they say about us'/>
-                <Typography as="p" className='max-w-2xl'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</Typography>
+                <Typography as="p" className='max-w-2xl'> Hear what our students and clients have to say about their experience with SNWEL Academy.</Typography>
 
                 <Carousel
             plugins={[

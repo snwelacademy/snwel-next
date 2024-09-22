@@ -49,7 +49,7 @@ export function MasterDropdown({ parentCode, onChange, value, selectorKey = '_id
         return filter;
     }
     
-
+    console.log(parentCode, value)
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error fetching data</div>;
     return (

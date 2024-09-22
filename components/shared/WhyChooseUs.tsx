@@ -1,3 +1,4 @@
+'use client'
 import {DoubleArrowRightIcon} from '@radix-ui/react-icons'
 import { ReactNode } from 'react'
 import SectionTitle from './SectionTitle'
@@ -8,18 +9,18 @@ import Link from 'next/link'
 
 const content: { title: string, desc: string, icon?: ReactNode }[] = [
     {
-        title: "Collaborating with experienced professionals",
-        desc: "Our instructors are renowned practitioners who share their real-world expertise and insights, ensuring you learn from the best.",
+        title: "Students",
+        desc: "Start your career with confidence. Our courses provide the hands-on experience and industry exposure that sets you apart in the job market. Turn your academic knowledge into practical skills that employers value.",
         icon: <DoubleArrowRightIcon className='w-14 h-14 text-primary-foreground' />
     },
     {
-        title: "Developing cutting-edge curriculum",
-        desc: "Our courses are constantly updated to reflect the latest industry trends and standards, keeping you ahead of the curve.",
+        title: "Job Seekers",
+        desc: "Enhance your employability and secure your dream job with our specialized training programs. We focus on the skills that matter most to employers, making you more competitive and marketable in a crowded job market.",
         icon: <DoubleArrowRightIcon className='w-14 h-14 text-primary-foreground' />
     },
     {
-        title: "Catering to diverse disciplines ",
-        desc: "We offer a wide range of programs across various engineering fields, allowing you to find the perfect fit for your career goals.",
+        title: "Working Professionals ",
+        desc: "Stay ahead of the curve with advanced courses designed to keep you at the forefront of your industry. Whether you’re looking to update your skills or take on new challenges, SNWEL Academy helps you remain productive and successful.",
         icon: <DoubleArrowRightIcon className=' w-14 h-14 text-primary-foreground' />
     },
     // {
@@ -33,8 +34,8 @@ const WhyChooseUs = () => {
     return (
         <div className='grid grid-cols-1 items-center md:grid-cols-2 gap-5'>
             <div className='flex justify-center md:block flex-col text-center md:text-start'>
-                <SectionTitle title=' Who We Are: Building Your Engineering Expertise' />
-                <Typography as="p" className='max-w-2xl'>Empower your engineering career with Snwel Academy, your trusted partner for industry-relevant training.</Typography>
+                <SectionTitle title=' Who We Serve' />
+                <Typography as="p" className='max-w-2xl'>We empower individuals and businesses to achieve their career goals through our job-guaranteed courses, tailored to meet the demands of today's competitive job market.</Typography>
                 <Link href="/about"><Button size="lg" className='mt-5'>Learn More</Button></Link>
             </div>
             <div className='space-y-3'>

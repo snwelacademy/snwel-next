@@ -1,12 +1,19 @@
 'use client'
 import { uploadFile } from '@/services/file';
-import React, { useState } from 'react'
+import React, {  useState } from 'react'
 import { useToast } from './ui/use-toast';
 import { FileUploadResponse } from '@/types/ApiResponses';
 import { Loader2Icon } from 'lucide-react';
 
 
-const FileUpload = ({ onUpload }: { onUpload?: (response?: FileUploadResponse) => void}) => {
+type FileUploadProps = {
+    isMultiple?: boolean,
+    accept?: string,
+    onUpload?: (response?: FileUploadResponse) => void
+}
+
+
+const FileUpload = ({ onUpload, isMultiple=true, accept='image/*' }: FileUploadProps) => {
     const [loading, setLoading] = useState(false);
     const [, setPreviewImage] = useState<string | undefined>();
     const {toast} = useToast()
@@ -32,7 +39,13 @@ const FileUpload = ({ onUpload }: { onUpload?: (response?: FileUploadResponse) =
             loading ? 
             <div className='w-full h-full flex items-center justify-center'><Loader2Icon className='animate-spin w-8 h-8' /></div>
             : <>
-            <input type="file" onChange={handleUpload } multiple className="cursor-pointer relative block opacity-0 w-full h-full p-20 z-50" />
+            <input 
+            type="file" 
+            onChange={handleUpload } 
+            multiple = {isMultiple}
+            className="cursor-pointer relative block opacity-0 w-full h-full p-20 z-50" 
+            accept={accept}
+            />
             <div className="text-center p-10 absolute top-0 right-0 left-0 m-auto">
                 <h4>
                     Drop files anywhere to upload

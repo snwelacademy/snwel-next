@@ -30,7 +30,7 @@ const MarketingFour = () => {
                 content.map(ct => {
                     return <div key={nanoid()} className='flex items-center gap-5 md:gap-10 flex-col md:flex-row odd:md:flex-row-reverse '>
                         <div className='space-y-4 max-w-xl'>
-                            <Typography as="h1">{ct.title}</Typography>
+                            <Typography as="h1" className='from-blue-500 to-purple-500 bg-gradient-to-r bg-clip-text text-transparent inline-block'>{ct.title}</Typography>
                             <Typography as="p" className='font-bold'>{ct.subTitle}</Typography>
                             <Typography as="p">{ct.desc}</Typography>
                         </div>

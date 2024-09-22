@@ -30,6 +30,7 @@ export const createJobVacancySchema = z.object({
   remoteWorkOption: z.boolean().optional(),
   benefits: z.string().optional(),
   applicationLink: z.string().optional(),
+  isActive: z.boolean().optional()
 });
 
 export const updateJobVacancySchema = createJobVacancySchema.partial();

@@ -33,7 +33,6 @@ export function CitySelector({ onChange, value, placeholder, countryCode, stateC
     const [search, setSearch] = React.useState("");
 
     const cities = React.useMemo(() => {
-        console.log({countryCode, stateCode})
         if(!countryCode || !stateCode) return [];
         return City.getCitiesOfState(countryCode, stateCode).map(city => ({
             value: city.name,
@@ -56,9 +55,6 @@ export function CitySelector({ onChange, value, placeholder, countryCode, stateC
         overscan: 5,
     });
 
-    React.useEffect(() => {
-        console.log(cities.length, filteredCities.length)
-    }, [filteredCities])
 
     return (
         <div className="relative">
@@ -100,7 +96,6 @@ export function CitySelector({ onChange, value, placeholder, countryCode, stateC
                                 >
                                     {rowVirtualizer?.getVirtualItems()?.map((virtualRow) => {
                                         const city = filteredCities[virtualRow.index];
-                                        console.log(virtualRow.index)
                                         return (
                                             <CommandItem
                                                 key={city.value}

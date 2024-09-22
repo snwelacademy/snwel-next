@@ -5,11 +5,13 @@ import { ApiResponse, ListResponse } from '@/types/ApiResponses';
 import { ListOptions } from "@/types/ListOptions";
 import { AxiosResponse } from 'axios';
 import { CourseEnrollment, CreateCourseQuery } from '@/types/CourseEnrollment';
+import { objectToQueryString } from '@/lib/utils';
 
 export async function getAllEnrollments (options?: ListOptions) {
     try {
+        console.log({options})
         options = {...DEFAULT_LIST_OPTIONS, ...options}
-        const res = await protectedApi.get<any, AxiosResponse<ApiResponse<ListResponse<CourseEnrollment>>>>(`/course-enroll?page=${options.page}&limit=${options.limit}${options.search ? '&search='+options.search : ''}`);
+        const res = await protectedApi.get<any, AxiosResponse<ApiResponse<ListResponse<CourseEnrollment>>>>(`/course-enroll?${objectToQueryString(options)}`);
         const data = res.data.data;
         return data;
     } catch (error) {

@@ -16,6 +16,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useImportantEntitiesCount, useTotalRevenue } from '@/hooks/useAnalytics';
 import { getCurrencySymbol } from '@/lib/utils';
+import {MenuBuilderComponent} from './MenuBuilder';
 
 export default function page() {
   const { data: totalRevenue, isLoading: revenueLoading } = useTotalRevenue();
@@ -37,9 +38,9 @@ export default function page() {
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
             <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="analytics" disabled>
+            {/* <TabsTrigger value="analytics" disabled>
               Analytics
-            </TabsTrigger>
+            </TabsTrigger> */}
           </TabsList>
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

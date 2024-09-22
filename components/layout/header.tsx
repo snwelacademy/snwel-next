@@ -1,13 +1,21 @@
-
+'use client'
 // import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { UserNav } from "./user-nav";
 import Logo from "../shared/Logo";
+import { useSearchParams } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 
 export default function Header() {
+  const searchParams = useSearchParams()
   return (
-    <div className="fixed top-0 left-0 right-0 supports-backdrop-blur:bg-background/60 border-b bg-background/95 backdrop-blur z-20">
+    <div className={cn([
+      "fixed top-0 left-0 right-0 supports-backdrop-blur:bg-background/60 border-b bg-background/95 backdrop-blur z-20",
+      {
+        "hidden": searchParams.get('mode') === 'edit'
+      }
+    ])}>
       <nav className=" flex items-center justify-between px-4">
         <div className="hidden lg:block">
           <Link

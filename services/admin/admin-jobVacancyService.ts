@@ -29,7 +29,7 @@ export async function createJobVacancy(mutateJobVacancy: CreateJobVacancy) {
     }
 }
 
-export async function updateJobVacancy(jobVacancyId: string, mutateJobVacancy: UpdateJobVacancy) {
+export async function updateJobVacancy(jobVacancyId: string, mutateJobVacancy: Partial<UpdateJobVacancy>) {
     try {
         const res = await protectedApi.put<any, AxiosResponse<ApiResponse<JobVacancyType>>>(`/jobvacancies/${jobVacancyId}`, mutateJobVacancy);
         const data = res.data.data;

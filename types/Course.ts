@@ -1,5 +1,6 @@
 import {  z } from "zod";
 import { CourseCategory } from ".";
+import { Master } from "./master";
 
 export enum COURSE_STATUS {
     SAVED = 'SAVED',
@@ -72,5 +73,8 @@ export type Course = {
         tabs: CourseTabType[],
         info?: CourseInfoType[],
         durationUnit?: string
-    }
+    },
+    widget?: string,
+    qualifications?: Master[],
+    trainingModes?: Master[]
 }

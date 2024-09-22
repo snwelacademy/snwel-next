@@ -20,7 +20,7 @@ const EditPage = () => {
         isLoading ? 
         <Loader type={'default'} /> : 
         !data ? <div>Invalid Page</div> : 
-        <div className='relative pt-6'>
+        <div className='relative pt-12'>
             <PageEditor data={data}/>
         </div>
       }

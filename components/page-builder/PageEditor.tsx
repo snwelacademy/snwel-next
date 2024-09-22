@@ -20,7 +20,6 @@ export function PageEditor({ data }: { data?: Master }) {
   const { toast } = useToast();
   const save = async (pageData: any) => {
     try {
-      console.log("Publishing", pageData)
       if (!data) return;
       await updateMaster(data._id, { ...data, meta: pageData } as z.infer<typeof updateMasterSchema>);
       toast({ title: 'Page Updated Successfully!!', variant: 'success' })
@@ -35,6 +34,11 @@ export function PageEditor({ data }: { data?: Master }) {
       config={conf as any}
       onPublish={save}
       overrides={{
+        // header: ({children}) => {
+        //   return <div className="mt-12 w-full ">
+        //     {children}
+        //   </div>
+        // },
         headerActions: ({ children }) => (
           <>
             <div>

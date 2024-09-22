@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Widget } from "./WidgetTypes";
 
 export type CourseEnrollment = {
     _id: string,
@@ -21,6 +22,7 @@ export type CourseEnrollment = {
     expiredAt: string,
     createdAt: Date,
     updatedAt: Date,
+    widget?: Widget
 }
 
 
@@ -30,7 +32,8 @@ export const createCourseEnrollment = z.object({
     status: z.enum(['ACTIVE', 'PENDING', 'DECLINED']).default('PENDING').optional(),
     paymentStatus: z.enum(['PAID', 'PENDING', 'FAILED']).default('PENDING').optional(),
     paymentMethod: z.enum(['CASH', 'EXTERNAL', 'INAPP']).optional(),
-    expiredAt: z.string()
+    expiredAt: z.string(),
+    widget: z.string().optional()
 })
 export const updateCourseEnrollment = z.object({
     _id: z.string()

@@ -63,10 +63,22 @@ export const navItems: NavItemWithOptionalChildren[] = [
     label: "Job Vacancy",
   },
   {
+    title: "Job Applications",
+    href: "/admin/job-applications",
+    icon: "jobApplications",
+    label: "Job Applications",
+  },
+  {
     title: "Job Category",
     href: "/admin/job-category",
     icon: "job_category",
     label: "Job Vacancy",
+  },
+  {
+    title: "Manage Gallery",
+    href: "/admin/gallery-manager",
+    icon: "gallery",
+    label: "Manage Gallery",
   },
   {
     title: "Master",

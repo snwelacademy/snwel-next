@@ -1,6 +1,6 @@
 "use client"
 import { zodResolver } from '@hookform/resolvers/zod';
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
@@ -9,14 +9,16 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Textarea } from '../ui/textarea';
 import { useToast } from '../ui/use-toast';
-import  FileUploadModal  from '../modal/FileUploadModal'; // Assuming you have this component
+import FileUploadModal from '../modal/FileUploadModal'; // Assuming you have this component
 import { createSetting, getSetting, updateSetting } from '@/services/admin/setting-service';
 import { GeneralSetting, GeneralSettingSchema, SETTINGS } from '@/types/Setting';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Loader from '../Loader';
+import { Label } from '../ui/label';
+import { FacebookIcon, InstagramIcon, LinkedinIcon, X, Youtube } from 'lucide-react';
 
 const GeneralSettingForm = () => {
-    const {data: settingData, isLoading} = useQuery({
+    const { data: settingData, isLoading } = useQuery({
         queryKey: ['admin/setting/general'],
         queryFn: () => getSetting<GeneralSetting>(SETTINGS.GENERAL)
     })
@@ -39,7 +41,14 @@ const GeneralSettingForm = () => {
                     phone: '',
                     email: ''
                 },
-                senderEmail: ''
+                senderEmail: '',
+                socialLinks: {
+                    facebook: '',
+                    insta: '',
+                    x: '',
+                    youtube: '',
+                    linkedin: ''
+                }
             }
         },
         resolver: zodResolver(GeneralSettingSchema)
@@ -57,7 +66,7 @@ const GeneralSettingForm = () => {
                 await createSetting(value);
                 toast({ title: 'Setting created successfully!' });
             }
-            client.invalidateQueries({queryKey: ['admin/setting/general']})
+            client.invalidateQueries({ queryKey: ['admin/setting/general'] })
         } catch (error: any) {
             toast({ title: `Error: ${error.message}` });
         } finally {
@@ -71,7 +80,7 @@ const GeneralSettingForm = () => {
         }
     }, [settingData]);
 
-    if(isLoading){
+    if (isLoading) {
         return <div className='flex items-center w-full h-1/2 justify-center'><Loader type='default' /></div>
     }
 
@@ -122,7 +131,7 @@ const GeneralSettingForm = () => {
                                         <FormItem className='w-full'>
                                             <FormLabel>Sender Email</FormLabel>
                                             <FormControl>
-                                                <Input type="email" placeholder="Sender Email" {...field}  />
+                                                <Input type="email" placeholder="Sender Email" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -177,8 +186,8 @@ const GeneralSettingForm = () => {
                                                 <Input placeholder="State" {...field} />
                                             </FormControl>
                                             <FormMessage />
-                                            </FormItem>
-                                        )}
+                                        </FormItem>
+                                    )}
                                 />
                                 <FormField
                                     control={form.control}
@@ -190,9 +199,125 @@ const GeneralSettingForm = () => {
                                                 <Input placeholder="Country" {...field} />
                                             </FormControl>
                                             <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <fieldset className="space-y-4">
+                                    <legend className="text-lg font-semibold">Social Media Links</legend>
+                                    <div className="space-y-2">
+                                        <FormField
+                                            control={form.control}
+                                            name="data.socialLinks.x"
+                                            render={({ field }) => (
+                                                <FormItem className='w-full'>
+                                                    <FormLabel htmlFor="twitter" className="flex items-center space-x-2">
+                                                        <X className="w-5 h-5 text-black" />
+                                                        <span>X</span>
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="url"
+                                                            placeholder="https://x.com/yourusername"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+
+                                        <FormField
+                                            control={form.control}
+                                            name="data.socialLinks.facebook"
+                                            render={({ field }) => (
+                                                <FormItem className='w-full'>
+                                                    <FormLabel htmlFor="twitter" className="flex items-center space-x-2">
+                                                        <FacebookIcon className="w-5 h-5 text-blue-600" />
+                                                        <span>Facebook</span>
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="url"
+                                                            placeholder="https://facebook.com/yourpage"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <FormField
+                                            control={form.control}
+                                            name="data.socialLinks.linkedin"
+                                            render={({ field }) => (
+                                                <FormItem className='w-full'>
+                                                    <FormLabel htmlFor="twitter" className="flex items-center space-x-2">
+                                                        <LinkedinIcon className="w-5 h-5 text-blue-700" />
+                                                        <span>LinkedIn</span>
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="url"
+                                                            placeholder="https://linkedin.com/in/yourprofile"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                    <FormField
+                                            control={form.control}
+                                            name="data.socialLinks.insta"
+                                            render={({ field }) => (
+                                                <FormItem className='w-full'>
+                                                    <FormLabel htmlFor="twitter" className="flex items-center space-x-2">
+                                                    <InstagramIcon className="w-5 h-5 text-pink-600" />
+                                                    <span>Instagram</span>
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="url"
+                                                            placeholder="https://instagram.com/yourusername"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <FormField
+                                            control={form.control}
+                                            name="data.socialLinks.youtube"
+                                            render={({ field }) => (
+                                                <FormItem className='w-full'>
+                                                    <FormLabel htmlFor="twitter" className="flex items-center space-x-2">
+                                                        <Youtube className="w-5 h-5 text-red-600" />
+                                                        <span>YouTube</span>
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="url"
+                                                            placeholder="https://youtube.com/yourusername"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                </fieldset>
 
                                 <div className='flex justify-end pt-5'>
                                     <Button disabled={loading || isLoading} type='submit'>{settingData ? 'Update' : 'Create'}</Button>

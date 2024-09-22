@@ -7,7 +7,6 @@ import { Button } from './ui/button';
 
 const AuthButton = () => {
     const session = useSession();
-    console.log({session})
     if(session && session.status === 'authenticated') return <Button onClick={() => signOut()}>Log Out</Button>
   return (
     <Button onClick={() => signIn()}>LogIn</Button>

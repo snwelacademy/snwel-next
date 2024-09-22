@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
-import { deleteJobVacancy } from "@/services/admin/admin-jobVacancyService"; // Replace with your actual service
+import { deleteJobVacancy, updateJobVacancy } from "@/services/admin/admin-jobVacancyService"; // Replace with your actual service
 import { JobVacancyType } from "@/types/JobVacancyTypes"; // Replace with your actual type
 import { useQueryClient } from "@tanstack/react-query";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
@@ -33,7 +33,7 @@ export const CellActionJobVacancy: React.FC<CellActionProps> = ({ data }) => {
     try {
       setLoading(true);
       await deleteJobVacancy(data._id); // Adjust to your delete function
-      await queryClient.invalidateQueries({ queryKey: ['/admin/job-vacancy'] }); // Adjust query key as necessary
+      await queryClient.invalidateQueries({ queryKey: ['/admin/job-vacancies'] }); // Adjust query key as necessary
       toast({ title: "Job vacancy deleted successfully!" });
       setOpen(false);
     } catch (error: any) {
@@ -42,6 +42,8 @@ export const CellActionJobVacancy: React.FC<CellActionProps> = ({ data }) => {
       setLoading(false);
     }
   };
+
+ 
 
   return (
     <>

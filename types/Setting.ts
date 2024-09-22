@@ -4,7 +4,8 @@ import { z } from "zod";
 export enum SETTINGS {
     INTEGRATION = 'INTEGRATION',
     GENERAL = 'GENERAL',
-    EMAIL = 'EMAIL'
+    EMAIL = 'EMAIL',
+    MENUBUILDER = 'MENUBUILDER'
 }
 
 
@@ -34,6 +35,7 @@ export type CreateSettingInput<T=any> = {
     isChangable: boolean
 }
 export type UpdateSettingInput<T=any> = {
+    code?: string
     data: T,
     isChangable: boolean
 }
@@ -103,10 +105,43 @@ export const GeneralSettingSchema = SettingSchema.merge(z.object({
             email: z.string().optional(),
         }).optional(),
         senderEmail: z.string(),
+        socialLinks: z.object({
+            facebook: z.string().optional(),
+            insta: z.string().optional(),
+            x: z.string().optional(),
+            youtube: z.string().optional(),
+            linkedin: z.string().optional()
+        }).optional()
     })
 }))
 
 export type GeneralSetting = z.infer<typeof GeneralSettingSchema>;
+
+export const MenuItemSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    href: z.string().optional(),
+    icon: z.string().optional(),
+    img: z.string().optional(),
+    index: z.number().nullable().optional(),
+    parentId: z.string().nullable().optional(),
+    depth: z.number().optional()
+    
+})
+
+export const MenuSchemaWithChildren = MenuItemSchema.merge(z.object({children: z.array(MenuItemSchema).optional().default([])}))
+
+export const MenuSettingSchema = SettingSchema.merge(z.object({
+    code: z.enum([SETTINGS.MENUBUILDER]),
+    data: z.object({
+        menus: z.array(MenuSchemaWithChildren).default([]),
+        footerMenu: z.array(MenuSchemaWithChildren).default([])
+    })
+}))
+
+export type MenuSetting = z.infer<typeof MenuSettingSchema>;
+
+export type MenuSchemaWithChildrenType = z.infer<typeof MenuSchemaWithChildren>;
 
 
 

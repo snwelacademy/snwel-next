@@ -5,6 +5,7 @@ import { formatDate, formatToLocalCurrency, getAvatarLetters } from '@/lib/utils
 import { Icons } from '../icons'
 import { Button } from '../ui/button'
 import { nanoid } from 'nanoid'
+import ApplyNowModal from './JobApplyNow'
 
 const SingleVacancy = ({
     data
@@ -86,7 +87,7 @@ const SingleVacancy = ({
                     </article>
 
                     <div className='mt-5'>
-                        <Button>Apply Now</Button>
+                        <ApplyNowModal data={data}/>
                     </div>
                 </div>
 

@@ -13,7 +13,8 @@ export type ListResponse<T = any> = {
     nextPage?: number|null,
     prevPage?: number|null,
     hasNext: boolean,
-    currentPage: number
+    currentPage: number,
+    totalPages?: number | null
 }
 
 

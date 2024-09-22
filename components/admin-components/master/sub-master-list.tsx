@@ -13,7 +13,6 @@ const SubMasterList = () => {
   const searchParams = useSearchParams();
   const option = getListOptionsFromSearchParams(searchParams);
 
-    console.log({option})
   const { data, isLoading } = useQuery({
     queryKey: ['/admin/masters', searchParams],
     queryFn: () => getAllMasters(option),

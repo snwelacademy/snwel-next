@@ -1,4 +1,4 @@
-'use client'
+
 
 import { Config } from "@measured/puck"
 import { HeroProps, HeroSliderComponent } from "./components/HeroSliderComponent"
@@ -10,6 +10,15 @@ import { Text, TextProps } from "./blocks/Text";
 import { ContainerProps, Container } from "./blocks/Container";
 import { PremiumCourseProps, PremiumCourseComponent } from "./components/PremiumCourseComponent";
 import { PopularCourseSliderProps, PopularCourseSliderComponent } from "./components/PopularCourseComponent";
+import { WidgetComponent, WidgetComponentProps } from "./components/WidgetComponent";
+import { JoinCourseComponent, JoinCourseComponentProps } from "./components/CourseJoinForm";
+import { PopularBlogComponent, PopulartBlogComponentProps } from "./components/PopularBlogComp";
+import { TestimonialComponent, TestimonialComponentProps } from "./components/Testimonial";
+import { CTAOneComponent, CtaOneComponentProps } from "./components/CtaOneComp";
+import { MarketingOneComponent, MarketingOneComponentProps } from "./components/MarketingOne";
+import { CourseTabsComponent, CourseTabsComponentProps } from "./components/CourseTabsByCategoryComponent";
+import { WhyChooseUsComponent, WhyChooseUsComponentProps } from "./components/WhyChooseUs";
+import { CourseFeatureComponent, CourseFeatureComponentProps } from "./components/CourseFeatureComponent";
 
 
 export type Props = {
@@ -20,13 +29,23 @@ export type Props = {
     Text: TextProps;
     Container: ContainerProps,
     PremiumCourseComponent: PremiumCourseProps,
-    PopularCourseSliderComponent: PopularCourseSliderProps
+    PopularCourseSliderComponent: PopularCourseSliderProps,
+    WidgetComponent: WidgetComponentProps,
+    JoinCourseComponent: JoinCourseComponentProps,
+    PopularBlogComponent: PopulartBlogComponentProps,
+    TestimonialComponent: TestimonialComponentProps,
+    CTAOneComponent: CtaOneComponentProps,
+    MarketingOneComponent: MarketingOneComponentProps,
+    CourseTabsComponent: CourseTabsComponentProps,
+    WhyChooseUsComponent: WhyChooseUsComponentProps,
+    CourseFeatureComponent: CourseFeatureComponentProps,
+
 }
 
 export type UserConfig = Config<
 Props,
 RootProps,
-"prebuilt"|"layout" 
+"prebuilt"|"layout" |"widget"
 >;
 
 
@@ -42,8 +61,24 @@ export const conf: UserConfig = {
         components: ['VerticalSpace', 'Columns', 'Text', 'Container']
       },
       prebuilt: {
-        components: ['HeroSliderComponent', 'StatisticsComponent', 'PremiumCourseComponent', 'PopularCourseSliderComponent']
+        components: [
+          'HeroSliderComponent', 
+          'StatisticsComponent', 
+          'PremiumCourseComponent', 
+          'PopularCourseSliderComponent',
+          'CourseFeatureComponent',
+          "WhyChooseUsComponent",
+        "CourseTabsComponent",
+        "MarketingOneComponent",
+        'CTAOneComponent',
+        'TestimonialComponent',
+        'PopularBlogComponent',
+        'JoinCourseComponent'
+        ]
       },
+      widget: {
+        components: ["WidgetComponent"]
+      }
     },
     components: {
         HeroSliderComponent,
@@ -54,5 +89,14 @@ export const conf: UserConfig = {
         Container,
         PremiumCourseComponent,
         PopularCourseSliderComponent,
+        WidgetComponent,
+        CourseFeatureComponent,
+        WhyChooseUsComponent,
+        CourseTabsComponent,
+        MarketingOneComponent,
+        CTAOneComponent,
+        TestimonialComponent,
+        PopularBlogComponent,
+        JoinCourseComponent
     },
   };

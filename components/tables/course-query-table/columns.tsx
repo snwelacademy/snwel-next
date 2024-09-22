@@ -2,9 +2,27 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
-import { formatDate } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import { CourseEnrollment } from "@/types/CourseEnrollment";
 import EnrollmentStausChanger from "./statusChanger";
+import { Badge } from "@/components/ui/badge";
+import dayjs from "dayjs";
+import { Widget, WidgetType } from "@/types/WidgetTypes";
+import Link from "next/link";
+
+
+const isEnrolledDuringOffer = (
+  enrollmentDate: string | Date, 
+  offerStartDate: string | Date, 
+  offerEndDate: string | Date
+): boolean => {
+  const enrollment = dayjs(enrollmentDate);  // Parse the enrollment date
+  const offerStart = dayjs(offerStartDate);  // Parse the offer start date
+  const offerEnd = dayjs(offerEndDate);  // Parse the offer end date
+
+  // Check if the enrollment date is between the offer start and end dates
+  return enrollment.isAfter(offerStart) && enrollment.isBefore(offerEnd);
+};
 
 export const columns: ColumnDef<CourseEnrollment>[] = [
   {
@@ -44,7 +62,7 @@ export const columns: ColumnDef<CourseEnrollment>[] = [
   {
     accessorKey: "status",
     header: "STATUS",
-    cell: ({ row }) => <EnrollmentStausChanger statusType="ENROLLMENT_STATUS" value={row.original.status} selfMode={{id: row.original._id}} />
+    cell: ({ row }) => <Badge variant={'outline'}>{row.original.status}</Badge>
   },
   {
     accessorKey: "paymentStatus",
@@ -52,9 +70,20 @@ export const columns: ColumnDef<CourseEnrollment>[] = [
     cell: ({ row }) => <EnrollmentStausChanger statusType="PAYMENT_STATUS" value={row.original.paymentStatus} selfMode={{id: row.original._id}} />
   },
   {
-    accessorKey: "paymentMethod",
-    header: "PAYMENT METHOD",
-    cell: ({row}) => row.original.paymentMethod || '-'
+    accessorKey: "widget",
+    header: "Offer Widget",
+    cell: ({row}) => {
+      const widget: any = row.original?.widget;
+      if(!widget || widget.type !== 'cdtWidget'){
+        return  <p>-</p>
+      }
+      const inOff = isEnrolledDuringOffer(row.original.createdAt, widget.content?.startTime, widget.content?.endTime);
+      return <div className="flex flex-col gap-1">
+        <Badge className={cn(['inline-block',{'bg-green-700 text-white': inOff, "bg-red-700 text-white": !inOff}])}>{inOff ? 'In Offer': 'Not In Offer'}</Badge>
+        <Link href={`/admin/widgets/${widget._id}?type=cdtWidget`}>{widget.title}</Link>
+        {/* <p>{widget.title}</p> */}
+      </div>
+    }
   },
   {
     accessorKey: "otp.verified",

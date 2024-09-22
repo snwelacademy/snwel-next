@@ -31,7 +31,7 @@ const WebinarRegistrationForm = ({ className }: { className?: string }) => {
 
 
     function onSubmit(value: z.infer<typeof formSchema>) {
-        console.log(value)
+
     }
 
     return (

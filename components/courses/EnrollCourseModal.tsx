@@ -7,10 +7,12 @@ import Logo from '../shared/Logo'
 
 const EnrollCourseModal = ({
     trigger,
-    courseId
+    courseId,
+    widget
 }: {
     trigger: ReactNode,
-    courseId: string
+    courseId: string,
+    widget?: string
 }) => {
   const [open, setOpen] = useState(false)
 
@@ -22,7 +24,7 @@ const EnrollCourseModal = ({
             <div className='flex items-center justify-center'><Logo/></div>
             <DialogTitle className='font-bold text-center'>Start Your Career Journey With Industry Experts!</DialogTitle>
           </DialogHeader>
-            <JoinCourseForm value={{name: '', email: '', courseId, phone: '', extra: {agree: false}, mode: '', occupation: '', location: {} as any, qualification: ''}} onClose={() => setOpen(false)} />
+            <JoinCourseForm value={{name: '', email: '', courseId, phone: '', extra: {agree: false}, mode: '', occupation: '', location: {} as any, qualification: '', widget}} onClose={() => setOpen(false)} />
         </DialogContent>
     </Dialog>
   )
