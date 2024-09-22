@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid'
 import WebinarCard from './WebinarCard'
 import { Webinar } from '@/types/Webinar'
 import { Skeleton } from '../ui/skeleton';
+import NoWebinarsFound from './NoWebinarScreen';
 
 const LoadingSkeleton = () => (
     <>
@@ -49,6 +50,9 @@ const WebinarGridList = ({
                 })
             }
         </div>
+    }
+    if(!loading && webinarList.length === 0){
+      return <NoWebinarsFound/>
     }
     return (
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center justify-items-center gap-10'>

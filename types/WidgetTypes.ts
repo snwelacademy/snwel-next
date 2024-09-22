@@ -1,5 +1,6 @@
 
 
+import { defaultCdtValue } from '@/components/widget/cdt-widget/CdtType';
 import dayjs from 'dayjs';
 import { z } from 'zod';
 export interface Widget {
@@ -38,52 +39,7 @@ export const template = {
 }
 
 export const Widgets: Record<string, _WidgetType> = {
-  'cdtWidget': {
-    title: 'Count Down Timer Widget',
-    icon: 'sun',
-    description: "This is count down timer widget",
-    type: 'cdtWidget',
-    content: {
-      startTime: new Date().toLocaleString(),
-      endTime: dayjs(Date.now()).add(2, 'day').toDate().toLocaleString(),
-      timeZone: '',
-      position: CDT_POSITIONS.DEFAULT,
-      message: "🎂✨ Countdown to our birthday! ✨Epic things are going to happen in",
-    },
-    settings: {
-      countDisplay: {
-        'day': { isActive: true, label: 'Day' },
-        'hrs': { isActive: true, label: 'Hours' },
-        'minutes': { isActive: true, label: 'Minutes' },
-        'seconds': { isActive: true, label: 'Seconds' },
-      },
-      button: {
-        isActive: true,
-        text: "Register",
-        link: ''
-      },
-      actionAfterComplete: {
-        action: 'HIDE',
-        showMesage: {
-          message: "The countdown is finished",
-          showCounter: true,
-          showButton: true,
-          buttonLink: "",
-          buttonText: "Register"
-        },
-
-      },
-      appearance: {
-        colors: {
-          timerColor: '#fdf0d5',
-          labelsColor: '#fdf0d5',
-          messageColor: '#fdf0d5',
-          buttonColor: '#003049',
-          bgColor: '#c1121f'
-        }
-      }
-    }
-  }
+  'cdtWidget': defaultCdtValue as any
 }
 
 
@@ -121,10 +77,12 @@ const CdtWidgetSettings = z.object({
   appearance: z.object({
     colors: z.object({
       timerColor: z.string(),
+      timerTextColor: z.string(),
       labelsColor: z.string(),
       messageColor: z.string(),
       buttonColor: z.string(),
       bgColor: z.string(),
+      buttonTextColor: z.string()
     }),
   }),
 });

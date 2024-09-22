@@ -1,6 +1,6 @@
 'use client'
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import slugify from 'slugify';
@@ -23,10 +23,12 @@ import { useToast } from '../ui/use-toast';
 
 interface MutateWidgetFormProps {
     widgetData?: Widget;
-    type?: WidgetType
+    type?: WidgetType,
+    onChange?: (data: any) => void,
+    submit?: (submitHandler: () => Promise<void>) => void
 }
 
-const MutateWidgetForm: React.FC<MutateWidgetFormProps> = ({ widgetData, type }) => {
+const MutateWidgetForm: React.FC<MutateWidgetFormProps> = ({ widgetData, type, onChange, submit }) => {
     const [loading, setLoading] = useState<boolean>(false);
     const form = useForm<z.infer<typeof createWidget>>({
         defaultValues: type  ? Widgets[type] : {},
@@ -46,7 +48,7 @@ const MutateWidgetForm: React.FC<MutateWidgetFormProps> = ({ widgetData, type })
                 await createWidgetService(values as CreateWidget);
                
             }
-            toast({ title: `Course ${widgetData ? 'Updated' : 'created'} successfully!` })
+            toast({ title: `Course ${widgetData ? 'Updated' : 'created'} successfully!` }) 
         } catch (error: any) {
             toast({ title: `Error: ${error.message}` });
         } finally {
@@ -69,14 +71,10 @@ const MutateWidgetForm: React.FC<MutateWidgetFormProps> = ({ widgetData, type })
         }
     }, [widgetData, form]);
 
-    useEffect(() => {
-        console.log({error: form.formState.errors})
-    }, [form.formState.errors]);
-
 
 
     useEffect(() => {
-      console.log(watchFields)
+        onChange?.(watchFields);
     }, [watchFields])
     
     
@@ -89,7 +87,7 @@ const MutateWidgetForm: React.FC<MutateWidgetFormProps> = ({ widgetData, type })
                         <Card>
                             <CardHeader title={widgetData ? 'Update Widget' : 'Create Widget'} />
                             <CardContent className='space-y-4'>
-                                <div className='grid grid-cols-1 gap-5 lg:grid-cols-2'>
+                                <div className='space-y-4'>
                                     <FormField
                                         control={form.control}
                                         name="title"
@@ -149,11 +147,11 @@ const MutateWidgetForm: React.FC<MutateWidgetFormProps> = ({ widgetData, type })
                                 )}
                                  {widgetType === "cdtWidget" && <CdtWidgetSubForm control={form.control} />}
 
-                                <div className='flex justify-end pt-5'>
+                                {/* <div className='flex justify-end pt-5'>
                                     <Button disabled={loading} type='submit'>
                                         {widgetData ? 'Update' : 'Create'}
                                     </Button>
-                                </div>
+                                </div> */}
                             </CardContent>
                         </Card>
                     </div>

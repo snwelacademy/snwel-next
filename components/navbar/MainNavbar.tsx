@@ -8,77 +8,176 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
 import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
-// import Logo from '../shared/Logo';
-import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
-import { SearchIcon, ShoppingBagIcon } from 'lucide-react';
-import { nanoid } from 'nanoid';
 import MobileNavbar from './MobileNavbar';
-import { useQuery } from '@tanstack/react-query';
-import { getAllCourseCategories } from '@/services/admin/course-category-service';
-import { Menu } from '@/data/menu';
 import EnrollCourseModal from '../courses/EnrollCourseModal';
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Button } from "../ui/button";
-import AuthButton from "../AuthButton";
 import Logo from "../shared/Logo";
+import { useContext } from "react";
+import { AppContext } from "../AppProviders";
+import { SETTINGS } from "@/types";
 
 
-const MenuItemChildren = ({
-  menu
-}: { menu: Menu }) => {
+
+
+// Data structure for dynamic navigation
+const navItems = [
+  {
+    id: "64Tu1ljDoL5FLYHlm4EXQ",
+    name: "Home",
+    href: "/",
+    children: [],
+  },
+  {
+    id: "RH4DF3CunRqjejCjWc6Gf",
+    href: "/courses",
+    name: "Courses",
+    children: [
+      {
+        id: "dTu2c7pmprU3MiaZkV5PV",
+        name: "Piping",
+        href: "/courses?category=piping",
+        children: [],
+      },
+      {
+        id: "6g-x-jRLeOSwCYzu4PSKw",
+        name: "Mechanical",
+        href: "/courses?category=mechenical",
+        children: [],
+      },
+      {
+        id: "BP7e8FJLnz8goqZ8xGyYp",
+        name: "Civil & Structural",
+        href: "/courses?category=civil-and-structural",
+        children: [],
+      },
+    ],
+  },
+  {
+    id: "1Bu5Z0OSUQomF-3Zk-BNY",
+    name: "About",
+    href: "/about",
+    children: []
+  },
+  {
+    id: "hqi2v68JWVqmmVvWXbi_Q",
+    name: "Contact",
+    href: "/contact",
+    children: [],
+  },
+  {
+    id: "qVO4YrAfG7sAGjHCC7aJY",
+    name: "Webinars",
+    href: "/webinars",
+    children: [],
+  },
+  {
+    id: "AkzlFg4gg5XiANdE3mPSz",
+    name: "Job Vacancy",
+    href: "/job-vacancies",
+    children: [],
+  },
+];
+
+export function NavigationMenuComponent() {
+  const { settings } = useContext(AppContext);
+
+  return (
+    <NavigationMenu>
+      <NavigationMenuList>
+        {settings.find(val => val.code === SETTINGS.MENUBUILDER)?.data.menus.map((item: any) => (
+          <NavigationMenuItemWithChildren key={item.id} item={item} />
+        ))}
+      </NavigationMenuList>
+    </NavigationMenu>
+  );
+}
+
+// Recursive component to render navigation items and their children
+type NavItemProps = {
+  item: {
+    id: string;
+    name: string;
+    href: string;
+    img?: string;
+    children: any[];
+    desc?: string
+  };
+};
+
+const NavigationMenuItemWithChildren: React.FC<NavItemProps> = ({ item }) => {
+  const hasChildren = item.children && item.children.length > 0;
+
+  if (!hasChildren) {
+    return (
+      <NavigationMenuItem>
+        <Link href={item.href} legacyBehavior passHref>
+          <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+            {item.name}
+          </NavigationMenuLink>
+        </Link>
+      </NavigationMenuItem>
+    );
+  }
+
   return (
     <NavigationMenuItem>
-      <NavigationMenuTrigger className='text-lg text-primary font-bold'><Link href={menu.link || '#'}>{menu.label}</Link></NavigationMenuTrigger>
-      <NavigationMenuContent className="left-0">
-        <div className='w-[200px] flex flex-col items-center justify-center gap-2 p-2'>
-          {
-            menu.children?.map(m => {
-              return <Link href={m.link || '#'} className='flex w-full' key={nanoid()}>
-                <NavigationMenuLink className={cn([navigationMenuTriggerStyle(), 'block w-full'])}>
-                  {m.label}
-                </NavigationMenuLink>
-              </Link>
-            })
-          }
-        </div>
+      <NavigationMenuTrigger>{item.name}</NavigationMenuTrigger>
+      <NavigationMenuContent>
+        <ul className="grid w-[400px] gap-3 p-4 md:w-[600px] md:grid-cols-2 lg:w-[1000px] justify-items-stretch">
+          {item.children.map((child) => (
+            <ListItemWithChildren key={child.id} item={child} />
+          ))}
+        </ul>
       </NavigationMenuContent>
     </NavigationMenuItem>
-  )
-}
+  );
+};
 
-const SimpleNavlink = ({ menu }: { menu: Menu }) => {
-  const [isActive, setIsActive] = useState(false);
-  const pathname = usePathname();
-
-  useEffect(() => {
-    setIsActive(Boolean(menu.link && menu.link === pathname));
-  }, [pathname])
-
+// Component for rendering list items with children
+const ListItemWithChildren: React.FC<NavItemProps> = ({ item }) => {
+  const hasChildren = item.children && item.children.length > 0;
   return (
-    <Link href={menu?.link || '#'} >
-      <NavigationMenuLink className={cn([
+    <li>
+      <NavigationMenuLink asChild>
+        <Link href={item.href || '#'} className={cn([
+          "rounded-xl bg-red-700/10  px-5 py-2 flex gap-5 h-full items-center group hover:bg-red-600/30 hover:text-primary-foreground duration-200 transition-all  [&>*]:duration-200 [&>*]:transition-all",
+        
+        ])}>
 
-        navigationMenuTriggerStyle(),
-        'text-lg font-bold text-primary',
-        {
-          'bg-destructive text-destructive-foreground hover:bg-destructive/80 hover:text-destructive-foreground': isActive
-        }
-      ])}>
-        {menu.label}
+          <div className={cn([
+            "bg-contain aspect-square bg-center bg-no-repeat max-w-[100px] md:max-w-[200px] w-full group-hover:fill-primary-foreground fill-primary stroke-primary group-hover:stroke-primary-foreground flex items-center",
+            {
+              "aspect-auto h-[200px] w-0": !item.img
+            }
+          ])} 
+          style={{ backgroundImage: `url(${item.img})` }}
+          >
+            {/* <div className="bg-center bg-no-repeat bg-cover w-full h-full" style={{ backgroundImage: `url(${item.img})` }}></div> */}
+          </div>
+          <div>
+            <h3 className='text-slate-700 text-lg  font-bold group-hover:text-primary-foreground col-span-2 leading-tight'>{item.name}</h3>
+            <p className="text-sm">{item.desc}</p>
+            </div>
+        </Link>
       </NavigationMenuLink>
-    </Link>
-  )
-}
+
+      {hasChildren && (
+        <ul className="ml-4 mt-2 space-y-1">
+          {item.children.map((child) => (
+            <ListItemWithChildren key={child.id} item={child} />
+          ))}
+        </ul>
+      )}
+    </li>
+  );
+};
+
 
 
 
 const MainNavbar = () => {
-  const { data: categories } = useQuery({
-    queryKey: ['/admin/course-category'],
-    queryFn: () => getAllCourseCategories()
-  });
   return (
     <div className='flex items-center justify-between gap-4 py-3 px-2 md:px-10 bg-background h-[92px] '>
 
@@ -87,22 +186,7 @@ const MainNavbar = () => {
       </div>
 
       <div className='hidden md:block'>
-        <NavigationMenu>
-          <NavigationMenuList>
-
-            <SimpleNavlink menu={{ label: "Home", link: "/" }} />
-            <MenuItemChildren menu={{
-              label: "Courses",
-              link: "/courses",
-              children: categories?.docs.map(ctg => ({ label: ctg.title, link: `/courses/?category=${ctg.slug}` }))
-            }} key={nanoid()} />
-            <SimpleNavlink menu={{ label: "About", link: "/about" }} />
-            <SimpleNavlink menu={{ label: "Contact", link: "/contact" }} />
-            <SimpleNavlink menu={{ label: "Webinars", link: "/webinars" }} />
-            {/* <SimpleNavlink menu={{ label: "Live Projects", link: "/live-projects" }} /> */}
-            <SimpleNavlink menu={{ label: "Job Vacancy", link: "/job-vacancies" }} />
-          </NavigationMenuList>
-        </NavigationMenu>
+        <NavigationMenuComponent />
       </div>
 
       <div className='block md:hidden'>

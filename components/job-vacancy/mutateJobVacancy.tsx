@@ -21,6 +21,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getAllJobCategories } from '@/services/guestJobCategoryService'
 import { Switch } from '../ui/switch'
 import FileUploadModal from '../modal/FileUploadModal'
+import FileManagerPopup from '../modal/FileManager'
 
 
 const MutateJobVacancy = ({ data }: { data?: JobVacancyType }) => {
@@ -87,9 +88,6 @@ const MutateJobVacancy = ({ data }: { data?: JobVacancyType }) => {
         }
     }, [data])
 
-    useEffect(() => {
-        console.log({ errors: form.formState.errors })
-    }, [form.formState.errors])
 
     return (
         <div>
@@ -106,8 +104,8 @@ const MutateJobVacancy = ({ data }: { data?: JobVacancyType }) => {
                                         <div className='rounded-2xl border-dashed border-gray-600 py-10 aspect-square max-w-[250px] border-2 flex items-center justify-center bg-center bg-cover' style={{ backgroundImage: `url(${Watch.companyLogo})` }}>
                                             {
                                                 Watch.companyLogo ?
-                                                    <FileUploadModal trigger={<Button>Change Image</Button>} onChange={path => form.setValue('companyLogo', path)} />
-                                                    : <FileUploadModal trigger={<Button>Upload File</Button>} onChange={path => form.setValue('companyLogo', path)} />
+                                                    <FileManagerPopup value={Watch.companyLogo} trigger={<Button>Change Image</Button>} onChange={path => form.setValue('companyLogo', path[0])} />
+                                                    : <FileManagerPopup trigger={<Button>Upload File</Button>} onChange={path => form.setValue('companyLogo', path[0])} />
                                             }
                                         </div>
                                     </div>

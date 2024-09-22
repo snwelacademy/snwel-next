@@ -1,6 +1,6 @@
 'use client'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { z } from 'zod';
 import { Button } from "@/components/ui/button"
 import {
@@ -44,12 +44,12 @@ const formSchema = z.object({
     agree: z.boolean(),
   }),
   qualification: z.string(),
-    mode: z.string(),
-    occupation: z.string(),
-
+  mode: z.string(),
+  occupation: z.string(),
+  widget: z.string().optional()
 })
 
-const JoinCourseForm = ({ className, value, onClose }: { className?: string, value?: z.infer<typeof formSchema>, onClose?: () => void }) => {
+const JoinCourseForm = ({ className, value, onClose }: { className?: string, value?: z.infer<typeof formSchema>, onClose?: () => void, extraData?: {widgetId: string} }) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false)
   const form = useForm<z.infer<typeof formSchema>>({
@@ -59,7 +59,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
 
 
   const [state, setState] = useState<{ isVerified: boolean, token?: string, invalidOtp?: boolean, invalidToken?: boolean, enrollmentId?: string } | null>(null);
-
+  const Watch = useWatch({ control: form.control })
   async function onSubmit(value: z.infer<typeof formSchema>) {
     try {
       setLoading(true)
@@ -97,7 +97,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
 
   return (
     <Form {...form} >
-      <form onSubmit={form.handleSubmit(onSubmit)} className={cn(["space-y-3 rounded-2xl bg-primary/5 p-4 md:p-10", className])}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className={cn(["space-y-3 rounded-2xl p-4 md:p-10", className])}>
         <FormField
           control={form.control}
           name="name"
@@ -160,7 +160,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
               <FormItem>
                 {/* <FormLabel>Select Course </FormLabel> */}
                 <FormControl>
-                  <CourseSelector {...field} />
+                  <CourseSelector filter={{ qualifications: Watch.qualification, trainingModes: Watch.mode}} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

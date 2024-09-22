@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { formatDate, formatToLocalCurrency, getAvatarLetters } from '@/lib/utils'
 import { Button } from '../ui/button'
 import { Bookmark } from 'lucide-react'
+import ApplyNowModal from './JobApplyNow'
 
 const JobVacancyListCard = ({ data }: {
     data: JobVacancyType
@@ -44,8 +45,8 @@ const JobVacancyListCard = ({ data }: {
                 </div>
 
                 <div className='md:mt-0 mt-4 flex items-center gap-2'>
-                    <Button size={'icon'} variant={'outline'}><Bookmark/></Button>
-                    <Button>Apply Now</Button>
+                    {/* <Button size={'icon'} variant={'outline'}><Bookmark/></Button> */}
+                    <ApplyNowModal data={data}/>
                 </div>
                 {
                     data.isFeatured &&

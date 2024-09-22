@@ -41,7 +41,7 @@ const CategorySelectorFormElement = ({
 
             <Select onValueChange={onSingleChangeHandler} value={value as string}>
                 <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Theme" />
+                    <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
                     {

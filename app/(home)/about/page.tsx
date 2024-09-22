@@ -2,36 +2,144 @@ import PageHeader from "@/components/shared/PageHeader"
 import HeadingSubtitle from "@/components/shared/SectionLable"
 import Typography from "@/components/typography"
 import HighlightedText from "@/components/typography/HighlightedHeading"
-import { HandHeart, HandshakeIcon, HeadsetIcon, Star } from "lucide-react";
-import {constants} from '@/config/constants'
+import { CheckCircle, HandHeart, HandshakeIcon, HeadsetIcon, Star } from "lucide-react";
+import { constants } from '@/config/constants'
 import { Progress } from "@/components/ui/progress"
 import PremiumCourseSection from "@/components/courses/PremiumCourseSection";
 // import OurTeamSection from "@/components/shared/OurTeamSection";
 import JoinCourseSection2 from "@/components/shared/JoinCourseSection2";
 import MarketingFour from "@/components/shared/MarketingFour";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import JoinCourseSection from "@/components/shared/JoinCourseSection";
 
 
 const AboutPage = () => {
   return (
     <div>
-      <PageHeader title="About Us" image={"/assets/images/bim.jpg"} />
+      <PageHeader title="About SNWEL Academy" image={"/assets/images/bim.jpg"} subtitle="Empowering careers through industry-aligned, practical training" />
 
-      <section className="py-32 px-4 text-primary text-center">
-        <div className="flex items-center justify-center flex-col">
-          <div className="max-w-5xl">
-            <HeadingSubtitle title="CUSTOMER REVIEWS" className="" />
-            <Typography as="title" className="mb-10">Global Students Provide Us With Outstanding <HighlightedText>Client Testimonials</HighlightedText></Typography>
-            <Typography as="p">Donec laoreet quam in arcu tempor, ut aliquet diam sagittis. Morbi id elit sodales, facilisis enim sollicitudin, pellentesque quam. Donec tempor metus felis, nec egestas ligula convallis a. Duis rutrum, massa non vehicula sodales.</Typography>
+      <section className="pt-10 pb-32 px-4 text-primary text-center">
+        <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
+          {/* <div className="relative h-80 bg-gradient-to-r from-blue-600 to-purple-600 overflow-hidden">
+            <img
+          src="/assets/images/bim.jpg"
+          alt="SNWEL Academy Banner"
+          width={1920}
+          height={400}
+          className="object-cover object-center opacity-20"
+        />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center space-y-4">
+                <h1 className="text-5xl font-bold tracking-tight text-white">About SNWEL Academy</h1>
+                <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+                  Empowering careers through industry-aligned, practical training
+                </p>
+              </div>
+            </div>
+          </div> */}
+
+          <div className="container mx-auto px-4 py-12 space-y-16 ">
+            <section className="grid md:grid-cols-2 gap-8 text-left">
+              <div className="space-y-4">
+                <h2 className="text-3xl font-semibold text-blue-700">Our Mission</h2>
+                <p className="text-gray-700">
+                  At SNWEL Academy, we go beyond traditional training methods by focusing on knowledge and skill-based learning that aligns with real-world career goals. Our programs emphasize hands-on practical training and industry-specific projects, ensuring that our students are well-prepared for the demands of today's competitive job market.
+                </p>
+                <p className="text-gray-700">
+                  Our mission is to empower you to achieve further professional success. In an environment where competition is fierce and challenges are greater than ever, SNWEL Academy stands out as a crucial partner in your career development.
+                </p>
+              </div>
+              <div className="space-y-4">
+                <h2 className="text-3xl font-semibold text-purple-700">What We Offer</h2>
+                <p className="text-gray-700">
+                  We offer a wide range of engineering and technology courses tailored to meet industry needs. Delivered in modern, innovative classrooms, our training solutions are designed to truly meet your professional requirements.
+                </p>
+                <p className="text-gray-700">
+                  Whether you aim to enhance your skills, increase your productivity, or secure a high-paying job at a top multinational company, SNWEL Academy is here to support your journey.
+                </p>
+              </div>
+            </section>
+
+            <section className="space-y-8">
+              <h2 className="text-4xl text-center font-bold from-blue-500 to-purple-500 bg-gradient-to-r bg-clip-text text-transparent inline-block">Who We Serve</h2>
+              <div className="grid md:grid-cols-3 gap-8">
+                {[
+                  {
+                    title: "For Students",
+                    content: "Bridge the gap between classroom learning and real-world industry demands with hands-on experience and practical skills.",
+                    image: "/assets/images/for-student.jpg",
+                  },
+                  {
+                    title: "For Job Seekers",
+                    content: "Stand out in the competitive job market with specialized training programs that make you more marketable.",
+                    image: "/assets/images/for-job-seeker.jpg",
+                  },
+                  {
+                    title: "For Working Professionals",
+                    content: "Stay ahead of the curve and keep your skills sharp with advanced training programs designed for continuous learning.",
+                    image: "/assets/images/for-working-profissional.jpg",
+                  },
+                ].map((item, index) => (
+                  <Card key={index} className="overflow-hidden">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      width={300}
+                      height={200}
+                      className="w-full h-48 object-cover"
+                    />
+                    <CardHeader>
+                      <CardTitle className="text-xl font-bold ">{item.title}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-600">{item.content}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </section>
+
+            <section className="space-y-8 bg-gradient-to-r from-indigo-50 to-purple-50 p-8 rounded-lg">
+              <h2 className="text-4xl font-semibold text-center from-blue-500 to-purple-500 bg-gradient-to-r bg-clip-text text-transparent inline-block">Why Choose SNWEL Academy</h2>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[
+                  "Empower Your Career with Industry-Ready Skills",
+                  "Hands-On Training to Bridge the Gap Between Theory and Practice",
+                  "Get Ahead in the Job Market with Specialized Courses",
+                  "Turn Knowledge into Expertise with Real-World Projects",
+                  "Enhance Your Employability with Practical, Job-Oriented Training",
+                  "Stay Competitive: Continuous Learning for Working Professionals",
+                  "Tailored Courses to Meet the Demands of Today's Industries",
+                  "Your Pathway to Professional Success Starts Here",
+                  "From Classroom to Career: Gain the Skills Employers Want",
+                  "Upgrade Your Skills, Boost Your Productivity, and Achieve More",
+                ].map((item, index) => (
+                  <div key={index} className="flex items-start space-x-2">
+                    <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
+                    <p className="text-sm text-gray-700 text-left">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <section className="text-center bg-gradient-to-r from-blue-500 to-purple-500 p-12 rounded-lg">
+              <h2 className="text-3xl font-semibold mb-4 text-white">Ready to Start Your Journey?</h2>
+             <Link href="/courses">
+             <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50">Explore Our Courses</Button>
+             </Link>
+            </section>
           </div>
         </div>
 
         <section className="py-20">
-        <div className="container mx-auto">
-        <MarketingFour/>
-        </div>
-      </section>
+          <div className="container mx-auto">
+            <MarketingFour />
+          </div>
+        </section>
 
-        <div className="container mx-auto grid grid-cols-2 lg:grid-cols-4 items-center justify-items-center gap-5 mt-14  ">
+        {/* <div className="container mx-auto grid grid-cols-2 lg:grid-cols-4 items-center justify-items-center gap-5 mt-14  ">
           <div className="flex items-center justify-center flex-col gap-5">
             <Star className="w-20 text-primary h-20 "></Star>
             <span className="inline-flex p-2 text-primary-foreground gap-2 bg-primary rounded-xl items-center">
@@ -64,7 +172,7 @@ const AboutPage = () => {
             </span>
             <Typography as="h3" className="text-primary">Excellent Service</Typography>
           </div>
-        </div>
+        </div> */}
       </section>
 
 
@@ -79,8 +187,8 @@ const AboutPage = () => {
 
           <div>
             <HeadingSubtitle title="STUDY AND RESEARCH" />
-            <Typography as="title" className="mb-5">Remarkable Research &  <HighlightedText>Outstanding</HighlightedText> Teaching Expertise</Typography>
-            <Typography as="p">Ligula ullamcorper malesuada proin et netus et malesuada fames ac turpis et malesuada fames ac ante ipsum primis in faucibus. Vestibu tium.</Typography>
+            <Typography as="title" className="mb-5 from-blue-500 to-purple-500 bg-gradient-to-r bg-clip-text text-transparent inline-block">Remarkable Research &  <HighlightedText className="  ">Outstanding</HighlightedText> Teaching Expertise</Typography>
+            <Typography as="p">Discover a world of academic excellence where groundbreaking research meets inspiring teaching. Our faculty are dedicated to fostering a culture of intellectual curiosity and academic achievement, guiding you on your path to success.</Typography>
 
             <div className="mt-10 space-y-2">
               <div className="flex items-center justify-between text-primary">
@@ -107,11 +215,13 @@ const AboutPage = () => {
         </div>
       </section>
 
-      <PremiumCourseSection className="bg-background"/>
+      <PremiumCourseSection className="bg-background" />
 
       {/* <OurTeamSection/> */}
 
-      <JoinCourseSection2/>
+      <div className="container px-4 py-24">
+      <JoinCourseSection />
+      </div>
     </div>
   )
 }

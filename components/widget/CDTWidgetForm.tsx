@@ -22,7 +22,7 @@ const CdtWidgetSubForm: React.FC<CdtWidgetSubFormProps> = ({ control }) => {
 
     return (
         <>
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-5'>
+            <div className='space-y-5'>
                 <FormField
                     control={control}
                     name="content.startTime"
@@ -72,7 +72,7 @@ const CdtWidgetSubForm: React.FC<CdtWidgetSubFormProps> = ({ control }) => {
 
             <div className='space-y-8'>
                 <div className='space-y-5'>
-                    <div className="flex item-center gap-5">
+                    <div className="">
                         <FormField
                             control={control}
                             name="settings.countDisplay.day.isActive"
@@ -100,7 +100,7 @@ const CdtWidgetSubForm: React.FC<CdtWidgetSubFormProps> = ({ control }) => {
                             )}
                         />
                     </div>
-                    <div className="flex item-center gap-5">
+                    <div className="space-y-5">
                         <FormField
                             control={control}
                             name="settings.countDisplay.hrs.isActive"
@@ -128,7 +128,7 @@ const CdtWidgetSubForm: React.FC<CdtWidgetSubFormProps> = ({ control }) => {
                             )}
                         />
                     </div>
-                    <div className="flex item-center gap-5">
+                    <div className="space-y-5">
                         <FormField
                             control={control}
                             name="settings.countDisplay.minutes.isActive"
@@ -157,7 +157,7 @@ const CdtWidgetSubForm: React.FC<CdtWidgetSubFormProps> = ({ control }) => {
                         />
                     </div>
 
-                    <div className="flex item-center gap-5">
+                    <div className="space-y-5">
                         <FormField
                             control={control}
                             name="settings.countDisplay.seconds.isActive"
@@ -190,7 +190,7 @@ const CdtWidgetSubForm: React.FC<CdtWidgetSubFormProps> = ({ control }) => {
             </div>
 
             <Separator></Separator>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="space-y-5">
                 <FormField
                     control={control}
                     name="content.position"
@@ -256,7 +256,7 @@ const CdtWidgetSubForm: React.FC<CdtWidgetSubFormProps> = ({ control }) => {
                 <Typography as="h3">Button Setting</Typography>
                 <Separator></Separator>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-center justify-items-center">
+            <div className="space-y-5">
                 <FormField
                     control={control}
                     name="settings.button.text"
@@ -303,7 +303,7 @@ const CdtWidgetSubForm: React.FC<CdtWidgetSubFormProps> = ({ control }) => {
                 <Typography as="h3">Action After Complete</Typography>
                 <Separator></Separator>
             </div>
-            <div className="flex gap-5">
+            <div className="space-y-5">
 
                 <div>
                     <FormField
@@ -344,7 +344,7 @@ const CdtWidgetSubForm: React.FC<CdtWidgetSubFormProps> = ({ control }) => {
                     />
                 </div>
 
-                <div className='flex-grow space-y-5'>
+                <div className='space-y-5'>
                     {
                         (watch.settings?.actionAfterComplete?.action === "SHOW_MESSAGE") &&
                         <>
@@ -432,13 +432,26 @@ const CdtWidgetSubForm: React.FC<CdtWidgetSubFormProps> = ({ control }) => {
                 <Typography as="h3">Appearence</Typography>
                 <Separator></Separator>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="space-y-5">
                 <FormField
                     control={control}
                     name="settings.appearance.colors.timerColor"
                     render={({ field }) => (
                         <FormItem className='w-full'>
                             <FormLabel>Timer Color</FormLabel>
+                            <FormControl>
+                                <Input type="color" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={control}
+                    name="settings.appearance.colors.timerTextColor"
+                    render={({ field }) => (
+                        <FormItem className='w-full'>
+                            <FormLabel>Timer Text Color</FormLabel>
                             <FormControl>
                                 <Input type="color" {...field} />
                             </FormControl>
@@ -478,6 +491,19 @@ const CdtWidgetSubForm: React.FC<CdtWidgetSubFormProps> = ({ control }) => {
                     render={({ field }) => (
                         <FormItem className='w-full'>
                             <FormLabel>Button Color</FormLabel>
+                            <FormControl>
+                                <Input type="color" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={control}
+                    name="settings.appearance.colors.buttonTextColor"
+                    render={({ field }) => (
+                        <FormItem className='w-full'>
+                            <FormLabel>Button Text Color</FormLabel>
                             <FormControl>
                                 <Input type="color" {...field} />
                             </FormControl>

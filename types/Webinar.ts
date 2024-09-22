@@ -24,6 +24,7 @@ export type Webinar = {
     updatedAt: Date,
     price?: number,
     currency?: string,
-    curriculum: { title: string, duration: string }[]
+    curriculum: { title: string, duration: string }[],
+    videoUrl?: string
 }
 

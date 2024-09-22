@@ -51,7 +51,7 @@ const MutateMaster = ({ type, data }: { type?: MASTER_TYPE, data?: Master }) => 
     }
 
     useEffect(() => {
-        if (Watch.name) {
+        if (Watch.name && !data?.code) {
             form.setValue('code', slugify(Watch.name).toUpperCase())
         }
     }, [Watch.name]);

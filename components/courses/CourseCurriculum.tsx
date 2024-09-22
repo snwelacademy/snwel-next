@@ -2,6 +2,7 @@
 import { nanoid } from 'nanoid'
 import Typography from '../typography'
 import { Book, Clock } from 'lucide-react'
+import { Master } from '@/types/master'
 
 const CourseCurriculum = ({
     curriculum
@@ -10,7 +11,7 @@ const CourseCurriculum = ({
         title: string,
         duration: string,
         unit?: string,
-        curriculumType?: string, 
+        curriculumType?: Master, 
         classCount?: string
     }[]
 }) => {
@@ -21,7 +22,7 @@ const CourseCurriculum = ({
                     return <div key={nanoid()} className='flex md:items-start md:justify-between justify-start flex-col md:flex-row gap-3 py-2 border-b last:border-b-0'>
                        <div className='flex-auto'>
                        <Typography as="p" className='flex-auto flex items-center gap-2'><Book className='w-4 h-4 text-primary' /><span>{cc.title}</span></Typography>
-                       <p className='text-xs text-gray-500'>{cc.curriculumType}</p>
+                       <p className='text-xs text-gray-500'>{typeof cc.curriculumType === 'string' ? cc.curriculumType : cc?.curriculumType?.name}</p>
                        
                        </div>
 

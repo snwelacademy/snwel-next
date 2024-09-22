@@ -7,7 +7,8 @@ export type CourseCategory = {
     isPremium?: boolean,
     parentCategory?: CourseCategory,
     courseCount: number,
-    slug: string
+    slug: string,
+    image?: string
 }
 
 
@@ -18,7 +19,8 @@ export const createCourseCategory = z.object({
     isPremium: z.boolean().optional().default(false),
     parentCategory: z.string().optional(),
     slug: z.string(),
-    isActive: z.boolean().optional()
+    isActive: z.boolean().optional(),
+    image: z.string().optional()
 });
 
 export const updateCourseCategory = z.object({
@@ -29,7 +31,8 @@ export const updateCourseCategory = z.object({
     isPremium: z.boolean().optional(),
     parentCategory: z.string().optional(),
     slug: z.string().optional(),
-    isActive: z.boolean().optional()
+    isActive: z.boolean().optional(),
+    image: z.string().optional()
 });
 
 export type CreateCourseCategory = z.infer<typeof createCourseCategory>;

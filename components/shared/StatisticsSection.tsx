@@ -5,6 +5,7 @@ import HighlightedText from '../typography/HighlightedHeading'
 import { Calendar, CreditCard, DiamondIcon, RocketIcon } from 'lucide-react'
 import { nanoid } from 'nanoid'
 import { Button } from '../ui/button'
+import Link from 'next/link'
 
 const content: { title: string, icon: ReactNode, subtitle: string }[] = [
     {
@@ -13,18 +14,18 @@ const content: { title: string, icon: ReactNode, subtitle: string }[] = [
         icon: <Calendar className='w-10 h-10' />
     },
     {
-        title: "Affordability",
-        subtitle: "We provide affordable courses to students in a group, job-seeker and financially back-ward students. Ask for scholarship program",
+        title: "Industry-Ready Skills",
+        subtitle: "Our courses are developed in collaboration with industry experts to ensure you gain the skills that are in high demand. ",
         icon: <DiamondIcon className='w-10 h-10' />
     },
     {
-        title: "Certification",
-        subtitle: "Professional certificates add valuable credentials to a resume by showing potential or current employers.",
+        title: "Hands-On Learning",
+        subtitle: "We believe in learning by doing. Our programs emphasize practical, hands-on training through real-world projects that equip you with the experience and confidence needed to excel in your field.",
         icon: <CreditCard className='w-10 h-10' />
     },
     {
-        title: "ISO Certification",
-        subtitle: "We provide supports for students even after completion of the course to brush-up their skills and job assistance.",
+        title: "Tailored for Success",
+        subtitle: "Whether you’re enhancing your current skills or exploring new ones, our diverse range of courses is customized to meet today’s industry requirements. ",
         icon: <RocketIcon className='w-10 h-10' />
     },
 
@@ -60,11 +61,11 @@ const StatisticsSection = () => {
             <div >
                 <HeadingSubtitle className='text-primary before:bg-primary ' title="Flexible supported learning" />
                 <Typography as="title" className='mb-7'>
-                    Expertise Across <HighlightedText>All Disciplines</HighlightedText>
+                    Why Choose <HighlightedText>SNWEL Academy ?</HighlightedText>
                 </Typography>
 
                 <Typography as="lable" className='text-primary'>
-                    Metus dictum at tempor commodo ullamcorper a lacus vestibulum.
+                At SNWEL Academy, we are dedicated to transforming the way you learn and grow in your career. 
                 </Typography>
 
                 <div className='grid gap-5 grid-cols-1 items-center md:grid-cols-2 mt-10 '>
@@ -84,7 +85,7 @@ const StatisticsSection = () => {
                 </div>
 
                 <div className='mt-5'>
-                    <Button size={'lg'} className='w-full '>Learn More</Button>
+                   <Link href="/about"> <Button size={'lg'} className='w-full '>Learn More</Button></Link>
                 </div>
             </div>
         </section>

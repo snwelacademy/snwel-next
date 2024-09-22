@@ -4,6 +4,7 @@ import { constants } from "@/config/constants";
 import { ListOptions } from "@/types/ListOptions";
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import qs from 'qs';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -33,7 +34,6 @@ export function getListOptionsFromSearchParams(searchParams: URLSearchParams): L
       filter[key] = value;
     }
   })
-  console.log({filter})
   return {page, limit, search, filter}
 }
 
@@ -69,6 +69,10 @@ export function formatDate(date: Date | string |number, formatString: string = '
   return dayjs(date).format(formatString);
 }
 
+export const formatDateInReadable = (date: string | Date): string => {
+  return dayjs(date).format('MMMM D, YYYY'); // e.g., "September 22, 2024"
+};
+
 
 export function getAvatarLetters(name: string): string {
   if (name.length >= 2) {
@@ -92,7 +96,11 @@ export const listOptionsToUrlSearchParams = (options: ListOptions<Record<string,
   }
   if (options.filter) {
       Object.entries(options.filter).forEach(([key, value]) => {
-          params.append(`${key}`, value?.toString());
+          if(Boolean(value)){
+            params.append(`${key}`, value?.toString());
+          }else{
+            params.delete(key)
+          }
       });
   }
 
@@ -110,4 +118,39 @@ export function formatToLocalCurrency(value: number | string, locale: string = '
       style: 'currency',
       currency: currency
   }).format(numericValue);
+}
+
+export function objectToQueryString(obj: any){
+  return qs.stringify(obj)
+}
+export function queryStringToObject<T=any>(queryString: string){
+  return qs.parse(queryString) as T;
+}
+
+export const prepareAddressString = (location?: {
+  address: string,
+  city: string,
+  state: string,
+  country: string
+}): string => {
+  if (!location) return '';
+
+  const { address, city, state, country } = location;
+  const addressParts = [address, city, state, country].filter(Boolean); // Filters out empty values
+  return addressParts.join(', ');
+};
+
+export const isDatePassed = (date: string | Date): boolean => {
+  const currentDate = dayjs();  // Get the current date and time
+  const inputDate = dayjs(date);  // Parse the input date
+
+  return inputDate.isBefore(currentDate);  // Returns true if the input date is before the current date (i.e., passed)
+};
+
+
+export function extractYouTubeVideoId(url: string): string | null {
+  const regex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = url.match(regex);
+
+  return match ? match[1] : null;
 }

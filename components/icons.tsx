@@ -43,7 +43,8 @@ import {
     Clock4,
     Briefcase,
     LocateIcon,
-    TabletSmartphone
+    TabletSmartphone,
+    GalleryThumbnails
   } from "lucide-react";
   
   export type Icon = LucideIcon;
@@ -109,7 +110,9 @@ import {
     webinar: Podcast,
     webinarEnroll: BookUser,
     category: Shapes,
-    component: Component
+    component: Component,
+    jobApplications: FileText,
+    gallery: GalleryThumbnails
   };
 
 

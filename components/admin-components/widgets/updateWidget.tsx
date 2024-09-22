@@ -8,6 +8,7 @@ import MutateWidgetForm from '@/components/widget/MutateWidgetForm';
 import { fetchWidgetById } from '@/services/admin/admin-widget-service';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
+import WidgetEditor from './WidgetEditor';
 
 
 
@@ -21,18 +22,10 @@ const UpdateWidgetPage = () => {
 
   return (
     <div className="flex-1 space-y-4  p-4 md:p-8 pt-6">
-      <BreadCrumb items={breadcrumbItems} />
-
-      <div className="flex items-start justify-between">
-        <Heading
-          title={"Update Widget"}
-          description={'Update Widget'}
-        />
-      </div>
-      <Separator />
+      
 
       {
-        isLoading ? <Loader type={'default'} /> : !data ? <div>Invalid Webinar</div> : <MutateWidgetForm widgetData={data} />
+        isLoading ? <Loader type={'default'} /> : !data ? <div>Invalid Webinar</div> : <WidgetEditor widgetData={data} type={data.type} />
       }
     </div>
   )

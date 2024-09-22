@@ -4,6 +4,7 @@
 import { getMe, login } from '@/services/auth-service';
 import { CurrentUser } from '@/types/User';
 import { useLocalStorage } from '@uidotdev/usehooks';
+import { useSession } from 'next-auth/react';
 import { createContext, useContext, useEffect } from 'react';
 
 type AuthCredentials = {
@@ -21,13 +22,11 @@ type AuthContext = {
 
 const AuthContext = createContext<AuthContext>({} as AuthContext);
 
-export const useAuth = () => {
-    return useContext(AuthContext);
-};
 
 
 
 export const AuthProvider = ({ children }: { children: any }) => {
+    const {data: user} = useSession();
     const [currentUser, setUser] = useLocalStorage<CurrentUser | undefined | null>('user')
     const [token, setToken] = useLocalStorage<string | undefined>('token');
     const signIn = async (userData: { email: string, password: string }) => {
@@ -42,6 +41,7 @@ export const AuthProvider = ({ children }: { children: any }) => {
     };
 
    const refreshAuth = async() => {
+    console.log("Refresh auth")
             const user = await getMe(token);
             if(!user) {
                 signOut()
@@ -57,8 +57,8 @@ export const AuthProvider = ({ children }: { children: any }) => {
     };
 
     useEffect(() => {
-        refreshAuth();
-    }, [])
+        // refreshAuth();
+    }, [user])
 
     return (
         <AuthContext.Provider value={{ token, currentUser, signIn, signOut, refreshAuth }}>

@@ -18,7 +18,6 @@ const FadeInStaggered = ({ children, className }: {children: any, className?: st
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            console.log({entry})
             // Start the animation when the component is in view
             animate();
             // Disconnect the observer after animation is triggered once

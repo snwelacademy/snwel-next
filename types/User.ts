@@ -1,5 +1,5 @@
 export type CurrentUser = {
-    _id: string,
+    id: string,
     name: string,
     email: string,
     profilePic?: string,

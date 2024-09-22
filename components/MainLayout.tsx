@@ -15,15 +15,13 @@ const MainLayout = ({
         <div className='relative'>
             {/* <TopStrip /> */}
             <nav className={cn([
-                'bg-transparent z-50 sticky top-0',
+                'bg-transparent z-50 sticky top-0 ',
             ])}>
                 <MainNavbar />
             </nav>
 
             <div>
-                <React.Suspense fallback={<PageLoader/>}>
-                    {children}
-                </React.Suspense>
+                {children}
             </div>
 
             <footer className='bg-primary/20'><Footer /></footer>

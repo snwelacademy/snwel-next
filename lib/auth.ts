@@ -9,7 +9,8 @@ const authOptions: AuthOptions = {
             const u = user as any;
             // console.log("JWT",{token, user})
             if(user){
-                token.roles = u?.roles
+                token.roles = u?.roles,
+                token.id = u?.id
                 return {
                     ...token,
                     jwt: u.jwt
@@ -19,7 +20,8 @@ const authOptions: AuthOptions = {
         },
         async session({ session, token, user }) {
             session.user.roles = token?.roles as string[];
-            session.user.jwt = token?.jwt as string
+            session.user.jwt = token?.jwt as string,
+            session.user.id = token?.id as string
             // console.log("SESSION: ",{token, user, session})
             return session
         }
@@ -42,10 +44,11 @@ const authOptions: AuthOptions = {
                     headers
                 });
 
+                console.log("USER DATA", res);
                 if(!res.ok) return null;
 
                 const {token, ...rest} = await res.json()
-                // console.log("USER DATA", rest);
+
                 return {
                     jwt: token, 
                     ...rest

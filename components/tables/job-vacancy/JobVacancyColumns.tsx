@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { CellActionJobVacancy } from "./CellActionJobVacancy";
 import { formatDate } from "@/lib/utils";
 import { JobVacancyType } from "@/types/JobVacancyTypes";
+import ToggleJobActive from "./ToggleJobActive";
 
 export const JobVacancyColumns: ColumnDef<JobVacancyType>[] = [
   {
@@ -57,6 +58,11 @@ export const JobVacancyColumns: ColumnDef<JobVacancyType>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <CellActionJobVacancy data={row.original} />,
+    cell: ({ row }) =>(
+      <div className="flex items-center gap-2 ">
+        <ToggleJobActive data={row.original}/>
+         <CellActionJobVacancy data={row.original} />
+      </div>
+    ),
   },
 ];

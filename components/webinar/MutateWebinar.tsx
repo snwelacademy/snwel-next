@@ -19,8 +19,9 @@ import { cn, formatDate } from '@/lib/utils'
 import { CalendarIcon } from '@radix-ui/react-icons'
 import { Calendar } from '../ui/calendar'
 import UserSelectorFormElement from '../shared/UserSelectorFormElement'
-import { useAuth } from '../auth/AuthProvider'
+
 import { createWebinar, updateWebinar } from '@/services/admin/webinar-service'
+import { useSession } from 'next-auth/react'
 
 const createWebinarSchema = z.object({
     thumbnail: z.string().optional(),
@@ -29,23 +30,24 @@ const createWebinarSchema = z.object({
     shortDescription: z.string(),
     content: z.string(),
     startDate: z.date(),
-    hosts: z.array(z.string()),
+    hosts: z.array(z.string()).optional().default([]),
     currency: z.string().optional(),
     price: z.number().default(0),
     createdBy: z.string(),
-    coverImage: z.string().optional()
+    coverImage: z.string().optional(),
+    videoUrl: z.string().optional()
 })
 
 
 const MutateWebinar = ({ data }: { data?: Webinar }) => {
-    const { currentUser } = useAuth()
+    const { data:currentUser } = useSession()
     const [open, setOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const { toast } = useToast()
     const form = useForm<z.infer<typeof createWebinarSchema>>({
         defaultValues: {
             currency: 'INR',
-            createdBy: currentUser?._id,
+            createdBy: currentUser?.user.id,
             price: 0
         },
         resolver: zodResolver(createWebinarSchema)
@@ -93,25 +95,31 @@ const MutateWebinar = ({ data }: { data?: Webinar }) => {
     }, [data])
 
     useEffect(() => {
-        console.log({errors: form.formState.errors})
+      form.setValue('createdBy', currentUser?.user.id||"")
+    }, [currentUser])
+    
+
+    
+    useEffect(() => {
+      console.log(form.formState.errors, currentUser)
     }, [form.formState.errors])
     
 
-
     return (
         <div>
-            <AfterCourseCreatedModal
+            {/* <AfterCourseCreatedModal
                 isOpen={open}
                 onClose={() => setOpen(false)}
                 onAddNew={onAddNew}
                 loading={loading}
-            />
+            /> */}
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleSubmit)}>
                     <div className='mx-auto'>
                         <Card>
                             <CardHeader />
                             <CardContent className='space-y-4'>
+                           
                                <div className="flex items-center gap-5">
                                <div className='rounded-2xl w-full border-dashed border-gray-600 py-10 aspect-square max-w-sm border-2 flex items-center justify-center bg-center bg-cover' style={{ backgroundImage: `url(${Watch.thumbnail})` }}>
                                     {
@@ -238,6 +246,19 @@ const MutateWebinar = ({ data }: { data?: Webinar }) => {
                                                 <FormLabel>Webinar Price</FormLabel>
                                                 <FormControl>
                                                     <Input type='number' placeholder="Webinar Price" {...field} onChange={val => field.onChange(Number(val.target.value))} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="videoUrl"
+                                        render={({ field }) => (
+                                            <FormItem className='w-full'>
+                                                <FormLabel>Intro Video URL (YouTube)</FormLabel>
+                                                <FormControl>
+                                                    <Input type='url' placeholder="https://youtu.be/O98fT..." {...field} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>

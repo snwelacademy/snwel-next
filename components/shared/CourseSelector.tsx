@@ -14,21 +14,25 @@ import { useSearchParams } from "next/navigation";
 
 const CourseSelector = ({
     value,
-    onChange
+    onChange,
+    filter
 }: {
     onChange?: (value?: string) => void,
-    value?: string
+    value?: string,
+    filter?: {
+        qualifications?: string,
+        trainingModes?: string
+    }
 }) => {
-    const searchParams = useSearchParams();
     const {data} = useQuery({
-        queryKey: ['client/courses'],
-        queryFn:  () => getAllCourses(getListOptionsFromSearchParams(searchParams))
+        queryKey: ['client/courses', filter],
+        queryFn:  () => getAllCourses({filter})
     })
     return (
         <Select onValueChange={onChange} defaultValue={value}>
             
             <SelectTrigger className="w-full">
-                <SelectValue placeholder="Choose Courses"/>
+                <SelectValue placeholder="Choose Courses" />
             </SelectTrigger>
             <SelectContent>
                 {

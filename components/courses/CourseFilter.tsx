@@ -36,7 +36,6 @@ const CourseFilter = ({
 
     useEffect(() => {
         onChange?.(watchFields)
-        console.log({watchFields})
     }, [watchFields.category, watchFields.search])
     
     return (

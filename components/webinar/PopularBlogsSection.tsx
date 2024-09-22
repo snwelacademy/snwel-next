@@ -1,3 +1,5 @@
+'use client'
+
 import { getAllBlogs } from "@/services/blog-service"
 import Typography from "../typography";
 import HeadingSubtitle from "../shared/SectionLable";

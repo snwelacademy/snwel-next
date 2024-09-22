@@ -31,7 +31,6 @@ const CourseStatusChanger: React.FC<StatusChangerProps> = ({ courseId, status })
                 variant: 'success'
             });
         } catch (error) {
-            console.error('Error updating status:', error);
             toast({
                 title: "Error",
                 description: "Failed to update status. Please try again.",
