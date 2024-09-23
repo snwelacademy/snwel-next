@@ -19,7 +19,7 @@ const PremiumCourseSectionUi = ({
 } : PremiumCourseProps) => {
   return (
     <section className={cn(['py-20 bg-primary/5 px-4', className])}>
-            <div className='text-primary flex items-center justify-center flex-col max-w-4xl mx-auto text-center mb-10'>
+            <div className='text-primary flex items-center justify-center flex-col max-w-4xl mx-auto text-center mb-10 '>
                 <HeadingSubtitle title='LINKING UP EDUCATION' className='before:bg-primary after:bg-primary text-primary' />
                 <Typography as="title" className='mb-7'>Explore Our <HighlightedText>Job Guaranteed Courses</HighlightedText></Typography>
                 <Typography as="p" >
@@ -27,7 +27,7 @@ const PremiumCourseSectionUi = ({
                 </Typography>
             </div>
 
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center justify-items-center container gap-10 '>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center justify-items-center gap-10 '>
                
                 {
                     

@@ -111,7 +111,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <FormField
             control={form.control}
             name={`occupation`}
@@ -152,7 +152,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <FormField
             control={form.control}
             name="courseId"
@@ -218,7 +218,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
           )}
         />
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3  gap-3">
           <FormField
             control={form.control}
             name="location.country"

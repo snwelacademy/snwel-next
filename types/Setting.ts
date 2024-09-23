@@ -126,7 +126,6 @@ export const MenuItemSchema = z.object({
     index: z.number().nullable().optional(),
     parentId: z.string().nullable().optional(),
     depth: z.number().optional()
-    
 })
 
 export const MenuSchemaWithChildren = MenuItemSchema.merge(z.object({children: z.array(MenuItemSchema).optional().default([])}))
