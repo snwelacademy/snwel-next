@@ -179,12 +179,12 @@ export function AnimatedGalleryPage() {
                                             initial={{ opacity: 0, scale: 0.8 }}
                                             animate={{ opacity: 1, scale: 1 }}
                                             transition={{ duration: 0.3, delay: index * 0.1 }}
-                                            className="relative aspect-video group"
+                                            className="relative aspect-video group overflow-hidden rounded-lg"
                                         >
 
                                             <motion.img
                                                 src={photo.link}
-                                                className="rounded-lg"
+                                                className=" rounded-lg max-w-full object-fill object-center"
                                                 whileHover={{ scale: 1.05 }}
                                                 transition={{ duration: 0.2 }}
                                             />

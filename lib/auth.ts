@@ -56,6 +56,9 @@ const authOptions: AuthOptions = {
             }
         })
     ],
+    pages: {
+        signIn: '/auth/admin/signin'
+    }
 }
 
 /**
