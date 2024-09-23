@@ -45,19 +45,19 @@ const AboutPage = () => {
               <div className="space-y-4">
                 <h2 className="text-3xl font-semibold text-blue-700">Our Mission</h2>
                 <p className="text-gray-700">
-                  At SNWEL Academy, we go beyond traditional training methods by focusing on knowledge and skill-based learning that aligns with real-world career goals. Our programs emphasize hands-on practical training and industry-specific projects, ensuring that our students are well-prepared for the demands of today's competitive job market.
+                  At SNWEL Academy&apos; we go beyond traditional training methods by focusing on knowledge and skill-based learning that aligns with real-world career goals. Our programs emphasize hands-on practical training and industry-specific projects&apos; ensuring that our students are well-prepared for the demands of today's competitive job market.
                 </p>
                 <p className="text-gray-700">
-                  Our mission is to empower you to achieve further professional success. In an environment where competition is fierce and challenges are greater than ever, SNWEL Academy stands out as a crucial partner in your career development.
+                  Our mission is to empower you to achieve further professional success. In an environment where competition is fierce and challenges are greater than ever&apos; SNWEL Academy stands out as a crucial partner in your career development.
                 </p>
               </div>
               <div className="space-y-4">
                 <h2 className="text-3xl font-semibold text-purple-700">What We Offer</h2>
                 <p className="text-gray-700">
-                  We offer a wide range of engineering and technology courses tailored to meet industry needs. Delivered in modern, innovative classrooms, our training solutions are designed to truly meet your professional requirements.
+                  We offer a wide range of engineering and technology courses tailored to meet industry needs. Delivered in modern&apos; innovative classrooms&apos; our training solutions are designed to truly meet your professional requirements.
                 </p>
                 <p className="text-gray-700">
-                  Whether you aim to enhance your skills, increase your productivity, or secure a high-paying job at a top multinational company, SNWEL Academy is here to support your journey.
+                  Whether you aim to enhance your skills&apos; increase your productivity&apos; or secure a high-paying job at a top multinational company&apos; SNWEL Academy is here to support your journey.
                 </p>
               </div>
             </section>

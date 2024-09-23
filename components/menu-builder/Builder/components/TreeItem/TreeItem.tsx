@@ -255,6 +255,8 @@ export const TreeItem = forwardRef<HTMLDivElement, Props>(
   }
 );
 
+TreeItem.displayName = "TreeItem";
+
 const RecursiveItem = (props: {
   child: TreeItemType;
   nDepth: number;
