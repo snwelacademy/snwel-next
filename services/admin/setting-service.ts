@@ -5,6 +5,7 @@ import { ListOptions } from "@/types/ListOptions";
 import { AxiosResponse } from 'axios';
 import { DEFAULT_LIST_OPTIONS } from '@/types/ListOptions';
 import { CreateSettingInput, Setting, UpdateSettingInput } from "@/types/Setting";
+import { constants } from "@/config/constants";
 
 export async function getAllSettings(options?: ListOptions) {
     try {
@@ -15,6 +16,24 @@ export async function getAllSettings(options?: ListOptions) {
     } catch (error) {
         console.log("Error: getAllSettings: ", error);
         throw new Error("Error in fetching settings list. Please try again.");
+    }
+}
+
+export async function fetchAllSettings(){
+    try {
+        const url = new URL('settings', constants.apiBaseUrl);
+        const res = await fetch(url);
+        const data = await res.json() as ApiResponse<ListResponse<Setting>>;
+        return {
+            success: true,
+            data: data.data
+        }
+
+    } catch (error) {
+        return {
+            success: false,
+            data: null
+        }
     }
 }
 
