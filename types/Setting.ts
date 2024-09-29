@@ -79,9 +79,13 @@ export const EmailSettingTypeSchema = SettingSchema.merge(z.object({
     code: z.enum([SETTINGS.EMAIL]),
     data: z.object({
         [EMAIL_TRANSPORTER.NODEMAILER]: z.object({
-            appKey: z.string(),
-            authKey: z.string(),
-            message: z.string().optional()
+            host: z.string(),
+            port: z.string(),
+            secure: z.boolean(),
+            auth: z.object({
+                user: z.string(),
+                pass: z.string()
+            })
         }).optional(),
     })
 }));

@@ -14,6 +14,7 @@ import FooterCopyright from '../FooterCopyright'
 import { getSetting } from '@/services/admin/setting-service'
 import { SETTINGS } from '@/types'
 import { SocialMediaLinks } from '../SocialMediaLinks'
+import FooterUi from './FooterUi'
 
 const socialIcons: { link: string, icon: ReactNode }[] = [
     {
@@ -64,9 +65,13 @@ const Footer = () => {
         queryKey: ['admin/setting/general'],
         queryFn: () => getSetting<any>(SETTINGS.GENERAL)
     })
+    const { data: builderData, isLoading:isBuilderLoading } = useQuery({
+        queryKey: ['admin/setting/menu-builder'],
+        queryFn: () => getSetting<any>(SETTINGS.MENUBUILDER)
+    })
     return (
        <>
-        <div className='grid grid-cols-1 items-start md:grid-cols-2 lg:grid-cols-3 justify-center gap-5 py-10 container mx-auto text-white'>
+        {/* <div className='grid grid-cols-1 items-start md:grid-cols-2 lg:grid-cols-3 justify-center gap-5 py-10 container mx-auto text-white'>
             <div className='space-y-3'>
                 <div><Logo /></div>
                 <Typography as="p" className='text-muted'>We are passionate about bridging the gap between academic knowledge and practical industry applications. We achieve this by:</Typography>
@@ -95,7 +100,7 @@ const Footer = () => {
                         })
                     }
                 </div>
-            </div>
+            </div> */}
             {/* <div>
                 <Typography as="h4" className=''>Our NewsLetter</Typography>
                 <div className='flex flex-col items-start mt-4'>
@@ -103,8 +108,9 @@ const Footer = () => {
                 </div>
             </div> */}
 
-        </div>
-            <FooterCopyright companyName={settingData?.data.siteName}  />
+        {/* </div>
+            <FooterCopyright companyName={settingData?.data.siteName}  /> */}
+            <FooterUi footerMenu={builderData?.data.footerMenu} socialLinks={settingData?.data.socialLinks} />
        </>
     )
 }

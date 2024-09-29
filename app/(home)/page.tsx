@@ -5,8 +5,6 @@ import Typography from "@/components/typography";
 import { fetchMaster } from "@/services/admin/admin-master";
 
 
-export const revalidate = 3600;
-
 const HomePage = async () => {
   const master = await fetchMaster("HOME-PAGE");
 
@@ -82,5 +80,7 @@ const HomePage = async () => {
   //   </div>
   // )
 }
+
+
 
 export default HomePage

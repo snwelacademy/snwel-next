@@ -92,4 +92,16 @@ export const navItems: NavItemWithOptionalChildren[] = [
     icon: "kanban",
     label: "kanban",
   },
+  {
+    title: "App Center",
+    href: "/admin/app-center",
+    icon: "apps",
+    label: "App Center",
+  },
+  {
+    title: "Snwel Enquiries",
+    href: "/admin/snwel-enquiry",
+    icon: "snwelEnquiry",
+    label: "Snwel Enquiries",
+  },
 ];

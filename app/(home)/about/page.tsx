@@ -215,7 +215,8 @@ const AboutPage = () => {
         </div>
       </section>
 
-      <PremiumCourseSection className="bg-background" />
+    
+      <PremiumCourseSection className="bg-background container mx-auto" />
 
       {/* <OurTeamSection/> */}
 

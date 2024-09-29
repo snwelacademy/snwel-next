@@ -41,7 +41,7 @@ const formSchema = z.object({
     country: z.string({ message: 'Country Required' })
   }),
   extra: z.object({
-    agree: z.boolean(),
+    agree: z.boolean({message: "Consent is required!"}),
   }),
   qualification: z.string(),
   mode: z.string(),
@@ -99,7 +99,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
     <Form {...form} >
       <form onSubmit={form.handleSubmit(onSubmit)} className={cn(["space-y-3 rounded-2xl p-4 md:p-10", className])}>
         <FormField
-          control={form.control}
+          
           name="name"
           render={({ field }) => (
             <FormItem>
@@ -113,7 +113,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <FormField
-            control={form.control}
+            
             name={`occupation`}
             render={({ field }) => (
               <FormItem className='max-w-full'>
@@ -132,7 +132,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
             )}
           />
           <FormField
-            control={form.control}
+            
             name={`qualification`}
             render={({ field }) => (
               <FormItem>
@@ -154,7 +154,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <FormField
-            control={form.control}
+            
             name="courseId"
             render={({ field }) => (
               <FormItem>
@@ -168,7 +168,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
           />
 
           <FormField
-            control={form.control}
+            
             name={`mode`}
             render={({ field }) => (
               <FormItem className='max-w-full'>
@@ -189,7 +189,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
         </div>
 
         <FormField
-          control={form.control}
+          
           name="email"
           render={({ field }) => (
             <FormItem>
@@ -205,7 +205,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
 
 
         <FormField
-          control={form.control}
+          
           name="phone"
           render={({ field }) => (
             <FormItem>
@@ -220,7 +220,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
 
         <div className="grid grid-cols-1 md:grid-cols-3  gap-3">
           <FormField
-            control={form.control}
+            
             name="location.country"
             render={({ field }) => (
               <FormItem>
@@ -233,7 +233,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
             )}
           />
           <FormField
-            control={form.control}
+            
             name="location.state"
             render={({ field }) => (
               <FormItem>
@@ -246,7 +246,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
             )}
           />
           <FormField
-            control={form.control}
+            
             name="location.city"
             render={({ field }) => (
               <FormItem>
@@ -261,8 +261,6 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
         </div>
 
         <FormField
-
-          control={form.control}
           name="extra.agree"
           render={({ field }) => (
             <FormItem>
