@@ -1,8 +1,9 @@
 // import AnimatedComponent from "@/components/animate/AnimatedComponent";
+import dynamic from "next/dynamic";
 import { conf } from "@/components/page-builder/builder";
-import RenderPage from "@/components/page-builder/RenderPage";
 import Typography from "@/components/typography";
 import { fetchMaster } from "@/services/admin/admin-master";
+const RenderPage = dynamic(() => import('@/components/page-builder/RenderPage'))
 
 
 const HomePage = async () => {

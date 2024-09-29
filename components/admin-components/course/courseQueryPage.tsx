@@ -28,7 +28,7 @@ const CourseQueryPage = () => {
 
       <div className="flex items-start justify-between">
         <Heading
-          title={`Enrollments (${totalUsers})`}
+          title={`Enrollments (${data?.total||0})`}
           description="Manage All Course Enrollments List"
         />
 
@@ -45,7 +45,7 @@ const CourseQueryPage = () => {
         columns={columns as any[]}
         total={data?.total||0}
         data={data?.docs||[]}
-        pageCount={data?.total ? getTotalPages(data.total, data.limit): 0}
+        pageCount={data?.total ? getTotalPages(data.total, data.limit): 1}
         filter={[
           {
             lable: 'Verified',

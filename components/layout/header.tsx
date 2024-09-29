@@ -17,7 +17,7 @@ export default function Header() {
       }
     ])}>
       <nav className=" flex items-center justify-between px-4">
-        <div className="hidden lg:block">
+        <div className="block">
           <Link
             href={"/"}
             target="_blank"

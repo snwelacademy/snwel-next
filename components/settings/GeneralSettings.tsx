@@ -35,7 +35,8 @@ const GeneralSettingForm = () => {
                     address: '',
                     city: '',
                     state: '',
-                    country: ''
+                    country: '',
+                    url: ''
                 },
                 contacts: {
                     phone: '',
@@ -197,6 +198,19 @@ const GeneralSettingForm = () => {
                                             <FormLabel>Country</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="Country" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="data.location.url"
+                                    render={({ field }) => (
+                                        <FormItem className='w-full'>
+                                            <FormLabel>Direction URL</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="google map url" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>

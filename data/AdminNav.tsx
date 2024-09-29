@@ -59,7 +59,7 @@ export default function AdminSidebar() {
   return (
     <motion.div 
       className={cn(
-        "flex flex-col bg-background border-r h-screen",
+        "flex flex-col bg-background border-r h-screen pb-4 relative",
         expanded ? "w-64" : "w-20"
       )}
       animate={{ width: expanded ? 256 : 80 }}
@@ -72,15 +72,14 @@ export default function AdminSidebar() {
             exit={{ opacity: 0 }}
             className="flex items-center gap-2"
           >
-            <img src="/placeholder.svg" alt="Logo" className="w-8 h-8" />
             <span className="font-bold text-xl">Admin</span>
           </motion.div>
         )}
         <Button
-          variant="ghost"
+          variant="outline"
           size="icon"
           onClick={() => setExpanded(!expanded)}
-          className="ml-auto"
+          className="ml-auto absolute top-0  right-0"
         >
           {expanded ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
         </Button>

@@ -1,9 +1,7 @@
 
 import MainNavbar from './navbar/MainNavbar'
 import Footer from './footer'
-import TopStrip from './shared/TopStrip'
 import React, { ReactNode } from 'react'
-import PageLoader from './PageLoader'
 import {cn} from '../lib/utils'
 const MainLayout = ({
     children

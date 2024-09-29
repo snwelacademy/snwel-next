@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Facebook, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react'
+import { GeneralSettingType } from '@/types'
+import { prepareAddressString } from '@/lib/utils'
+import { formatIndianPhoneNumber } from '@/lib/phoneNumberFormat'
 
 type MenuItem = {
   id: string
@@ -24,7 +27,7 @@ type SocialLinks = {
 
 type FooterProps = {
   footerMenu: MenuItem[]
-  socialLinks: SocialLinks
+  settings: any
 }
 
 const RenderMenuItem = ({ item }: { item: MenuItem }) => (
@@ -42,10 +45,12 @@ const RenderMenuItem = ({ item }: { item: MenuItem }) => (
   </li>
 )
 
-export default function Footer({ footerMenu, socialLinks }: FooterProps) {
+export default function Footer({ footerMenu, settings }: FooterProps) {
   const [isVisible, setIsVisible] = useState(false)
   const footerRef = useRef<HTMLElement>(null)
-
+  const socialLinks = settings?.data.socialLinks;
+  const location = settings?.data.location;
+  const contact = settings?.data.contacts;
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -118,17 +123,17 @@ export default function Footer({ footerMenu, socialLinks }: FooterProps) {
             <h3 className="text-white text-lg font-semibold mb-4">Contact Us</h3>
             <ul className="space-y-2">
               <li>
-                <a href="mailto:info@snwelacademy.com" className="hover:text-white transition-colors">
-                  info@snwelacademy.com
+                <a href={`mailto:${contact?.email || "#"}`} className="hover:text-white transition-colors">
+                  {contact?.email}
                 </a>
               </li>
               <li>
-                <a href="tel:+1234567890" className="hover:text-white transition-colors">
-                  +1 (234) 567-890
+                <a href={`tel:${contact?.phone||''}`} className="hover:text-white transition-colors">
+                {contact?.phone ? formatIndianPhoneNumber(contact?.phone):''}
                 </a>
               </li>
               <li>
-                <span>123 Academy St, City, Country</span>
+                <span>{prepareAddressString(location)}</span>
               </li>
             </ul>
           </div>

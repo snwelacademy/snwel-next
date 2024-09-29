@@ -110,7 +110,7 @@ const Footer = () => {
 
         {/* </div>
             <FooterCopyright companyName={settingData?.data.siteName}  /> */}
-            <FooterUi footerMenu={builderData?.data.footerMenu} socialLinks={settingData?.data.socialLinks} />
+            <FooterUi footerMenu={builderData?.data.footerMenu} settings={settingData} />
        </>
     )
 }

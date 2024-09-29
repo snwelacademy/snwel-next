@@ -32,7 +32,7 @@ const CoursePage = () => {
 
       <div className="flex items-start justify-between">
         <Heading
-          title={`Courses (${totalUsers})`}
+          title={`Courses (${data?.total||0})`}
           description="Manage All Courses List"
         />
 
@@ -52,9 +52,9 @@ const CoursePage = () => {
         searchKey="title"
         pageNo={data?.currentPage||1}
         columns={columns}
-        totalUsers={totalUsers}
+        totalUsers={data?.total||0}
         data={data?.docs||[]}
-        pageCount={data?.total ? getTotalPages(data.total, data.limit): 0}
+        pageCount={data?.total ? getTotalPages(data.total, data.limit): 1}
       />
       }
     </div>

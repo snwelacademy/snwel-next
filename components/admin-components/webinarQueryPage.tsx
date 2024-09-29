@@ -32,7 +32,7 @@ const WebinarPage = () => {
 
       <div className="flex items-start justify-between">
         <Heading
-          title={`Webinars (${totalUsers})`}
+          title={`Webinars (${data?.total||0})`}
           description="Manage All Webinar List"
         />
 
@@ -54,7 +54,7 @@ const WebinarPage = () => {
         columns={[]}
         total={data?.total||0}
         data={data?.docs||[]}
-        pageCount={data?.total ? getTotalPages(data.total, data.limit): 0}
+        pageCount={data?.total ? getTotalPages(data.total, data.limit): 1}
       />
       }
     </div>

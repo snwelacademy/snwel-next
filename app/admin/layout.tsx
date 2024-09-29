@@ -20,10 +20,10 @@ async function AdminLayout({children}: {children: any}) {
     
      <Header />
     
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden pt-16">
       {/* <Sidebar /> */}
       <AdminSidebar/>
-      <main className="w-full pt-16 overflow-auto relative">
+      <main className="w-full overflow-auto relative">
         <React.Suspense fallback={<PageLoader/>}>
         {children}
         </React.Suspense>

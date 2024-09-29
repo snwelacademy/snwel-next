@@ -50,7 +50,7 @@ const GeneralEnquiryPage = () => {
           columns={GeneralEnquiryColumn as any}
           total={data?.total || 0}
           data={data?.docs || []}
-          pageCount={data?.total ? getTotalPages(data.total, data.limit) : 0}
+          pageCount={data?.total ? getTotalPages(data.total, data.limit) : 1}
         />
       }
     </div>
