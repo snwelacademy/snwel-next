@@ -139,9 +139,9 @@ export default function BlogPage() {
                                                 />
                                             </div>
                                             <div className="p-6">
-                                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{blogs?.docs[0].category?.name || "Uncategorized"} • {formatDateInReadable(blogs?.docs[0].createdAt || "")}</p>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{post.category?.name || "Uncategorized"} • {formatDateInReadable(post.createdAt || "")}</p>
                                                 <h4 title={post.title} className="text-xl font-semibold mb-2 line-clamp-1">{post.title}</h4>
-                                                <Link href={`/blogs/${blogs?.docs[0].slug || blogs?.docs[0]._id}`}>
+                                                <Link href={`/blogs/${post.slug || post._id}`}>
                                                     <Button variant="ghost" className="group">
                                                         Read More <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                                                     </Button>

@@ -24,7 +24,7 @@ const BlogCard = ({
                 <Typography as="h3" className='line-clamp-2'>{blog.title}</Typography>
                 <Typography as="p" className='line-clamp-2' >{blog.excerpt}</Typography>
                 <div className=''>
-                    <Link href={`/blogs/${blog.slug}`} ><Button>Read More</Button></Link>
+                    <Link href={`/blogs/${blog.slug||blog._id}`} ><Button>Read More</Button></Link>
                 </div>
             </div>
         </div>
