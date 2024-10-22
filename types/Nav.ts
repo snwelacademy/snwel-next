@@ -19,6 +19,11 @@ export interface NavItemWithOptionalChildren extends NavItem {
   items?: NavItemWithOptionalChildren[];
 }
 
+export interface GroupedNavItems {
+  group?: string,
+  items: NavItemWithOptionalChildren
+}
+
 export interface FooterItem {
   title: string;
   items: {

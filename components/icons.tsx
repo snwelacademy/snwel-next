@@ -46,7 +46,9 @@ import {
     TabletSmartphone,
     GalleryThumbnails,
     AppWindow,
-    Table
+    Table,
+    PenTool,
+    Tag
   } from "lucide-react";
   
   export type Icon = LucideIcon;
@@ -116,7 +118,9 @@ import {
     jobApplications: FileText,
     gallery: GalleryThumbnails,
     apps: AppWindow,
-    snwelEnquiry: Table
+    snwelEnquiry: Table,
+    blog: PenTool,
+    blogCategory: Tag
   };
 
 

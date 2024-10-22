@@ -1,16 +1,7 @@
 'use client'
 import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import CustomVideo from '@/lib/CustomVideoBlot';
 import { useRef } from 'react';
-
-const CustomVideoHandler = (quill: any) => {
-  const url = prompt('Enter video URL:');
-  if (url) {
-    const range = quill.getSelection();
-    quill.insertEmbed(range.index, 'customVideo', { url: url });
-  }
-};
 
 
 const Editor = ({ value, onChange }: { value?: string, onChange?: (value: string) => void }) => {

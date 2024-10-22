@@ -6,6 +6,8 @@ import { ListOptions } from "@/types/ListOptions";
 import { AxiosResponse } from 'axios';
 import { CourseEnrollment, CreateCourseQuery } from '@/types/CourseEnrollment';
 import { objectToQueryString } from '@/lib/utils';
+import dayjs from 'dayjs';
+import XLSX from 'json-as-xlsx';
 
 export async function getAllEnrollments (options?: ListOptions) {
     try {
@@ -56,6 +58,48 @@ export async function getEnrollment (id: string) {
     } catch (error) {
         console.log("Error: deleteCourse: ", error);
         throw new Error("Error in deleting Enrollment. Please try again")
+    }
+}
+
+export async function exportAllJobApplications(options?: ListOptions) {
+    try {
+        const data = await getAllEnrollments(options) // Adjust if needed based on your API response
+
+        // Prepare the data for export
+        const jobApplications = [
+            {
+                sheet: "Job Applications",
+                columns: [
+                    { label: "Course", value: "course" },
+                    { label: "Name", value: "name" },
+                    { label: "Email", value: "email" },
+                    { label: "Job Title", value: (row: any) => row.jobId.title }, // Custom format
+                    { label: "Status", value: "status" },
+                    { label: "Resume", value: "resumeUrl" },
+                    { label: "Cover Letter", value: "coverLetter" },
+                    { label: "Applied Date", value: (row: any) => dayjs(row.appliedDate).format('MM/DD/YYYY') }, // Format date
+                ],
+                content: data.docs.map(enrollments => ({
+                    course: enrollments.courseId.title,
+                    name: enrollments.userId.name,
+                    email: enrollments.userId.email,
+                    
+                })),
+            }
+        ];
+        const optionsXLSX = {
+            fileName: `job_applications_${options?.page || 1}`,
+            sheet: 'Job Applications',
+            tableOptions: {
+            },
+        };
+
+        // Create the XLSX file
+        const blob = XLSX(jobApplications, optionsXLSX);
+        return blob;
+    } catch (error) {
+        console.error("Error fetching job enrollments list: ", error);
+        throw new Error("Failed to fetch job enrollments list. Please try again.");
     }
 }
 

@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useDebounce } from "use-debounce"
 import { ChevronDown, ChevronUp, Download, Loader2, Trash2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -56,6 +55,7 @@ import { useToast } from "../ui/use-toast"
 import { formatDateInReadable } from "@/lib/utils"
 import { DatePickerWithRange } from "../ui/date-range"
 import { DateRangePicker } from "../ui/date-range-picker"
+import { useDebounce } from "@uidotdev/usehooks"
 
 
 
@@ -63,7 +63,7 @@ import { DateRangePicker } from "../ui/date-range-picker"
 export default function JobApplicationTable() {
 const [exporting, setExporting] = useState(false)
   const [search, setSearch] = useState("")
-  const [debouncedSearch] = useDebounce(search, 300)
+  const debouncedSearch = useDebounce(search, 300)
   const [sortField, setSortField] = useState<keyof JobApplication>("appliedDate")
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
   const [statusFilter, setStatusFilter] = useState<JobApplication["status"] | "all">("all")
@@ -219,8 +219,11 @@ const [exporting, setExporting] = useState(false)
           <TableHeader>
             <TableRow>
               {renderTableHeader("Applicant Name", "applicantName")}
+              <TableHead>Job</TableHead>
+              <TableHead>Company</TableHead>
               {renderTableHeader("Email", "email")}
               {renderTableHeader("Status", "status")}
+              
               {renderTableHeader("Applied Date", "appliedDate")}
               <TableHead>Resume</TableHead>
               <TableHead>Cover Letter</TableHead>
@@ -240,6 +243,14 @@ const [exporting, setExporting] = useState(false)
               currentItems?.map((application) => (
                 <TableRow key={application._id}>
                   <TableCell>{application.applicantName}</TableCell>
+                  <TableCell>
+                    {application.jobId.slug && (
+                      <a href={`/admin/job-vacancies/${application.jobId._id}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                        {application.jobId.title}
+                      </a>
+                    )}
+                  </TableCell>
+                  <TableCell>{application.jobId.companyName}</TableCell>
                   <TableCell>{application.email}</TableCell>
                   <TableCell>
                     <Select 
@@ -257,6 +268,7 @@ const [exporting, setExporting] = useState(false)
                       </SelectContent>
                     </Select>
                   </TableCell>
+                  
                   <TableCell>{formatDateInReadable(application.appliedDate)}</TableCell>
                   <TableCell>
                     {application.resumeUrl && (

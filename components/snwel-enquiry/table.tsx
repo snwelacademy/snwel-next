@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useDebounce } from "use-debounce";
+
 import { ChevronDown, ChevronUp, Download, Loader2, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -38,10 +38,11 @@ import { ListOptions } from "@/types/ListOptions";
 import { nanoid } from "nanoid";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useDebounce } from "@uidotdev/usehooks";
 
 export default function EnhancedSnwelEnquiryTable() {
   const [search, setSearch] = useState("");
-  const [debouncedSearch] = useDebounce(search, 300);
+  const debouncedSearch = useDebounce(search, 300);
   const [sortField, setSortField] = useState<keyof Enquiry>("createdAt");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [statusFilter, setStatusFilter] = useState<"all" | "processed" | "unprocessed">("all");

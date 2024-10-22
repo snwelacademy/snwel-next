@@ -203,6 +203,7 @@ const CourseInfoSidebar = ({ course }: { course: Course }) => {
             } */}
       <div className="flex items-center gap-2  py-3">
         <EnrollCourseModal
+        targetCourse={course}
           trigger={<Button className="w-full">Enroll Now</Button>}
           courseId={course._id}
         />

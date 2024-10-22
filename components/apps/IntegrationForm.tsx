@@ -21,12 +21,12 @@ import { createIntegration, updateIntegration } from '@/services/admin/admin-int
 import { useToast } from '../ui/use-toast'
 import { useQueryClient } from '@tanstack/react-query'
 import LoadingButton from '../ui/loading-button'
+import SnwelSMTPEmailIntegration from './SnwelSMTP'
+import GoogleMapIntegration from './GoogleMap'
+import { DynamicIntegrationSchema } from './appcenterConfig'
+import TagManagerIntegration from './TagManager'
+import PixelIntegration from './FacebookPixel'
 
-
-// className="space-y-8 mt-4"
-//       initial={{ opacity: 0 }}
-//       animate={{ opacity: 1 }}
-//       transition={{ delay: 0.3, duration: 0.5 }}
 
 const CreateIntegrationSchema = z.object({
     serviceName: z.string().min(1, 'Service name is required'),
@@ -36,6 +36,8 @@ const CreateIntegrationSchema = z.object({
 })
 
 type IntegrationFormValues = z.infer<typeof CreateIntegrationSchema>
+
+
 
 export default function IntegrationForm({ data, serviceName }: { data?: IntegrationType, serviceName: string }) {
     const [loading, setLoading] = useState(false);
@@ -135,6 +137,22 @@ export default function IntegrationForm({ data, serviceName }: { data?: Integrat
                     serviceName === 'push' &&
                     <PushNotificationIntegration form={form} />
                 }
+                {
+                    serviceName === 'snwel' &&
+                    <SnwelSMTPEmailIntegration form={form} />
+                }
+                {
+                    serviceName === 'gmap' &&
+                    <GoogleMapIntegration form={form} />
+                }
+                {
+                    serviceName === 'tagmanger' &&
+                    <TagManagerIntegration form={form} />
+                }
+                {/* {
+                    serviceName === 'pixal' &&
+                    <PixelIntegration form={form} />
+                } */}
                 <LoadingButton type="submit" >Save</LoadingButton>
             </form>
         </Form>

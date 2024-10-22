@@ -11,6 +11,19 @@ export interface IntegrationType {
   updatedAt: Date;
 }
 
+export enum INTEGRATION_NAME{
+  WHATSAPP="whatsapp",
+  SMTP="smtp",
+  RENDER="render",
+  TELEGRAM="telegram",
+  SMS="sms",
+  PUSH="push",
+  SNWEL="snwel",
+  GMAP="gmap",
+  TAGMANAGER="tagmanager",
+  PIXAL="pixal"
+}
+
 // Zod schema for creating a new integration
 export const CreateIntegrationSchema = z.object({
   serviceName: z.string().min(1, 'Service name is required'),

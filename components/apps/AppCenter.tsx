@@ -1,31 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import { Grid, MessageSquare, Mail, Send, BellRing, Smartphone } from 'lucide-react'
+import { Grid, MessageSquare, Mail, Send, BellRing, Smartphone, AppWindow, Command } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import IntegrationForm from './IntegrationForm'
 import { useQuery } from '@tanstack/react-query'
 import { getAllIntegrations } from '@/services/admin/admin-integration'
+import { ScrollArea } from '../ui/scroll-area'
+import { apps } from './appcenterConfig'
 
-enum AppIds {
-WHATSAPP="whatsapp",
-SMTP="smtp",
-RENDER_EMAIL="render",
-TELEGRAM="telegram",
-SMS="sms",
-PUSH="push"
-}
-
-const apps = [
-  { id: 'whatsapp', name: 'WhatsApp', icon: MessageSquare, fields: ['API Key', 'Phone Number'], color: 'text-green-500', hoverColor: 'bg-green-500' },
-  { id: 'smtp', name: 'SMTP Email', icon: Mail, fields: ['Host', 'Port', 'Username', 'Password'], color: 'text-blue-500', hoverColor: 'bg-blue-500' },
-  { id: 'render', name: 'Render Email', icon: Send, fields: ['API Key', 'Template ID'], color: 'text-purple-500', hoverColor: 'bg-purple-500' },
-  { id: 'telegram', name: 'Telegram', icon: Send, fields: ['Bot Token', 'Chat ID'], color: 'text-cyan-500', hoverColor: 'bg-cyan-500' },
-  { id: 'sms', name: 'SMS', icon: Smartphone, fields: ['API Key', 'From Number'], color: 'text-yellow-500', hoverColor: 'bg-yellow-500' },
-  { id: 'push', name: 'Push Notifications', icon: BellRing, fields: ['Server Key', 'App ID'], color: 'text-red-500', hoverColor: 'bg-red-500' },
-]
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -108,7 +93,9 @@ export default function AppCenter() {
                 Configure your {selectedApp.name} integration settings below.
               </DialogDescription>
             </DialogHeader>
+            <ScrollArea className='h-[700px] '>
             <IntegrationForm data={data?.docs.find(dt => dt.serviceName === selectedApp.id)} serviceName={selectedApp.id} />
+            </ScrollArea>
           </DialogContent>
         </Dialog>
       )}

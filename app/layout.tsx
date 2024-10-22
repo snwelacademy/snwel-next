@@ -5,6 +5,7 @@ import { getSession } from "@/lib/auth";
 import { fetchAllSettings } from "@/services/admin/setting-service";
 import {  SETTINGS } from "@/types/Setting";
 import { GeistSans } from 'geist/font/sans'
+import { getAllIntegrations } from "@/services/admin/admin-integration";
 
 
 
@@ -34,6 +35,7 @@ export default async function RootLayout({
 }>) {
   const session = await getSession();
   const settings = await fetchAllSettings();
+  const integrations = await getAllIntegrations()
   return (
     <html lang="en">
       <body className={GeistSans.className}>

@@ -16,6 +16,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Loader from '../Loader';
 import { Label } from '../ui/label';
 import { FacebookIcon, InstagramIcon, LinkedinIcon, X, Youtube } from 'lucide-react';
+import { GoogleMyBusinessIcon } from '../custom-icons/GoogleBIcon';
 
 const GeneralSettingForm = () => {
     const { data: settingData, isLoading } = useQuery({
@@ -48,7 +49,8 @@ const GeneralSettingForm = () => {
                     insta: '',
                     x: '',
                     youtube: '',
-                    linkedin: ''
+                    linkedin: '',
+                    googleb: ''
                 }
             }
         },
@@ -222,6 +224,28 @@ const GeneralSettingForm = () => {
                                     <div className="space-y-2">
                                         <FormField
                                             control={form.control}
+                                            name="data.socialLinks.googleb"
+                                            render={({ field }) => (
+                                                <FormItem className='w-full'>
+                                                    <FormLabel htmlFor="twitter" className="flex items-center space-x-2">
+                                                        <GoogleMyBusinessIcon className="w-5 h-5 text-black" />
+                                                        <span>Google My Business</span>
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="url"
+                                                            placeholder="You google business url"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <FormField
+                                            control={form.control}
                                             name="data.socialLinks.x"
                                             render={({ field }) => (
                                                 <FormItem className='w-full'>
@@ -232,7 +256,7 @@ const GeneralSettingForm = () => {
                                                     <FormControl>
                                                         <Input
                                                             type="url"
-                                                            placeholder="https://x.com/yourusername"
+                                                            placeholder="Your x url"
                                                             {...field}
                                                         />
                                                     </FormControl>

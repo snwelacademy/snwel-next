@@ -58,8 +58,12 @@ export default function Page({ params }: { params: { slug: string } }) {
                           </div>
 
                           <div className='flex items-center justify-center gap-2'>
-                              <span className='p-2 rounded-md text-primary text-2xl md:text-2xl font-mono font-bold text-orange-500'>{formatToLocalCurrency(course.price)}</span>
-                              <EnrollCourseModal trigger={<Button>Enroll Now</Button>} courseId={course._id} widget={course.widget} />
+                              {
+                                course.content?.showPrice 
+                                &&
+                                <span className='p-2 rounded-md text-primary text-2xl md:text-2xl font-mono font-bold text-orange-500'>{formatToLocalCurrency(course.price)}</span>
+                              }
+                              <EnrollCourseModal targetCourse={course} trigger={<Button>Enroll Now</Button>} courseId={course._id} widget={course.widget} />
                           </div>
                       </div>
                   </div>

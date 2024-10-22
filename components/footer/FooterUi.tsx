@@ -6,6 +6,7 @@ import { Facebook, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react'
 import { GeneralSettingType } from '@/types'
 import { prepareAddressString } from '@/lib/utils'
 import { formatIndianPhoneNumber } from '@/lib/phoneNumberFormat'
+import { GoogleMyBusinessIcon } from '../custom-icons/GoogleBIcon'
 
 type MenuItem = {
   id: string
@@ -76,9 +77,8 @@ export default function Footer({ footerMenu, settings }: FooterProps) {
   return (
     <footer
       ref={footerRef}
-      className={`bg-gray-900 text-gray-300 transition-all duration-1000 ease-out ${
-        isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
-      }`}
+      className={`bg-gray-900 text-gray-300 transition-all duration-1000 ease-out ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
+        }`}
     >
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -87,21 +87,43 @@ export default function Footer({ footerMenu, settings }: FooterProps) {
             <h2 className="text-white text-lg font-semibold mb-4">SNWEL Academy</h2>
             <p className="mb-4">Empowering professionals with industry-leading certifications and training.</p>
             <div className="flex space-x-4">
-              <a href={socialLinks?.facebook||"#"} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white" aria-label="Facebook">
+              {
+                socialLinks?.facebook &&
+                <a href={socialLinks?.facebook || "#"} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white" aria-label="Facebook">
                 <Facebook className="h-6 w-6" />
               </a>
-              <a href={socialLinks?.insta||"#"} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white" aria-label="Instagram">
+              }
+              {
+                socialLinks?.insta && 
+              <a href={socialLinks?.insta || "#"} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white" aria-label="Instagram">
                 <Instagram className="h-6 w-6" />
               </a>
-              <a href={socialLinks?.x||"#"} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white" aria-label="Twitter">
-                <Twitter className="h-6 w-6" />
-              </a>
-              <a href={socialLinks?.youtube||"#"} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white" aria-label="YouTube">
+              }
+              {
+                socialLinks?.x &&
+                <a href={socialLinks?.x || "#"} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white" aria-label="Twitter">
+                  <Twitter className="h-6 w-6" />
+                </a>
+              }
+              {
+                socialLinks?.googleb &&
+                <a href={socialLinks?.googleb || "#"} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white" aria-label="Twitter">
+                  <GoogleMyBusinessIcon className="h-6 w-6" />
+                </a>
+              }
+
+              {
+                socialLinks?.youtub &&
+                <a href={socialLinks?.youtube || "#"} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white" aria-label="YouTube">
                 <Youtube className="h-6 w-6" />
               </a>
-              <a href={socialLinks?.linkedin||"#"} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white" aria-label="LinkedIn">
+              }
+              {
+                socialLinks?.linkedin &&
+                <a href={socialLinks?.linkedin || "#"} target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white" aria-label="LinkedIn">
                 <Linkedin className="h-6 w-6" />
               </a>
+              }
             </div>
           </div>
 
@@ -128,8 +150,8 @@ export default function Footer({ footerMenu, settings }: FooterProps) {
                 </a>
               </li>
               <li>
-                <a href={`tel:${contact?.phone||''}`} className="hover:text-white transition-colors">
-                {contact?.phone ? formatIndianPhoneNumber(contact?.phone):''}
+                <a href={`tel:${contact?.phone || ''}`} className="hover:text-white transition-colors">
+                  {contact?.phone ? formatIndianPhoneNumber(contact?.phone) : ''}
                 </a>
               </li>
               <li>
