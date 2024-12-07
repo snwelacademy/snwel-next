@@ -1,10 +1,12 @@
+import { PermissionCode } from './../modules/user-management/types/permission.types';
 import {Icons} from "@/components/icons"
 
 type NavItem = {
   title: string
   href: string
   icon: keyof typeof Icons
-  label: string
+  label: string,
+  permissions?: PermissionCode[]
 }
 
 type GroupedNavItems = {
@@ -95,18 +97,21 @@ export const navItems: GroupedNavItems[] = [
         href: "/admin/job-vacancies",
         icon: "bag",
         label: "Job Vacancy",
+        permissions: ["JOB_VIEW", "JOB_CREATE", "JOB_UPDATE", "JOB_DELETE", "JOB_PUBLISH", "JOB_UNPUBLISH"]
       },
       {
         title: "Job Applications",
         href: "/admin/job-applications",
         icon: "jobApplications",
         label: "Job Applications",
+        permissions: ["JOB_VIEW"]
       },
       {
         title: "Job Category",
         href: "/admin/job-category",
         icon: "job_category",
         label: "Job Vacancy",
+        permissions: ["JOB_VIEW"]
       },
     ],
   },
@@ -147,6 +152,13 @@ export const navItems: GroupedNavItems[] = [
   {
     group: "System",
     items: [
+      {
+        title: "Users",
+        href: "/admin/users",
+        icon: "user",
+        label: "Users",
+        permissions: ["USER_VIEW", "USER_CREATE", "USER_UPDATE", "USER_DELETE"]
+      },
       {
         title: "Master",
         href: "/admin/masters?type=MASTER",

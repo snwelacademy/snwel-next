@@ -1,107 +1,129 @@
 'use client'
 import { Checkbox } from "@/components/ui/checkbox";
-import { ColumnDef } from "@tanstack/react-table";
-import { CellAction } from "./cell-action";
+import { Badge } from "@/components/ui/badge";
 import { cn, formatDate } from "@/lib/utils";
 import { CourseEnrollment } from "@/types/CourseEnrollment";
 import EnrollmentStausChanger from "./statusChanger";
-import { Badge } from "@/components/ui/badge";
 import dayjs from "dayjs";
-import { Widget, WidgetType } from "@/types/WidgetTypes";
 import Link from "next/link";
-
+import { CellAction } from "./cell-action";
 
 const isEnrolledDuringOffer = (
   enrollmentDate: string | Date, 
   offerStartDate: string | Date, 
   offerEndDate: string | Date
 ): boolean => {
-  const enrollment = dayjs(enrollmentDate);  // Parse the enrollment date
-  const offerStart = dayjs(offerStartDate);  // Parse the offer start date
-  const offerEnd = dayjs(offerEndDate);  // Parse the offer end date
-
-  // Check if the enrollment date is between the offer start and end dates
+  const enrollment = dayjs(enrollmentDate);
+  const offerStart = dayjs(offerStartDate);
+  const offerEnd = dayjs(offerEndDate);
   return enrollment.isAfter(offerStart) && enrollment.isBefore(offerEnd);
 };
 
-export const columns: ColumnDef<CourseEnrollment>[] = [
+export const columns = [
   {
-    id: "select",
-    header: ({ table }) => (
+    key: "select",
+    label: "",
+    render: (row: CourseEnrollment) => (
       <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value: any) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value: any) => row.toggleSelected(!!value)}
+        checked={false} // You'll need to handle selection state
+        onCheckedChange={() => {}} // Handle selection change
         aria-label="Select row"
       />
-    ),
-    enableSorting: false,
-    enableHiding: false,
+    )
   },
   {
-    accessorKey: "userId.name",
-    header: "NAME",
-    cell: ({ row }) => row.original.userId.name
+    key: "userId.name",
+    label: "NAME",
+    sortable: true,
+    render: (row: CourseEnrollment) => row.userId.name
   },
   {
-    accessorKey: "courseId",
-    header: "COURSE",
-    cell: ({ row }) => row.original.courseId.title
+    key: "courseId",
+    label: "COURSE",
+    sortable: true,
+    render: (row: CourseEnrollment) => row.courseId.title
   },
   {
-    accessorKey: "userId.email",
-    header: "EMAIL",
-    cell: ({ row }) => row.original.userId.email
+    key: "userId.email",
+    label: "EMAIL",
+    sortable: true,
+    render: (row: CourseEnrollment) => row.userId.email
   },
   {
-    accessorKey: "status",
-    header: "STATUS",
-    cell: ({ row }) => <Badge variant={'outline'}>{row.original.status}</Badge>
+    key: "status",
+    label: "STATUS",
+    sortable: true,
+    filterable: true,
+    filterOptions: [
+      { label: "Pending", value: "pending" },
+      { label: "Active", value: "active" },
+      { label: "Completed", value: "completed" }
+    ],
+    render: (row: CourseEnrollment) => (
+      <Badge variant="outline">{row.status}</Badge>
+    )
   },
   {
-    accessorKey: "paymentStatus",
-    header: "PAYMENT STATUS",
-    cell: ({ row }) => <EnrollmentStausChanger statusType="PAYMENT_STATUS" value={row.original.paymentStatus} selfMode={{id: row.original._id}} />
+    key: "paymentStatus",
+    label: "PAYMENT STATUS",
+    sortable: true,
+    filterable: true,
+    filterOptions: [
+      { label: "Paid", value: "paid" },
+      { label: "Unpaid", value: "unpaid" },
+      { label: "Pending", value: "pending" }
+    ],
+    render: (row: CourseEnrollment) => (
+      <EnrollmentStausChanger 
+        statusType="PAYMENT_STATUS" 
+        value={row.paymentStatus} 
+        selfMode={{id: row._id}} 
+      />
+    )
   },
   {
-    accessorKey: "widget",
-    header: "Offer Widget",
-    cell: ({row}) => {
-      const widget: any = row.original?.widget;
-      if(!widget || widget.type !== 'cdtWidget'){
-        return  <p>-</p>
+    key: "widget",
+    label: "Offer Widget",
+    render: (row: CourseEnrollment) => {
+      const widget: any = row.widget;
+      if(!widget || widget.type !== 'cdtWidget') {
+        return <p>-</p>
       }
-      const inOff = isEnrolledDuringOffer(row.original.createdAt, widget.content?.startTime, widget.content?.endTime);
-      return <div className="flex flex-col gap-1">
-        <Badge className={cn(['inline-block',{'bg-green-700 text-white': inOff, "bg-red-700 text-white": !inOff}])}>{inOff ? 'In Offer': 'Not In Offer'}</Badge>
-        <Link href={`/admin/widgets/${widget._id}?type=cdtWidget`}>{widget.title}</Link>
-        {/* <p>{widget.title}</p> */}
-      </div>
+      const inOff = isEnrolledDuringOffer(
+        row.createdAt, 
+        widget.content?.startTime, 
+        widget.content?.endTime
+      );
+      return (
+        <div className="flex flex-col gap-1">
+          <Badge className={cn(['inline-block',{
+            'bg-green-700 text-white': inOff, 
+            "bg-red-700 text-white": !inOff
+          }])}>
+            {inOff ? 'In Offer': 'Not In Offer'}
+          </Badge>
+          <Link href={`/admin/widgets/${widget._id}?type=cdtWidget`}>
+            {widget.title}
+          </Link>
+        </div>
+      )
     }
   },
   {
-    accessorKey: "otp.verified",
-    header: "OTP VERIFIED",
-    // cell: ({row}) => row.original. || '-'
-  },
-  // {
-  //   accessorKey: "expiredAt",
-  //   header: "EXPIRE AT",
-  //   cell: ({ row }) => formatDate(row.original.expiredAt)
-  // },
-  {
-    accessorKey: "createdAt",
-    header: "CREATED AT",
-    cell: ({ row }) => formatDate(row.original.createdAt)
+    key: "otp.verified",
+    label: "OTP VERIFIED",
+    sortable: true,
+    render: (row: CourseEnrollment) => row.otp?.verified || '-'
   },
   {
-    id: "actions",
-    cell: ({ row }) => <CellAction data={row.original} />,
+    key: "createdAt",
+    label: "CREATED AT",
+    sortable: true,
+    render: (row: CourseEnrollment) => formatDate(row.createdAt)
   },
+  {
+    key: "actions",
+    label: "",
+    render: (row: CourseEnrollment) => <CellAction data={row} />
+  }
 ];

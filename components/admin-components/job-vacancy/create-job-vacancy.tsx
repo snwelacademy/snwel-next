@@ -1,7 +1,10 @@
 import BreadCrumb from '@/components/BreadCrumb';
+import { PermissionGuard } from '@/components/gaurds/PermissionGaurd';
+import { withErrorHandling } from '@/components/hoc/withErrorHandling';
 import MutateJobVacancy from '@/components/job-vacancy/mutateJobVacancy';
 import { Heading } from '@/components/ui/Heading';
 import { Separator } from '@/components/ui/separator';
+import { Permission } from '@/modules/user-management/types/role.types';
 
 
 
@@ -27,4 +30,10 @@ const CreateNewJobVacancyPage = () => {
     )
 }
 
-export default CreateNewJobVacancyPage
+export default withErrorHandling(function ProtectedCreateJobVacancyPage() {
+    return (
+        <PermissionGuard permission={Permission.JOB_CREATE}>
+            <CreateNewJobVacancyPage />
+        </PermissionGuard>
+    )
+})

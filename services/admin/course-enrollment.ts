@@ -1,4 +1,3 @@
-
 import { DEFAULT_LIST_OPTIONS } from './../../types/ListOptions';
 import { protectedApi } from "@/lib/api";
 import { ApiResponse, ListResponse } from '@/types/ApiResponses';
@@ -7,7 +6,7 @@ import { AxiosResponse } from 'axios';
 import { CourseEnrollment, CreateCourseQuery } from '@/types/CourseEnrollment';
 import { objectToQueryString } from '@/lib/utils';
 import dayjs from 'dayjs';
-import XLSX from 'json-as-xlsx';
+import XLSX, { IJsonSheet } from 'json-as-xlsx';
 
 export async function getAllEnrollments (options?: ListOptions) {
     try {
@@ -61,45 +60,53 @@ export async function getEnrollment (id: string) {
     }
 }
 
-export async function exportAllJobApplications(options?: ListOptions) {
+export async function exportAllEnrollments(options?: ListOptions) {
     try {
-        const data = await getAllEnrollments(options) // Adjust if needed based on your API response
+        const data = await getAllEnrollments(options)
 
-        // Prepare the data for export
-        const jobApplications = [
+        const transformedData = data.docs.map(enrollment => ({
+            studentName: enrollment.userId.name,
+            studentEmail: enrollment.userId.email,
+            courseTitle: enrollment.courseId.title,
+            coursePrice: `${enrollment.courseId.currency} ${enrollment.courseId.price}`,
+            enrollmentStatus: enrollment.status,
+            paymentStatus: enrollment.paymentStatus,
+            paymentMethod: enrollment.paymentMethod,
+            expiryDate: dayjs(enrollment.expiredAt).format('MM/DD/YYYY'),
+            createdDate: dayjs(enrollment.createdAt).format('MM/DD/YYYY'),
+            otpVerified: enrollment.otp?.verified ? "Yes" : "No"
+        }));
+
+        const sheets: IJsonSheet[] = [
             {
-                sheet: "Job Applications",
+                sheet: "Course Enrollments",
                 columns: [
-                    { label: "Course", value: "course" },
-                    { label: "Name", value: "name" },
-                    { label: "Email", value: "email" },
-                    { label: "Job Title", value: (row: any) => row.jobId.title }, // Custom format
-                    { label: "Status", value: "status" },
-                    { label: "Resume", value: "resumeUrl" },
-                    { label: "Cover Letter", value: "coverLetter" },
-                    { label: "Applied Date", value: (row: any) => dayjs(row.appliedDate).format('MM/DD/YYYY') }, // Format date
+                    { label: "Student Name", value: "studentName" },
+                    { label: "Student Email", value: "studentEmail" },
+                    { label: "Course Title", value: "courseTitle" },
+                    { label: "Course Price", value: "coursePrice" },
+                    { label: "Enrollment Status", value: "enrollmentStatus" },
+                    { label: "Payment Status", value: "paymentStatus" },
+                    { label: "Payment Method", value: "paymentMethod" },
+                    { label: "Expiry Date", value: "expiryDate" },
+                    { label: "Created Date", value: "createdDate" },
+                    { label: "OTP Verified", value: "otpVerified" },
                 ],
-                content: data.docs.map(enrollments => ({
-                    course: enrollments.courseId.title,
-                    name: enrollments.userId.name,
-                    email: enrollments.userId.email,
-                    
-                })),
+                content: transformedData
             }
         ];
+
         const optionsXLSX = {
-            fileName: `job_applications_${options?.page || 1}`,
-            sheet: 'Job Applications',
-            tableOptions: {
-            },
+            fileName: `course_enrollments_${options?.page || 1}`,
+            sheet: 'Course Enrollments',
+            tableOptions: {},
         };
 
-        // Create the XLSX file
-        const blob = XLSX(jobApplications, optionsXLSX);
+        const blob = XLSX(sheets, optionsXLSX);
         return blob;
     } catch (error) {
-        console.error("Error fetching job enrollments list: ", error);
-        throw new Error("Failed to fetch job enrollments list. Please try again.");
+        console.error("Error exporting enrollments: ", error);
+        throw new Error("Failed to export enrollments. Please try again.");
     }
 }
 

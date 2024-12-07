@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import { Icons } from '../icons'
+import { usePermission, usePermissions } from '@/modules/user-management/hooks/usePermission'
+import { useSession } from 'next-auth/react'
+import { Permission, PermissionCode } from '@/modules/user-management/types/permission.types'
 
 
 interface NavItem {
@@ -14,6 +17,7 @@ interface NavItem {
   href: string
   icon: string
   label: string
+  permissions?: string | string[]
 }
 
 
@@ -22,25 +26,49 @@ const navItems: NavItem[] = [
     title: "Dashboard",
     href: "/admin",
     icon: "dashboard",
-    label: "Dashboard",
+    label: "Dashboard"
   },
   {
     title: "Course",
     href: "/admin/courses",
     icon: "course",
     label: "Courses",
+    permissions: "COURSE_VIEW"
   },
   {
     title: "Course Category",
-    href: "/admin/course-category",
+    href: "/admin/course-category", 
     icon: "category",
     label: "Courses",
+    permissions: "COURSE_VIEW"
   },
   {
     title: "Course Queries",
     href: "/admin/course-queries",
     icon: "enrollments",
     label: "course queries",
+    permissions: "COURSE_VIEW"
+  },
+  {
+    title: "Job Vacancy",
+    href: "/admin/job-vacancies",
+    icon: "bag",
+    label: "Job Vacancy",
+    permissions: "JOB_VIEW"
+  },
+  {
+    title: "Job Applications",
+    href: "/admin/job-applications",
+    icon: "jobApplications",
+    label: "Job Applications",
+    permissions: "JOB_VIEW"
+  },
+  {
+    title: "Job Category",
+    href: "/admin/job-category",
+    icon: "job_category", 
+    label: "Job Vacancy",
+    permissions: "JOB_VIEW"
   },
   {
     title: "Pages",
@@ -71,24 +99,6 @@ const navItems: NavItem[] = [
     href: "/admin/general-enquiry",
     icon: "user",
     label: "Enquiries",
-  },
-  {
-    title: "Job Vacancy",
-    href: "/admin/job-vacancies",
-    icon: "bag",
-    label: "Job Vacancy",
-  },
-  {
-    title: "Job Applications",
-    href: "/admin/job-applications",
-    icon: "jobApplications",
-    label: "Job Applications",
-  },
-  {
-    title: "Job Category",
-    href: "/admin/job-category",
-    icon: "job_category",
-    label: "Job Vacancy",
   },
   {
     title: "Manage Gallery",
@@ -124,7 +134,22 @@ const navItems: NavItem[] = [
 
 export default function AdminNavbar() {
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const pathname = usePathname()
+  const pathname = usePathname();
+  const session = useSession();
+
+
+  function checkPermission(permission: string | string[]) {
+    if (!session.data?.user?.roles) return false
+    const permissionsForCheck = Array.isArray(permission) ? permission : [permission];
+    return permissionsForCheck.every(permission => session.data.user.roles.some(role => role.permissions.some(p => p.code === permission as PermissionCode)));
+  }
+
+  const menuItems = navItems.filter(item => {
+    if (!item.permissions) return true
+    return checkPermission(item.permissions)
+  })
+
+  console.log(session.data?.user?.roles)
 
   return (
     <div className={cn(
@@ -144,7 +169,7 @@ export default function AdminNavbar() {
       </div>
       <ScrollArea className="flex-1">
         <nav className="p-2">
-          {navItems.map((item, index) => (
+          {menuItems.map((item, index) => (
             <Link
               key={index}
               href={item.href}

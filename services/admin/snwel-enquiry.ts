@@ -14,7 +14,7 @@ import dayjs from 'dayjs';
 export async function getAllEnquiries(options?: ListOptions) {
     try {
         options = { ...DEFAULT_LIST_OPTIONS, ...options };
-        const res = await api.get<any, AxiosResponse<ApiResponse<ListResponse<Enquiry>>>>(`/enquiry?${objectToQueryString(options)}`);
+        const res = await api.get<any, AxiosResponse<ApiResponse<ListResponse<Enquiry>>>>(`snwel-enquiry?${objectToQueryString(options)}`);
         const data = res.data.data;
         return data;
     } catch (error) {

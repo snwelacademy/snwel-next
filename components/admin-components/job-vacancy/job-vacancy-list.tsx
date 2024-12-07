@@ -1,5 +1,7 @@
 'use client'
 
+import { PermissionGuard } from '@/components/gaurds/PermissionGaurd'
+import { withErrorHandling } from '@/components/hoc/withErrorHandling'
 import BreadCrumb from '@/components/BreadCrumb';
 import Loader from '@/components/Loader';
 import { DataTable } from '@/components/shared/DataTable';
@@ -13,6 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { Permission } from '@/modules/user-management/types/role.types';
 
 const breadcrumbItems = [{ title: "Job Vacancies", link: "/admin/job-vacancies" }];
 
@@ -59,4 +62,12 @@ const JobVacancyPage = () => {
   );
 }
 
-export default JobVacancyPage;
+// Wrap with both permission guard and error handling
+export default withErrorHandling(function ProtectedJobVacancyPage() {
+  return (
+    <PermissionGuard permission={Permission.JOB_VIEW}>
+      <JobVacancyPage />
+    </PermissionGuard>
+  )
+})
+

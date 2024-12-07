@@ -22,7 +22,10 @@ export type CourseEnrollment = {
     expiredAt: string,
     createdAt: Date,
     updatedAt: Date,
-    widget?: Widget
+    widget?: Widget,
+    otp?: {
+        verified: boolean;
+    }
 }
 
 

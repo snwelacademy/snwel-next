@@ -14,11 +14,25 @@ import {
 } from 'lucide-react'
 import { Icons } from '@/components/icons'
 import { navItems } from './dashboardNav'
+import { useSession } from 'next-auth/react'
+import { PermissionCode } from '@/modules/user-management/types/permission.types'
 
 
 export default function Component() {
   const [expanded, setExpanded] = useState(true)
-  const pathname = usePathname()
+  const pathname = usePathname();
+  const session = useSession();
+
+  function checkPermission(permission: string | string[]) {
+    if (!session.data?.user?.roles) return false
+    const permissionsForCheck = Array.isArray(permission) ? permission : [permission];
+    return permissionsForCheck.every(permission => session.data.user.roles.some(role => role.permissions.some(p => p.code === permission as PermissionCode)));
+  }
+
+  const menuItems = navItems.filter(group => {
+    if (!group.items.some(item => item.permissions)) return true
+    return group.items.some(item => checkPermission(item.permissions as PermissionCode[]))
+  })
 
   return (
     <motion.div 
@@ -50,7 +64,7 @@ export default function Component() {
       </div>
       <ScrollArea className="overflow-auto flex-1">
         <nav className="flex flex-col gap-4 px-2 py-2 pt-2" style={{paddingBottom: '100px'}}>
-          {navItems.map((group, groupIndex) => (
+          {menuItems.map((group, groupIndex) => (
             <div key={groupIndex} className="flex flex-col gap-1">
               {expanded && (
                 <h2 className="text-sm font-semibold text-muted-foreground px-3 py-2">
