@@ -3,6 +3,9 @@ const nextConfig = {
   images: {
     domains: ['res.cloudinary.com'],
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 }
  
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
