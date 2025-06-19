@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Permission, RoleFormData } from '../types/role.types';
+import { RoleFormData } from '../types/role.types';
 import { usePermissions } from '../hooks/usePermission';
+import { AdminPanelPermissions } from '@/data/permissions-list';
+import { PermissionCode } from '../types/permission.types';
 
 interface RoleFormProps {
   submitting?: boolean;
@@ -22,7 +24,7 @@ export function RoleForm({ onSave, initialData, submitting }: RoleFormProps) {
   });
 
 
-  const handlePermissionChange = (permission: Permission) => {
+    const handlePermissionChange = (permission: PermissionCode) => {
     setFormData(prev => ({
       ...prev,
       permissions: prev.permissions.includes(permission)
@@ -80,7 +82,7 @@ export function RoleForm({ onSave, initialData, submitting }: RoleFormProps) {
       <div>
         <Label>Permissions</Label>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {(Object.values(Permission) as Permission[]).map(permission => (
+          {(Object.values(AdminPanelPermissions)).map(permission => (
             <div key={permission} className="flex items-center space-x-2">
               <Checkbox
                 id={`permission-${permission}`}

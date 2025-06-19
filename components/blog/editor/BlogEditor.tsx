@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useRef } from 'react';
-import YooptaEditor, { createYooptaEditor } from '@yoopta/editor'
+import YooptaEditor, { createYooptaEditor, YooptaPlugin } from '@yoopta/editor'
 import Paragraph from '@yoopta/paragraph';
 import Blockqoute from '@yoopta/blockquote';
 import Accordion from '@yoopta/accordion';
@@ -21,7 +21,7 @@ import Toolbar, { DefaultToolbarRender } from '@yoopta/toolbar';
 import LinkTool, { DefaultLinkToolRender } from '@yoopta/link-tool';
 import { html } from '@yoopta/exports'
 
-const plugins = [
+const plugins: YooptaPlugin<any>[] = [
     Paragraph,
     Blockqoute,
     Accordion,

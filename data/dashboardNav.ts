@@ -1,5 +1,6 @@
 import { PermissionCode } from './../modules/user-management/types/permission.types';
 import {Icons} from "@/components/icons"
+import { AdminPanelPermissions } from "./permissions-list";
 
 type NavItem = {
   title: string
@@ -97,21 +98,21 @@ export const navItems: GroupedNavItems[] = [
         href: "/admin/job-vacancies",
         icon: "bag",
         label: "Job Vacancy",
-        permissions: ["JOB_VIEW", "JOB_CREATE", "JOB_UPDATE", "JOB_DELETE", "JOB_PUBLISH", "JOB_UNPUBLISH"]
+                permissions: [AdminPanelPermissions.VIEW_JOB_VACANCIES, AdminPanelPermissions.CREATE_JOB_VACANCIES, AdminPanelPermissions.EDIT_JOB_VACANCIES, AdminPanelPermissions.DELETE_JOB_VACANCIES, AdminPanelPermissions.PUBLISH_JOB_VACANCIES]
       },
       {
         title: "Job Applications",
         href: "/admin/job-applications",
         icon: "jobApplications",
         label: "Job Applications",
-        permissions: ["JOB_VIEW"]
+        permissions: [AdminPanelPermissions.VIEW_JOB_QUERY]
       },
       {
         title: "Job Category",
         href: "/admin/job-category",
         icon: "job_category",
         label: "Job Vacancy",
-        permissions: ["JOB_VIEW"]
+        permissions: [AdminPanelPermissions.VIEW_JOB_CATEGORIES]
       },
     ],
   },
@@ -157,7 +158,7 @@ export const navItems: GroupedNavItems[] = [
         href: "/admin/users",
         icon: "user",
         label: "Users",
-        permissions: ["USER_VIEW", "USER_CREATE", "USER_UPDATE", "USER_DELETE"]
+                permissions: [AdminPanelPermissions.VIEW_USERS, AdminPanelPermissions.CREATE_USERS, AdminPanelPermissions.EDIT_USERS, AdminPanelPermissions.DELETE_USERS]
       },
       {
         title: "Master",

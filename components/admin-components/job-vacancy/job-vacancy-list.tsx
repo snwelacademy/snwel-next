@@ -15,7 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Permission } from '@/modules/user-management/types/role.types';
+import { AdminPanelPermissions } from '@/data/permissions-list';
 
 const breadcrumbItems = [{ title: "Job Vacancies", link: "/admin/job-vacancies" }];
 
@@ -65,7 +65,7 @@ const JobVacancyPage = () => {
 // Wrap with both permission guard and error handling
 export default withErrorHandling(function ProtectedJobVacancyPage() {
   return (
-    <PermissionGuard permission={Permission.JOB_VIEW}>
+    <PermissionGuard permission={AdminPanelPermissions.VIEW_JOB_VACANCIES}>
       <JobVacancyPage />
     </PermissionGuard>
   )

@@ -1,18 +1,4 @@
-import {Permission as PermissionType} from './permission.types'
-
-export enum Permission {
-  USER_CREATE = 'USER_CREATE',
-  USER_VIEW = 'USER_VIEW',
-  USER_UPDATE = 'USER_UPDATE',
-  USER_DELETE = 'USER_DELETE',
-  ROLE_ASSIGN = 'ROLE_ASSIGN',
-  JOB_VIEW = 'JOB_VIEW',
-  JOB_CREATE = 'JOB_CREATE',
-  JOB_UPDATE = 'JOB_UPDATE',
-  JOB_DELETE = 'JOB_DELETE',
-  JOB_PUBLISH = 'JOB_PUBLISH',
-  JOB_UNPUBLISH = 'JOB_UNPUBLISH',
-}
+import {Permission as PermissionType, PermissionCode} from './permission.types'
 
 export interface Role {
   _id: string;
@@ -27,7 +13,7 @@ export type RoleForm = {
   _id?: string,
   name: string,
   description: string,
-  permissions: Permission[]
+    permissions: PermissionCode[]
 }
 
 export type RoleFormData = Omit<RoleForm, 'id'>; 

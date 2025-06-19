@@ -13,7 +13,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { RoleFormData } from './types/role.types'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
+import { AdminPanelPermissions } from '@/data/permissions-list';
 import { Loader2 } from 'lucide-react'
 
 export default function UserManagement() {
@@ -24,11 +25,11 @@ export default function UserManagement() {
   const [roleToDelete, setRoleToDelete] = useState<string | null>(null)
   const [isRoleSheetOpen, setIsRoleSheetOpen] = useState(false)
   
-  const canViewUsers = usePermission('USER_VIEW')
-  const canCreateUser = usePermission('USER_CREATE')
-  const canUpdateUser = usePermission('USER_UPDATE')
-  const canDeleteUser = usePermission('USER_DELETE')
-  const canAssignRoles = usePermission('ROLE_ASSIGN')
+  const canViewUsers = usePermission(AdminPanelPermissions.VIEW_USERS)
+  const canCreateUser = usePermission(AdminPanelPermissions.CREATE_USERS)
+  const canUpdateUser = usePermission(AdminPanelPermissions.EDIT_USERS)
+  const canDeleteUser = usePermission(AdminPanelPermissions.DELETE_USERS)
+  const canAssignRoles = usePermission(AdminPanelPermissions.EDIT_USERS)
 
   const { 
     pagination,
