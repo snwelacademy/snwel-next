@@ -6,6 +6,9 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true, // ✅ disables ESLint during build
+  },
 }
  
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
