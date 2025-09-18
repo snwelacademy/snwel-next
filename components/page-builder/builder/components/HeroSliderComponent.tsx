@@ -1,5 +1,6 @@
 'use client'
-import Hero from "@/components/shared/Hero";
+import dynamic from 'next/dynamic'
+const Hero = dynamic(() => import('@/components/shared/Hero'), { ssr: false })
 import { ComponentConfig } from "@measured/puck";
 
 export type HeroProps = {
