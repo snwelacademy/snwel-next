@@ -31,8 +31,7 @@ import { MultiChipInput } from '../ui/chip-input'
 import slugify from 'slugify'
 import { useSession } from 'next-auth/react'
 
-const BlogEditor = dynamic(() => import('./editor/BlogEditor'))
-
+const BlogEditor = dynamic(() => import('./editor/BlogEditor'), { ssr: false })
 
 const formSchema = z.object({
     title: z.string().min(1, "Title is required"),

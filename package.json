@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "analyze": "ANALYZE=true next build"
+    "analyze": "ANALYZE=true next build",
+    "build:lowmem": "cross-env LOW_MEM_BUILD=1 UV_THREADPOOL_SIZE=1 next build",
+    "build:turbo": "cross-env LOW_MEM_BUILD=1 next build --turbo",
+    "start:standalone": "node .next/standalone/server.js",
+    "postinstall": "next telemetry disable"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",
@@ -93,7 +97,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "country-state-city": "^3.2.1",
-    "date-fns": "^4.1.0",
+    "date-fns": "^3.6.0",
     "dayjs": "^1.11.12",
     "embla-carousel-autoplay": "^8.0.0",
     "embla-carousel-react": "^8.0.0",
@@ -147,6 +151,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "@tailwindcss/typography": "^0.5.10",
     "@tanstack/eslint-plugin-query": "^5.51.12",
     "@types/node": "^20",
