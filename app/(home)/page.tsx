@@ -1,9 +1,12 @@
 // import AnimatedComponent from "@/components/animate/AnimatedComponent";
-import dynamic from "next/dynamic";
+import nextDynamic from "next/dynamic";
 import { conf } from "@/components/page-builder/builder";
 import Typography from "@/components/typography";
 import { fetchMaster } from "@/services/admin/admin-master";
-const RenderPage = dynamic(() => import('@/components/page-builder/RenderPage'), { ssr: false })
+const RenderPage = nextDynamic(() => import('@/components/page-builder/RenderPage'), { ssr: false })
+
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 
 const HomePage = async () => {

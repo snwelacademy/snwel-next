@@ -15,7 +15,8 @@ import Link from "next/link";
 import JoinCourseSection from "@/components/shared/JoinCourseSection";
 import { WheWeServeTwo } from "@/components/WhoWeServeTwo";
 
-
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 const AboutPage = () => {
   return (
