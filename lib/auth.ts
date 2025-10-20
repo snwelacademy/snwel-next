@@ -5,6 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 const authOptions: AuthOptions = {
     // Configure one or more authentication providers
+    url: process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_NEXTAUTH_URL,
     callbacks: {
         async jwt({ token, user }) {
             const u = user as any;
