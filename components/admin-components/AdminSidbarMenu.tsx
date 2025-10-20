@@ -139,9 +139,13 @@ export default function AdminNavbar() {
 
 
   function checkPermission(permission: string | string[]) {
-    if (!session.data?.user?.roles) return false
+    if (!session.data?.user?.roles || !Array.isArray(session.data.user.roles)) return false
     const permissionsForCheck = Array.isArray(permission) ? permission : [permission];
-    return permissionsForCheck.every(permission => session.data.user.roles.some(role => role.permissions.some(p => p.code === permission as PermissionCode)));
+    return permissionsForCheck.every(permission => 
+      session.data.user.roles?.some(role => 
+        role.permissions?.some(p => p.code === permission as PermissionCode)
+      )
+    );
   }
 
   const menuItems = navItems.filter(item => {
