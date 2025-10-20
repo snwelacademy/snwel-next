@@ -11,7 +11,7 @@ import { fetchClient } from '@/lib/fetchClient';
 export async function getAllCourses (options?: ListOptions) {
     try {
         options = {...DEFAULT_LIST_OPTIONS, ...options}
-        const res = await fetchClient(`/course?${listOptionsToUrlSearchParams(options)}`, {method: 'GET'});
+        const res = await fetchClient(`/admin/course?${listOptionsToUrlSearchParams(options)}`, {method: 'GET'});
         const data = await res.json() as ApiResponse<ListResponse<Course>>;
         console.log("fetch client")
         return data.data;
@@ -23,7 +23,7 @@ export async function getAllCourses (options?: ListOptions) {
 export async function createCourse (mutateCourse: any) {
     try {
         
-        const res = await protectedApi.post<any, AxiosResponse<ApiResponse<Course>>>('/course', mutateCourse);
+        const res = await protectedApi.post<any, AxiosResponse<ApiResponse<Course>>>('/admin/course', mutateCourse);
         const data = res.data.data;
         return data;
     } catch (error) {
@@ -34,7 +34,7 @@ export async function createCourse (mutateCourse: any) {
 export async function updateCourse (courseId: string, mutateCourse: any) {
     try {
         
-        const res = await protectedApi.put<any, AxiosResponse<ApiResponse<Course>>>(`/course/${courseId}`, mutateCourse);
+        const res = await protectedApi.put<any, AxiosResponse<ApiResponse<Course>>>(`/admin/course/${courseId}`, mutateCourse);
         const data = res.data.data;
         return data;
     } catch (error) {
@@ -45,7 +45,7 @@ export async function updateCourse (courseId: string, mutateCourse: any) {
 export async function changeCourseStatus (courseId: string, status: string) {
     try {
         
-        const res = await protectedApi.put<any, AxiosResponse<ApiResponse<Course>>>(`/course/partial-update/${courseId}`, {status});
+        const res = await protectedApi.put<any, AxiosResponse<ApiResponse<Course>>>(`/admin/course/partial-update/${courseId}`, {status});
         const data = res.data.data;
         return data;
     } catch (error) {
@@ -55,7 +55,7 @@ export async function changeCourseStatus (courseId: string, status: string) {
 }
 export async function deleteCourse (courseId: string) {
     try {
-        const res = await protectedApi.delete<any, AxiosResponse<ApiResponse<Course>>>(`/course/${courseId}`);
+        const res = await protectedApi.delete<any, AxiosResponse<ApiResponse<Course>>>(`/admin/course/${courseId}`);
         const data = res.data.data;
         return data;
     } catch (error) {
@@ -65,7 +65,7 @@ export async function deleteCourse (courseId: string) {
 }
 export async function getCourse (courseId: string) {
     try {
-        const res = await protectedApi.get<any, AxiosResponse<ApiResponse<Course>>>(`/course/${courseId}`);
+        const res = await protectedApi.get<any, AxiosResponse<ApiResponse<Course>>>(`/admin/course/byId/${courseId}`);
         const data = res.data.data;
         return data;
     } catch (error) {

@@ -1,12 +1,10 @@
-import SnwelEnquiryTable from '@/components/snwel-enquiry/table'
+import SnwelEnquiryPage from '@/components/admin-components/snwel-enquiry/SnwelEnquiryPage'
 import React from 'react'
 
-const SnwelEnquiryPage = () => {
+const Page = () => {
   return (
-  <div className='px-4 md:px-4'>
-     <SnwelEnquiryTable/>
-  </div>
+    <SnwelEnquiryPage />
   )
 }
 
-export default SnwelEnquiryPage
+export default Page
