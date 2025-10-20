@@ -5,6 +5,7 @@ import { ListOptions, DEFAULT_LIST_OPTIONS } from '@/types/ListOptions';
 import { AxiosResponse } from 'axios';
 import { listOptionsToUrlSearchParams } from '@/lib/utils';
 import { Master, CreateMasterDTO, UpdateMasterDTO } from '@/types/master';
+import { constants } from "@/config/constants";
 
 // Get all masters with optional list options
 export async function getAllMasters(options?: ListOptions) {
@@ -52,6 +53,17 @@ export async function getMaster(masterId: string) {
     } catch (error) {
         console.log("Error: getMaster: ", error);
         throw new Error("Error in fetching master record. Please try again.");
+    }
+}
+export async function fetchMaster(masterId: string) {
+    try {
+        const url = new URL(`/master/${masterId}`, constants.apiBaseUrl)
+        const res = await fetch(url);
+        const data = await res.json() as ApiResponse<Master>;
+        return data.data;
+    } catch (error) {
+        console.log("Error: getMaster: ", error);
+        return null;
     }
 }
 

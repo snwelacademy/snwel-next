@@ -7,6 +7,7 @@ import { Master, updateMasterSchema } from "@/types/master";
 import { z } from "zod";
 import { updateMaster } from "@/services/admin/admin-master";
 import { useToast } from "../ui/use-toast";
+import { inavlidateHomePage } from "@/server-actions/page-actions";
 
 
 // Describe the initial data
@@ -22,7 +23,8 @@ export function PageEditor({ data }: { data?: Master }) {
     try {
       if (!data) return;
       await updateMaster(data._id, { ...data, meta: pageData } as z.infer<typeof updateMasterSchema>);
-      toast({ title: 'Page Updated Successfully!!', variant: 'success' })
+      toast({ title: 'Page Updated Successfully!!', variant: 'success' });
+      await inavlidateHomePage();
     } catch (error) {
       toast({ title: 'Something wrong while updating page', variant: 'destructive' })
     }

@@ -79,9 +79,13 @@ export const EmailSettingTypeSchema = SettingSchema.merge(z.object({
     code: z.enum([SETTINGS.EMAIL]),
     data: z.object({
         [EMAIL_TRANSPORTER.NODEMAILER]: z.object({
-            appKey: z.string(),
-            authKey: z.string(),
-            message: z.string().optional()
+            host: z.string(),
+            port: z.string(),
+            secure: z.boolean(),
+            auth: z.object({
+                user: z.string(),
+                pass: z.string()
+            })
         }).optional(),
     })
 }));
@@ -98,7 +102,8 @@ export const GeneralSettingSchema = SettingSchema.merge(z.object({
             address: z.string(),
             city: z.string(),
             state: z.string(),
-            country: z.string()
+            country: z.string(),
+            url: z.string().optional()
         }).optional(),
         contacts: z.object({
             phone: z.string().optional(),
@@ -110,7 +115,8 @@ export const GeneralSettingSchema = SettingSchema.merge(z.object({
             insta: z.string().optional(),
             x: z.string().optional(),
             youtube: z.string().optional(),
-            linkedin: z.string().optional()
+            linkedin: z.string().optional(),
+            googleb: z.string().optional()
         }).optional()
     })
 }))
@@ -126,7 +132,6 @@ export const MenuItemSchema = z.object({
     index: z.number().nullable().optional(),
     parentId: z.string().nullable().optional(),
     depth: z.number().optional()
-    
 })
 
 export const MenuSchemaWithChildren = MenuItemSchema.merge(z.object({children: z.array(MenuItemSchema).optional().default([])}))

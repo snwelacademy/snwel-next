@@ -13,7 +13,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import JoinCourseSection from "@/components/shared/JoinCourseSection";
+import { WheWeServeTwo } from "@/components/WhoWeServeTwo";
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 const AboutPage = () => {
   return (
@@ -62,7 +65,7 @@ const AboutPage = () => {
               </div>
             </section>
 
-            <section className="space-y-8">
+            {/* <section className="space-y-8">
               <h2 className="text-4xl text-center font-bold from-blue-500 to-purple-500 bg-gradient-to-r bg-clip-text text-transparent inline-block">Who We Serve</h2>
               <div className="grid md:grid-cols-3 gap-8">
                 {[
@@ -99,9 +102,11 @@ const AboutPage = () => {
                   </Card>
                 ))}
               </div>
-            </section>
+            </section> */}
 
-            <section className="space-y-8 bg-gradient-to-r from-indigo-50 to-purple-50 p-8 rounded-lg">
+            <WheWeServeTwo/>
+
+              <section className="space-y-8 bg-gradient-to-r from-indigo-50 to-purple-50 p-8 rounded-lg">
               <h2 className="text-4xl font-semibold text-center from-blue-500 to-purple-500 bg-gradient-to-r bg-clip-text text-transparent inline-block">Why Choose SNWEL Academy</h2>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {[
@@ -126,9 +131,9 @@ const AboutPage = () => {
 
             <section className="text-center bg-gradient-to-r from-blue-500 to-purple-500 p-12 rounded-lg">
               <h2 className="text-3xl font-semibold mb-4 text-white">Ready to Start Your Journey?</h2>
-             <Link href="/courses">
-             <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50">Explore Our Courses</Button>
-             </Link>
+              <Link href="/courses">
+                <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50">Explore Our Courses</Button>
+              </Link>
             </section>
           </div>
         </div>
@@ -215,12 +220,13 @@ const AboutPage = () => {
         </div>
       </section>
 
-      <PremiumCourseSection className="bg-background" />
+
+      <PremiumCourseSection className="bg-background container mx-auto" />
 
       {/* <OurTeamSection/> */}
 
       <div className="container px-4 py-24">
-      <JoinCourseSection />
+        <JoinCourseSection />
       </div>
     </div>
   )

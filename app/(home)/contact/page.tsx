@@ -1,4 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
+import BusinessHours from "@/components/BusinessHours"
 import ContactUsCards from "@/components/ContactCards"
 import EnquiryForm from "@/components/forms/EnquiryForm"
 import PageHeader from "@/components/shared/PageHeader"
@@ -17,7 +18,7 @@ const ContactPage = () => {
         <div className="container mx-auto flex gap-10 flex-col lg:flex-row px-4 items-start">
           <div className="flex-auto ">
             <HeadingSubtitle title="Contact Us" />
-            <Typography as="title">We're Here To Provide <br /> <HighlightedText>24X7Support</HighlightedText></Typography>
+            <Typography as="title">Connect with us to <br /> <HighlightedText>Explore More</HighlightedText></Typography>
             <Typography as="p" className="mt-3" >
               If you have any questions about our courses, need more information, or want to discuss how SNWEL Academy can support your career goals, we’d love to hear from you. Our team is ready to assist you with any inquiries you may have.
             </Typography>
@@ -34,10 +35,12 @@ const ContactPage = () => {
               <img className="w-full" src={`${constants.imagePath}/contact.jpg`} />
               <div className="absolute top-0 left-0 right-0 bottom-0 w-full h-full bg-gradient-to-b from-transparent to-primary flex flex-col justify-end">
                 <div className="py-5 text-center" >
-                  <Typography as="h4">24/7 Contact Support</Typography>
+                  {/* <Typography as="h4">24/7 Contact Support</Typography> */}
                 </div>
               </div>
             </div>
+
+            <BusinessHours/>
           </div>
         </div>
       </section>

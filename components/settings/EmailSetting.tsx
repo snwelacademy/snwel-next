@@ -3,8 +3,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import  { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 import { Card, CardContent, CardHeader } from '../ui/card';
@@ -18,12 +18,13 @@ import { SETTINGS } from '@/types/Setting';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Loader from '../Loader';
 import { Separator } from '../ui/separator';
+import { Switch } from '../ui/switch';
 
 const EmailSettingForm = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const client = useQueryClient()
     const { toast } = useToast();
-    const {data: settingData, isLoading} = useQuery({
+    const { data: settingData, isLoading } = useQuery({
         queryKey: ['admin/setting/email'],
         queryFn: () => getSetting<GeneralSetting>(SETTINGS.EMAIL)
     })
@@ -33,14 +34,20 @@ const EmailSettingForm = () => {
             code: SETTINGS.EMAIL,
             data: {
                 [EMAIL_TRANSPORTER.NODEMAILER]: {
-                    appKey: '',
-                    authKey: '',
-                    message: ''
+                    host: '',
+                    port: '',
+                    secure: false,
+                    auth: {
+                        user: '',
+                        pass: ''
+                    }
                 }
             }
         },
         resolver: zodResolver(EmailSettingTypeSchema)
     });
+
+    const watch = useWatch({control: form.control})
 
 
     const handleSubmit = async (value: z.infer<typeof EmailSettingTypeSchema>) => {
@@ -53,7 +60,7 @@ const EmailSettingForm = () => {
                 await createSetting(value);
                 toast({ title: 'Email setting created successfully!' });
             }
-            client.invalidateQueries({queryKey: ['admin/setting/email']})
+            client.invalidateQueries({ queryKey: ['admin/setting/email'] })
         } catch (error: any) {
             toast({ title: `Error: ${error.message}` });
         } finally {
@@ -68,7 +75,7 @@ const EmailSettingForm = () => {
     }, [settingData]);
 
 
-    if(isLoading){
+    if (isLoading) {
         return <div className='flex items-center w-full h-1/2 justify-center'><Loader type='default' /></div>
     }
 
@@ -84,15 +91,15 @@ const EmailSettingForm = () => {
                                     <h2 className='text-lg font-medium'>SMTP Configuration</h2>
                                     <p className="text-sm text-muted-foreground">Update your SMTP Email setting. </p>
                                 </div>
-                                    <Separator/>
+                                <Separator />
                                 <FormField
                                     control={form.control}
-                                    name={`data.${EMAIL_TRANSPORTER.NODEMAILER}.appKey`}
+                                    name={`data.${EMAIL_TRANSPORTER.NODEMAILER}.host`}
                                     render={({ field }) => (
                                         <FormItem className='w-full'>
-                                            <FormLabel>App Key</FormLabel>
+                                            <FormLabel>Host</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="App Key" {...field} />
+                                                <Input placeholder="smtp.example.com" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -100,12 +107,12 @@ const EmailSettingForm = () => {
                                 />
                                 <FormField
                                     control={form.control}
-                                    name={`data.${EMAIL_TRANSPORTER.NODEMAILER}.authKey`}
+                                    name={`data.${EMAIL_TRANSPORTER.NODEMAILER}.port`}
                                     render={({ field }) => (
                                         <FormItem className='w-full'>
-                                            <FormLabel>Auth Key</FormLabel>
+                                            <FormLabel>Port</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Auth Key" {...field} />
+                                                <Input placeholder="Port" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -113,17 +120,47 @@ const EmailSettingForm = () => {
                                 />
                                 <FormField
                                     control={form.control}
-                                    name={`data.${EMAIL_TRANSPORTER.NODEMAILER}.message`}
+                                    name={`data.${EMAIL_TRANSPORTER.NODEMAILER}.auth.user`}
                                     render={({ field }) => (
                                         <FormItem className='w-full'>
-                                            <FormLabel>Message</FormLabel>
+                                            <FormLabel>User name</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Message" {...field} />
+                                                <Input placeholder="your-email@example.com" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
+                                <FormField
+                                    control={form.control}
+                                    name={`data.${EMAIL_TRANSPORTER.NODEMAILER}.auth.pass`}
+                                    render={({ field }) => (
+                                        <FormItem className='w-full'>
+                                            <FormLabel>Password</FormLabel>
+                                            <FormControl>
+                                                <Input type="password" placeholder="your-email-password" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name={`data.${EMAIL_TRANSPORTER.NODEMAILER}.secure`}
+                                    render={({ field }) => (
+                                        <FormItem className='w-full flex items-center gap-3'>
+                                            <FormControl>
+                                                <Switch
+                                                    checked={field.value}
+                                                    onCheckedChange={field.onChange}
+                                                    />
+                                            </FormControl>
+                                                    <FormLabel>{watch.data?.[EMAIL_TRANSPORTER.NODEMAILER]?.secure ? 'Use Secure' : 'Use Unsecure'}</FormLabel>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                
                                 <FormField
                                     control={form.control}
                                     name="isChangable"

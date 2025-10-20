@@ -41,7 +41,7 @@ const PremiumCourseCard = ({
                     return <Typography key={nanoid()} as="lable" className={'tracking-wider uppercase text-xs'}>{ct.title}</Typography>
                 })
             }
-            <Link className='block' href={`/courses/${course._id}`}><Typography as="h2" className='text-3xl'>{course.title}</Typography></Link>
+            <Link className='block' href={`/courses/${course._id}`}><Typography as="h2" className='text-2xl lg:text-3xl'>{course.title}</Typography></Link>
         </div>
         <EnrollCourseModal
         trigger={<Button className='absolute left-5 bottom-5 bg-amber-500 hover:bg-amber-600 text-white'><span>ENROLL NOW</span><ArrowRight/></Button>}

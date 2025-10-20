@@ -158,6 +158,16 @@ export function MenuBuilderComponent() {
         ]);
         setFormData({ id: nanoid(), name: "Menu Item", href: "", children: [], img: "", desc: '' });
     };
+    const addFooterMenu = () => {
+        setFooterMenus([
+            ...footerMenu,
+            {
+                ...formData,
+                id: Math.random().toString(36).substring(7),
+            },
+        ]);
+        setFormData({ id: nanoid(), name: "Menu Item", href: "", children: [], img: "", desc: '' });
+    };
 
     useEffect(() => {
       if(settingData && settingData._id){
@@ -209,7 +219,7 @@ export function MenuBuilderComponent() {
                         variant={'outline'}
                             className=""
                             onClick={() => {
-                                addMenu();
+                                addFooterMenu();
                             }}
                             >
                             <PlusSquareIcon className="mr-2 w-4 h-4"/>

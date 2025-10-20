@@ -6,7 +6,7 @@ const PremiumCourseSection = async ({ className }: { className?: string }) => {
 
     const data = await getAllCourses({filter: {isPremium: true}})
     return (
-        <PremiumCourseSectionUi data={data.docs}/>
+        <PremiumCourseSectionUi data={data.docs} className={className}/>
     )
 }
 

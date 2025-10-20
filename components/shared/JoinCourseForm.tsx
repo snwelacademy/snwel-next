@@ -27,6 +27,8 @@ import { MASTER_CODES } from '@/types/master';
 import { CountrySelector } from '../country-state-city/Country';
 import { StateSelector } from '../country-state-city/StateSelector';
 import { CitySelector } from '../country-state-city/CitySelector';
+import { useQuery } from '@tanstack/react-query';
+import { Course } from '@/types';
 
 
 const formSchema = z.object({
@@ -41,7 +43,7 @@ const formSchema = z.object({
     country: z.string({ message: 'Country Required' })
   }),
   extra: z.object({
-    agree: z.boolean(),
+    agree: z.boolean({message: "Consent is required!"}),
   }),
   qualification: z.string(),
   mode: z.string(),
@@ -49,14 +51,13 @@ const formSchema = z.object({
   widget: z.string().optional()
 })
 
-const JoinCourseForm = ({ className, value, onClose }: { className?: string, value?: z.infer<typeof formSchema>, onClose?: () => void, extraData?: {widgetId: string} }) => {
+const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className?: string, value?: z.infer<typeof formSchema>, onClose?: () => void, extraData?: {widgetId: string}, targetCourse?: Course }) => {
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: value || {}
   });
-
 
   const [state, setState] = useState<{ isVerified: boolean, token?: string, invalidOtp?: boolean, invalidToken?: boolean, enrollmentId?: string } | null>(null);
   const Watch = useWatch({ control: form.control })
@@ -99,7 +100,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
     <Form {...form} >
       <form onSubmit={form.handleSubmit(onSubmit)} className={cn(["space-y-3 rounded-2xl p-4 md:p-10", className])}>
         <FormField
-          control={form.control}
+          
           name="name"
           render={({ field }) => (
             <FormItem>
@@ -111,9 +112,9 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <FormField
-            control={form.control}
+            
             name={`occupation`}
             render={({ field }) => (
               <FormItem className='max-w-full'>
@@ -132,7 +133,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
             )}
           />
           <FormField
-            control={form.control}
+            
             name={`qualification`}
             render={({ field }) => (
               <FormItem>
@@ -142,6 +143,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
                     placeholder='Qualifications'
                     type={"SUB_MASTER"}
                     parentCode={MASTER_CODES.QUALIFICATIONS}
+                    forcedData={targetCourse?.qualifications}
                     selectorKey="_id"
                     {...field}
                   />
@@ -152,9 +154,9 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <FormField
-            control={form.control}
+            
             name="courseId"
             render={({ field }) => (
               <FormItem>
@@ -168,7 +170,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
           />
 
           <FormField
-            control={form.control}
+            
             name={`mode`}
             render={({ field }) => (
               <FormItem className='max-w-full'>
@@ -179,6 +181,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
                     type={"SUB_MASTER"}
                     parentCode={MASTER_CODES.TRAINING_MODE}
                     selectorKey="_id"
+                    forcedData={targetCourse?.trainingModes}
                     {...field}
                   />
                 </FormControl>
@@ -189,7 +192,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
         </div>
 
         <FormField
-          control={form.control}
+          
           name="email"
           render={({ field }) => (
             <FormItem>
@@ -205,7 +208,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
 
 
         <FormField
-          control={form.control}
+          
           name="phone"
           render={({ field }) => (
             <FormItem>
@@ -218,9 +221,9 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
           )}
         />
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3  gap-3">
           <FormField
-            control={form.control}
+            
             name="location.country"
             render={({ field }) => (
               <FormItem>
@@ -233,7 +236,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
             )}
           />
           <FormField
-            control={form.control}
+            
             name="location.state"
             render={({ field }) => (
               <FormItem>
@@ -246,7 +249,7 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
             )}
           />
           <FormField
-            control={form.control}
+            
             name="location.city"
             render={({ field }) => (
               <FormItem>
@@ -261,8 +264,6 @@ const JoinCourseForm = ({ className, value, onClose }: { className?: string, val
         </div>
 
         <FormField
-
-          control={form.control}
           name="extra.agree"
           render={({ field }) => (
             <FormItem>

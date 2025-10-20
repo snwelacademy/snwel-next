@@ -44,7 +44,11 @@ import {
     Briefcase,
     LocateIcon,
     TabletSmartphone,
-    GalleryThumbnails
+    GalleryThumbnails,
+    AppWindow,
+    Table,
+    PenTool,
+    Tag
   } from "lucide-react";
   
   export type Icon = LucideIcon;
@@ -112,7 +116,11 @@ import {
     category: Shapes,
     component: Component,
     jobApplications: FileText,
-    gallery: GalleryThumbnails
+    gallery: GalleryThumbnails,
+    apps: AppWindow,
+    snwelEnquiry: Table,
+    blog: PenTool,
+    blogCategory: Tag
   };
 
 

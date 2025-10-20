@@ -20,66 +20,6 @@ import { SETTINGS } from "@/types";
 
 
 
-
-// Data structure for dynamic navigation
-const navItems = [
-  {
-    id: "64Tu1ljDoL5FLYHlm4EXQ",
-    name: "Home",
-    href: "/",
-    children: [],
-  },
-  {
-    id: "RH4DF3CunRqjejCjWc6Gf",
-    href: "/courses",
-    name: "Courses",
-    children: [
-      {
-        id: "dTu2c7pmprU3MiaZkV5PV",
-        name: "Piping",
-        href: "/courses?category=piping",
-        children: [],
-      },
-      {
-        id: "6g-x-jRLeOSwCYzu4PSKw",
-        name: "Mechanical",
-        href: "/courses?category=mechenical",
-        children: [],
-      },
-      {
-        id: "BP7e8FJLnz8goqZ8xGyYp",
-        name: "Civil & Structural",
-        href: "/courses?category=civil-and-structural",
-        children: [],
-      },
-    ],
-  },
-  {
-    id: "1Bu5Z0OSUQomF-3Zk-BNY",
-    name: "About",
-    href: "/about",
-    children: []
-  },
-  {
-    id: "hqi2v68JWVqmmVvWXbi_Q",
-    name: "Contact",
-    href: "/contact",
-    children: [],
-  },
-  {
-    id: "qVO4YrAfG7sAGjHCC7aJY",
-    name: "Webinars",
-    href: "/webinars",
-    children: [],
-  },
-  {
-    id: "AkzlFg4gg5XiANdE3mPSz",
-    name: "Job Vacancy",
-    href: "/job-vacancies",
-    children: [],
-  },
-];
-
 export function NavigationMenuComponent() {
   const { settings } = useContext(AppContext);
 
@@ -178,8 +118,10 @@ const ListItemWithChildren: React.FC<NavItemProps> = ({ item }) => {
 
 
 const MainNavbar = () => {
+  const { settings } = useContext(AppContext);
+
   return (
-    <div className='flex items-center justify-between gap-4 py-3 px-2 md:px-10 bg-background h-[92px] '>
+    <div className='flex items-center justify-between gap-4 py-3 px-2 md:px-10 bg-background lg:h-[92px] h-[70px] '>
 
       <div>
         <Link href="/"><Logo /></Link>
@@ -190,7 +132,10 @@ const MainNavbar = () => {
       </div>
 
       <div className='block md:hidden'>
-        <MobileNavbar />
+        <MobileNavbar 
+        navItems={settings?.find(nv => nv.code === SETTINGS.MENUBUILDER)?.data.menus} 
+        logo={settings.find(st => st.code === SETTINGS.GENERAL)?.data?.logoUrl}
+        />
       </div>
 
       <div className=' items-center gap-3 hidden md:inline-flex'>

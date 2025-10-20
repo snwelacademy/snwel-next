@@ -4,6 +4,7 @@
 import PageLoader from '@/components/PageLoader';
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/header';
+import AdminSidebar from '@/data/AdminNav';
 import { getSession } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import React from 'react';
@@ -19,9 +20,10 @@ async function AdminLayout({children}: {children: any}) {
     
      <Header />
     
-    <div className="flex h-screen overflow-hidden">
-      <Sidebar />
-      <main className="w-full pt-16 overflow-auto relative">
+    <div className="flex h-screen overflow-hidden pt-16">
+      {/* <Sidebar /> */}
+      <AdminSidebar/>
+      <main className="w-full overflow-auto relative">
         <React.Suspense fallback={<PageLoader/>}>
         {children}
         </React.Suspense>

@@ -72,7 +72,8 @@ export type Course = {
     content?: {
         tabs: CourseTabType[],
         info?: CourseInfoType[],
-        durationUnit?: string
+        durationUnit?: string,
+        showPrice?: boolean
     },
     widget?: string,
     qualifications?: Master[],

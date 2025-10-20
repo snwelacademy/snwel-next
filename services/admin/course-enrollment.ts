@@ -1,4 +1,3 @@
-
 import { DEFAULT_LIST_OPTIONS } from './../../types/ListOptions';
 import { protectedApi } from "@/lib/api";
 import { ApiResponse, ListResponse } from '@/types/ApiResponses';
@@ -6,6 +5,8 @@ import { ListOptions } from "@/types/ListOptions";
 import { AxiosResponse } from 'axios';
 import { CourseEnrollment, CreateCourseQuery } from '@/types/CourseEnrollment';
 import { objectToQueryString } from '@/lib/utils';
+import dayjs from 'dayjs';
+import XLSX, { IJsonSheet } from 'json-as-xlsx';
 
 export async function getAllEnrollments (options?: ListOptions) {
     try {
@@ -56,6 +57,56 @@ export async function getEnrollment (id: string) {
     } catch (error) {
         console.log("Error: deleteCourse: ", error);
         throw new Error("Error in deleting Enrollment. Please try again")
+    }
+}
+
+export async function exportAllEnrollments(options?: ListOptions) {
+    try {
+        const data = await getAllEnrollments(options)
+
+        const transformedData = data.docs.map(enrollment => ({
+            studentName: enrollment.userId.name,
+            studentEmail: enrollment.userId.email,
+            courseTitle: enrollment.courseId.title,
+            coursePrice: `${enrollment.courseId.currency} ${enrollment.courseId.price}`,
+            enrollmentStatus: enrollment.status,
+            paymentStatus: enrollment.paymentStatus,
+            paymentMethod: enrollment.paymentMethod,
+            expiryDate: dayjs(enrollment.expiredAt).format('MM/DD/YYYY'),
+            createdDate: dayjs(enrollment.createdAt).format('MM/DD/YYYY'),
+            otpVerified: enrollment.otp?.verified ? "Yes" : "No"
+        }));
+
+        const sheets: IJsonSheet[] = [
+            {
+                sheet: "Course Enrollments",
+                columns: [
+                    { label: "Student Name", value: "studentName" },
+                    { label: "Student Email", value: "studentEmail" },
+                    { label: "Course Title", value: "courseTitle" },
+                    { label: "Course Price", value: "coursePrice" },
+                    { label: "Enrollment Status", value: "enrollmentStatus" },
+                    { label: "Payment Status", value: "paymentStatus" },
+                    { label: "Payment Method", value: "paymentMethod" },
+                    { label: "Expiry Date", value: "expiryDate" },
+                    { label: "Created Date", value: "createdDate" },
+                    { label: "OTP Verified", value: "otpVerified" },
+                ],
+                content: transformedData
+            }
+        ];
+
+        const optionsXLSX = {
+            fileName: `course_enrollments_${options?.page || 1}`,
+            sheet: 'Course Enrollments',
+            tableOptions: {},
+        };
+
+        const blob = XLSX(sheets, optionsXLSX);
+        return blob;
+    } catch (error) {
+        console.error("Error exporting enrollments: ", error);
+        throw new Error("Failed to export enrollments. Please try again.");
     }
 }
 

@@ -1,0 +1,39 @@
+# Nixpacks configuration to make installs/builds lighter and use the standalone runtime.
+
+[variables]
+NODE_ENV = "production"
+NPM_CONFIG_PRODUCTION = "false"
+LOW_MEM_BUILD = "1"
+NEXT_TELEMETRY_DISABLED = "1"
+UV_THREADPOOL_SIZE = "1"
+# Modest memory cap for Node processes during build; adjust if needed
+NODE_OPTIONS = "--max-old-space-size=512"
+
+[phases.setup]
+nixPkgs = [
+  "nodejs_18",
+  "npm-9_x",
+  "curl",
+  "wget",
+]
+nixOverlays = ["https://github.com/railwayapp/nix-npm-overlay/archive/main.tar.gz"]
+
+[phases.install]
+# Faster, deterministic installs; tolerate peer conflicts just in case
+cmds = [
+  "npm ci --no-audit --no-fund --omit=optional --legacy-peer-deps"
+]
+cacheDirectories = ["/root/.npm"]
+paths = ["/app/node_modules/.bin"]
+
+[phases.build]
+dependsOn = ["install"]
+cmds = ["npm run build:lowmem"]
+cacheDirectories = [
+  ".next/cache",
+  "node_modules/.cache",
+]
+
+[start]
+# Use the standalone server to avoid runtime dependency on node_modules
+cmd = "npm run start:standalone"

@@ -21,6 +21,7 @@ import VerifyOtp from "../ui/verify-otp"
 import { OTPResponse } from "@/types/OtpTypes"
 import { createJobApplication } from "@/services/admin/admin-jobApplication"
 import JobApplicationSuccess from "./JobApplicationSuccess"
+import VerifyOtpResend from "../ui/verify-otp-resend"
 
 
 const FormInputsSchema = z.object({
@@ -177,7 +178,7 @@ export default function ApplyNowModal({ data }: { data?: JobVacancyType }) {
 
                   {
                     (!otpData?.verified && Watch.email && Watch.phone) && 
-                    <VerifyOtp
+                    <VerifyOtpResend
                   data={{
                     email: Watch.email||'',
                     phone: Watch.phone || ''

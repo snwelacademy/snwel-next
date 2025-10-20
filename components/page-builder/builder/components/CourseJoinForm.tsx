@@ -1,5 +1,4 @@
 'use client'
-import PopularBlogsSection from "@/components/blog/PopularBlogsSection";
 import JoinCourseSection from "@/components/shared/JoinCourseSection";
 import { ComponentConfig } from "@measured/puck";
 

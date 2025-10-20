@@ -29,16 +29,18 @@ interface DropdownSelectorProps {
     value?: string;
     selectorKey?: keyof Master,
     type?: MASTER_TYPE,
-    placeholder?: string
+    placeholder?: string,
+    forcedData?: Master[]
 }
 
-export function MasterDropdown({ parentCode, onChange, value, selectorKey = '_id', type, placeholder }: DropdownSelectorProps) {
+export function MasterDropdown({ parentCode, onChange, value, selectorKey = '_id', type, placeholder, forcedData }: DropdownSelectorProps) {
     const [open, setOpen] = React.useState(false);
     const [search, setSearch] = React.useState("");
 
     const { data, isLoading, error } = useQuery({
         queryKey: ['/api/masters', parentCode, search],
-        queryFn: () => getAllMasters({ search, filter: getFilterValue({parentCode, type}) })
+        queryFn: () => getAllMasters({ search, filter: getFilterValue({parentCode, type}) }),
+        enabled: !forcedData || forcedData.length === 0
     });
 
 
@@ -49,7 +51,7 @@ export function MasterDropdown({ parentCode, onChange, value, selectorKey = '_id
         return filter;
     }
     
-    console.log(parentCode, value)
+    // console.log(forcedData)
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error fetching data</div>;
     return (
@@ -79,7 +81,8 @@ export function MasterDropdown({ parentCode, onChange, value, selectorKey = '_id
                         <CommandList>
                             <CommandEmpty>No item found.</CommandEmpty>
                             <CommandGroup>
-                                {data?.docs?.map((item: Master) => {
+                                {(forcedData || data?.docs)?.map((item: Master) => {
+                                    // console.log({forcedData})
                                     return <CommandItem
                                     key={nanoid()}
                                         className="cursor-pointer"

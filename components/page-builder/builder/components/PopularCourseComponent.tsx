@@ -1,5 +1,6 @@
 'use client'
-import PopularCourseSlider from "@/components/courses/PopularCourseSlider";
+import dynamic from 'next/dynamic'
+const PopularCourseSlider = dynamic(() => import('@/components/courses/PopularCourseSlider'), { ssr: false })
 import SectionTitle from "@/components/shared/SectionTitle";
 import { ComponentConfig } from "@measured/puck";
 

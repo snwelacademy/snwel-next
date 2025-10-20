@@ -16,6 +16,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Loader from '../Loader';
 import { Label } from '../ui/label';
 import { FacebookIcon, InstagramIcon, LinkedinIcon, X, Youtube } from 'lucide-react';
+import { GoogleMyBusinessIcon } from '../custom-icons/GoogleBIcon';
 
 const GeneralSettingForm = () => {
     const { data: settingData, isLoading } = useQuery({
@@ -35,7 +36,8 @@ const GeneralSettingForm = () => {
                     address: '',
                     city: '',
                     state: '',
-                    country: ''
+                    country: '',
+                    url: ''
                 },
                 contacts: {
                     phone: '',
@@ -47,7 +49,8 @@ const GeneralSettingForm = () => {
                     insta: '',
                     x: '',
                     youtube: '',
-                    linkedin: ''
+                    linkedin: '',
+                    googleb: ''
                 }
             }
         },
@@ -202,9 +205,44 @@ const GeneralSettingForm = () => {
                                         </FormItem>
                                     )}
                                 />
+                                <FormField
+                                    control={form.control}
+                                    name="data.location.url"
+                                    render={({ field }) => (
+                                        <FormItem className='w-full'>
+                                            <FormLabel>Direction URL</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="google map url" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
 
                                 <fieldset className="space-y-4">
                                     <legend className="text-lg font-semibold">Social Media Links</legend>
+                                    <div className="space-y-2">
+                                        <FormField
+                                            control={form.control}
+                                            name="data.socialLinks.googleb"
+                                            render={({ field }) => (
+                                                <FormItem className='w-full'>
+                                                    <FormLabel htmlFor="twitter" className="flex items-center space-x-2">
+                                                        <GoogleMyBusinessIcon className="w-5 h-5 text-black" />
+                                                        <span>Google My Business</span>
+                                                    </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="url"
+                                                            placeholder="You google business url"
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </div>
                                     <div className="space-y-2">
                                         <FormField
                                             control={form.control}
@@ -218,7 +256,7 @@ const GeneralSettingForm = () => {
                                                     <FormControl>
                                                         <Input
                                                             type="url"
-                                                            placeholder="https://x.com/yourusername"
+                                                            placeholder="Your x url"
                                                             {...field}
                                                         />
                                                     </FormControl>

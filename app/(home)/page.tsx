@@ -1,20 +1,16 @@
 // import AnimatedComponent from "@/components/animate/AnimatedComponent";
+import nextDynamic from "next/dynamic";
 import { conf } from "@/components/page-builder/builder";
-import RenderPage from "@/components/page-builder/RenderPage";
 import Typography from "@/components/typography";
-import { getMaster } from "@/services/admin/admin-master";
+import { fetchMaster } from "@/services/admin/admin-master";
+const RenderPage = nextDynamic(() => import('@/components/page-builder/RenderPage'), { ssr: false })
 
-const getHomePage = async () => {
-  try {
-    const master = await getMaster('HOME-PAGE');
-    return master;
-  } catch (error) {
-    return null;
-  }
-}
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 
 const HomePage = async () => {
-  const master = await getHomePage();
+  const master = await fetchMaster("HOME-PAGE");
 
   if(!master){
     return <div className="w-screen h-screen grid place-content-center">
@@ -88,5 +84,7 @@ const HomePage = async () => {
   //   </div>
   // )
 }
+
+
 
 export default HomePage

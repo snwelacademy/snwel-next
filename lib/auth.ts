@@ -1,4 +1,5 @@
 import { constants } from "@/config/constants";
+import { UserRole } from "@/modules/user-management/types/permission.types";
 import { AuthOptions, getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -19,7 +20,7 @@ const authOptions: AuthOptions = {
             return token
         },
         async session({ session, token, user }) {
-            session.user.roles = token?.roles as string[];
+            session.user.roles = token?.roles as UserRole[];
             session.user.jwt = token?.jwt as string,
             session.user.id = token?.id as string
             // console.log("SESSION: ",{token, user, session})
@@ -44,11 +45,10 @@ const authOptions: AuthOptions = {
                     headers
                 });
 
-                console.log("USER DATA", res);
                 if(!res.ok) return null;
 
                 const {token, ...rest} = await res.json()
-
+                console.log("USER DATA", {token, rest});
                 return {
                     jwt: token, 
                     ...rest
