@@ -103,9 +103,20 @@ export function DataTable<TData, TValue>({
   });
 
   const setFilter = (value: string) => {
-    const result = filter?.find(dt => dt.identifier === value);
+    const result = filter?.find(dt => dt.filterValue === value);
 
     if(!result) return;
+    
+    // If filterValue is 'ALL', clear the filter
+    if(result.filterValue === 'ALL') {
+      setQueryObj(obj => {
+        const newObj = { ...obj };
+        delete newObj.filter;
+        return newObj;
+      });
+      return;
+    }
+    
     setQueryObj(obj => ({
       ...obj,
       filter:{

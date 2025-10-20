@@ -57,6 +57,12 @@ export const navItems: NavItemWithOptionalChildren[] = [
     label: "Enquiries",
   },
   {
+    title: "Snwel Enquiry",
+    href: "/admin/snwel-enquiry",
+    icon: "user",
+    label: "Snwel Enquiries",
+  },
+  {
     title: "Job Vacancy",
     href: "/admin/job-vacancies",
     icon: "bag",
