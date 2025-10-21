@@ -26,12 +26,15 @@ export default function Component() {
   function checkPermission(permission: string | string[]) {
     if (!session.data?.user?.roles) return false
     const permissionsForCheck = Array.isArray(permission) ? permission : [permission];
-    return permissionsForCheck.every(permission => session.data.user.roles.some(role => role.permissions.some(p => p.code === permission as PermissionCode)));
+    return permissionsForCheck.every(permission => 
+      session.data.user.roles.some(role => role.permissions?.some(p => p.code === permission as PermissionCode))
+    );
   }
 
-  const menuItems = navItems.filter(group => {
-    if (!group.items.some(item => item.permissions)) return true
-    return group.items.some(item => checkPermission(item.permissions as PermissionCode[]))
+  // navItems from dashboardNav is a flat array, not grouped
+  const menuItems = navItems.filter((item: any) => {
+    if (!item?.permissions) return true
+    return checkPermission(item.permissions as PermissionCode[])
   })
 
   return (
@@ -64,44 +67,35 @@ export default function Component() {
       </div>
       <ScrollArea className="overflow-auto flex-1">
         <nav className="flex flex-col gap-4 px-2 py-2 pt-2" style={{paddingBottom: '100px'}}>
-          {menuItems.map((group, groupIndex) => (
-            <div key={groupIndex} className="flex flex-col gap-1">
-              {expanded && (
-                <h2 className="text-sm font-semibold text-muted-foreground px-3 py-2">
-                  {group.group}
-                </h2>
-              )}
-              {group.items.map((item, itemIndex) => {
-                const Icon = Icons[item.icon] || Command
-                const isActive = pathname === item.href
-
-                return (
-                  <Link
-                    key={itemIndex}
-                    href={item.href}
-                    className={cn(
-                      "flex items-center gap-2 px-3 py-2 rounded-md transition-colors",
-                      isActive 
-                        ? "bg-primary text-primary-foreground" 
-                        : "hover:bg-muted"
-                    )}
+          {menuItems.map((item: any, itemIndex: number) => {
+            const Icon = Icons[item.icon] || Command
+            const isActive = pathname === item.href
+            if (!item.href) return null
+            return (
+              <Link
+                key={itemIndex}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-2 px-3 py-2 rounded-md transition-colors",
+                  isActive 
+                    ? "bg-primary text-primary-foreground" 
+                    : "hover:bg-muted"
+                )}
+              >
+                <Icon className="h-5 w-5 flex-shrink-0" />
+                {expanded && (
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="truncate"
                   >
-                    <Icon className="h-5 w-5 flex-shrink-0" />
-                    {expanded && (
-                      <motion.span
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="truncate"
-                      >
-                        {item.title}
-                      </motion.span>
-                    )}
-                  </Link>
-                )
-              })}
-            </div>
-          ))}
+                    {item.title}
+                  </motion.span>
+                )}
+              </Link>
+            )
+          })}
         </nav>
       </ScrollArea>
     </motion.div>
