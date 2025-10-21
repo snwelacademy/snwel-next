@@ -12,12 +12,54 @@ export async function getAllCourses (options?: ListOptions) {
     try {
         options = {...DEFAULT_LIST_OPTIONS, ...options}
         const res = await fetchClient(`/admin/course?${listOptionsToUrlSearchParams(options)}`, {method: 'GET'});
-        const data = await res.json() as ApiResponse<ListResponse<Course>>;
-        console.log("fetch client")
+
+        const fallback: ListResponse<Course> = {
+            docs: [],
+            limit: (options?.limit ?? DEFAULT_LIST_OPTIONS.limit) as number,
+            offset: 0,
+            total: 0,
+            nextPage: null,
+            prevPage: null,
+            hasNext: false,
+            currentPage: (options?.page ?? DEFAULT_LIST_OPTIONS.page) as number,
+            totalPages: 0
+        }
+
+        if (!res.ok) {
+            console.log("getAllCourses: non-ok response", res.status)
+            return fallback
+        }
+
+        let data: ApiResponse<ListResponse<Course>> | null = null
+        try {
+            data = await res.json() as ApiResponse<ListResponse<Course>>
+        } catch (e) {
+            console.log("getAllCourses: JSON parse failed", e)
+            return fallback
+        }
+
+        if (!data?.data) {
+            console.log("getAllCourses: missing data in response")
+            return fallback
+        }
+
         return data.data;
     } catch (error) {
         console.log("Error: getAllCourses: ", error);
-        throw new Error("Error in fetching course list. Please try again")
+        // Never crash the page; return safe fallback
+        const page = options?.page ?? DEFAULT_LIST_OPTIONS.page as number
+        const limit = options?.limit ?? DEFAULT_LIST_OPTIONS.limit as number
+        return {
+            docs: [],
+            limit,
+            offset: 0,
+            total: 0,
+            nextPage: null,
+            prevPage: null,
+            hasNext: false,
+            currentPage: page,
+            totalPages: 0
+        }
     }
 }
 export async function createCourse (mutateCourse: any) {
