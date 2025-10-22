@@ -1,10 +1,3 @@
-import BlogTable from '@/components/blog/BlogTable'
-import React from 'react'
+import EnhancedBlogPage from '@/components/admin-components/blog/BlogPage'
 
-const BlogPage = () => {
-  return (
-    <BlogTable/>
-  )
-}
-
-export default BlogPage
+export default EnhancedBlogPage

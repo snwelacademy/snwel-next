@@ -1,30 +1,28 @@
 import { constants } from "@/config/constants";
-import { UserRole } from "@/modules/user-management/types/permission.types";
 import { AuthOptions, getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 const authOptions: AuthOptions = {
     // Configure one or more authentication providers
-    url: process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_NEXTAUTH_URL,
     callbacks: {
         async jwt({ token, user }) {
             const u = user as any;
-            // console.log("JWT",{token, user})
-            if(user){
-                token.roles = u?.roles,
-                token.id = u?.id
+            if (u) {
+                // Keep JWT small to avoid 431 header issues
                 return {
+                    // next-auth internals
                     ...token,
-                    jwt: u.jwt
+                    // minimal custom fields
+                    id: u?.id,
+                    jwt: u?.jwt,
                 }
             }
             return token
         },
         async session({ session, token, user }) {
-            session.user.roles = token?.roles as UserRole[];
-            session.user.jwt = token?.jwt as string,
+            // Expose only minimal fields in session; roles/permissions come from /auth/me
+            session.user.jwt = token?.jwt as string
             session.user.id = token?.id as string
-            // console.log("SESSION: ",{token, user, session})
             return session
         }
     },

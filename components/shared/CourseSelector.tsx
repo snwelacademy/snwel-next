@@ -6,11 +6,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { getListOptionsFromSearchParams } from "@/lib/utils";
-import { getAllCourses } from "@/services/admin/admin-course-service";
 import { nanoid } from "nanoid";
 import { useQuery } from '@tanstack/react-query'
-import { useSearchParams } from "next/navigation";
+import { getPublicCourses } from "@/services/public/course-service";
 
 const CourseSelector = ({
     value,
@@ -26,7 +24,7 @@ const CourseSelector = ({
 }) => {
     const {data} = useQuery({
         queryKey: ['client/courses', filter],
-        queryFn:  () => getAllCourses({filter})
+        queryFn:  () => getPublicCourses({filter})
     })
     return (
         <Select onValueChange={onChange} defaultValue={value}>

@@ -10,9 +10,10 @@ import { toast } from "@/components/ui/use-toast"
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { verifyOtp } from '@/services/course-enrollment-service'
+import { verifyOtp, resendOtp } from '@/services/course-enrollment-service'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
+import { useEffect, useState } from 'react'
 
 const FormSchema = z.object({
     otp: z.string().min(6, {
@@ -22,6 +23,8 @@ const FormSchema = z.object({
 })
 
 const OTPForm = ({token, onVerified}: {token: string, onVerified?: (data:  {isVerified: boolean, enrollmentId?: string}) =>void}) => {
+    const [resendCooldown, setResendCooldown] = useState(0)
+    const [resending, setResending] = useState(false)
    
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -48,6 +51,27 @@ const OTPForm = ({token, onVerified}: {token: string, onVerified?: (data:  {isVe
             toast({ title: error.message||"Sonthing went wrong!", variant: "destructive" });
         }
     }
+
+    async function onResend() {
+        try {
+            const tk = form.getValues('token')
+            if (!tk) return toast({ title: 'Token not found!' })
+            setResending(true)
+            await resendOtp({ token: tk })
+            toast({ title: 'OTP resent', description: 'Please check your email/WhatsApp.' })
+            setResendCooldown(60)
+        } catch (error: any) {
+            toast({ title: error.message || 'Failed to resend OTP', variant: 'destructive' })
+        } finally {
+            setResending(false)
+        }
+    }
+
+    useEffect(() => {
+        if (resendCooldown <= 0) return
+        const id = setInterval(() => setResendCooldown((s) => s - 1), 1000)
+        return () => clearInterval(id)
+    }, [resendCooldown])
 
     return (
         
@@ -85,7 +109,12 @@ const OTPForm = ({token, onVerified}: {token: string, onVerified?: (data:  {isVe
                         )}
                     />
 
-                    <Button type="submit" className="w-full">Submit</Button>
+                    <div className="flex items-center justify-between gap-2">
+                        <Button type="button" variant="ghost" disabled={resending || resendCooldown > 0} onClick={onResend}>
+                            {resending ? 'Resending...' : resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend OTP'}
+                        </Button>
+                        <Button type="submit">Submit</Button>
+                    </div>
                 </form>
             </Form>
     

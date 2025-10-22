@@ -17,10 +17,10 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { useQuery } from "@tanstack/react-query";
-import { getAllMasters } from "@/services/admin/admin-master"; // Adjust the import based on your service
 import { MASTER_TYPE, Master } from "@/types/master";
 import { nanoid } from "nanoid";
 import { CommandList } from "cmdk";
+import { getPublicMasters } from "@/services/public/master-service";
 
 
 interface DropdownSelectorProps {
@@ -38,11 +38,15 @@ export function MasterDropdown({ parentCode, onChange, value, selectorKey = '_id
     const [search, setSearch] = React.useState("");
 
     const { data, isLoading, error } = useQuery({
-        queryKey: ['/api/masters', parentCode, search],
-        queryFn: () => getAllMasters({ search, filter: getFilterValue({parentCode, type}) }),
+        queryKey: ['/api/masters', parentCode, search, type],
+        queryFn: () => getPublicMasters({ search, filter: getFilterValue({parentCode, type}) }),
         enabled: !forcedData || forcedData.length === 0
     });
 
+    const items = React.useMemo<Master[]>(() => {
+        if (forcedData && forcedData.length) return forcedData;
+        return data?.docs || [];
+    }, [forcedData, data]);
 
     const getFilterValue = (data: {parentCode?: string, type?: MASTER_TYPE}) => {
         const filter: any = {};
@@ -52,11 +56,11 @@ export function MasterDropdown({ parentCode, onChange, value, selectorKey = '_id
     }
     
     // console.log(forcedData)
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading && (!forcedData || forcedData.length === 0)) return <div>Loading...</div>;
     if (error) return <div>Error fetching data</div>;
     return (
         <div className="relative">
-            <Popover open={open} onOpenChange={setOpen}>
+            <Popover open={open} onOpenChange={(v)=>{ setOpen(v); if(!v) setSearch(""); }}>
                 <PopoverTrigger asChild>
                     <Button
                         variant="outline"
@@ -65,7 +69,7 @@ export function MasterDropdown({ parentCode, onChange, value, selectorKey = '_id
                         className="w-full max-w-full justify-between"
                     >
                         {value
-                            ? (data?.docs || []).find((item: Master) => item[selectorKey] === value)?.name
+                            ? items.find((item: Master) => String(item[selectorKey]) === String(value))?.name || (placeholder || "Select item...")
                             : (placeholder || "Select item...")}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
@@ -81,7 +85,7 @@ export function MasterDropdown({ parentCode, onChange, value, selectorKey = '_id
                         <CommandList>
                             <CommandEmpty>No item found.</CommandEmpty>
                             <CommandGroup>
-                                {(forcedData || data?.docs)?.map((item: Master) => {
+                                {items.map((item: Master) => {
                                     // console.log({forcedData})
                                     return <CommandItem
                                     key={nanoid()}
@@ -90,13 +94,14 @@ export function MasterDropdown({ parentCode, onChange, value, selectorKey = '_id
                                         value={String(item[selectorKey])}
                                         onSelect={(currentValue) => {
                                             onChange(currentValue === value ? "" : currentValue);
+                                            setSearch("");
                                             setOpen(false);
                                         }}
                                     >
                                         <Check
                                             className={cn(
                                                 "mr-2 h-4 w-4",
-                                                value === item.name ? "opacity-100" : "opacity-0"
+                                                String(value) === String(item[selectorKey]) ? "opacity-100" : "opacity-0"
                                             )}
                                         />
                                         {item.name}

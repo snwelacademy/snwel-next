@@ -17,7 +17,6 @@ import { useSearchParams } from 'next/navigation'
 const breadcrumbItems = [{ title: "Webinars", link: "/admin/webinar" }];
 
 const WebinarEnquiryPage = () => {
-  const totalUsers = 10;
   const searchParams = useSearchParams();
   const {data, isLoading} = useQuery({
     queryKey: ['/admin/webinar-inquiry', searchParams], 
@@ -32,7 +31,7 @@ const WebinarEnquiryPage = () => {
 
       <div className="flex items-start justify-between">
         <Heading
-          title={`Webinars (${totalUsers})`}
+          title={`Webinars (${data?.total || 0})`}
           description="Manage All Webinar List"
         />
 
@@ -52,7 +51,7 @@ const WebinarEnquiryPage = () => {
         searchKey="title"
         pageNo={data?.currentPage||1}
         columns={WebinarEnquiryColumn as any}
-        total={totalUsers}
+        total={data?.total || 0}
         data={data?.docs||[]}
         pageCount={data?.total ? getTotalPages(data.total, data.limit): 0}
       />

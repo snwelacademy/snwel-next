@@ -15,6 +15,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import WebinarEnquirySubForm from './WebinarEnquiryForm';
 import GeneralEnquirySubForm from './GeneralEnquiryForm';
 import { createEnquiry } from '@/services/enquiry-service';
+import VerifyOtp from '@/components/ui/verify-otp';
 
 const EnquiryForm = ({ type, isUnique }: { type: string, isUnique?: boolean }) => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -34,6 +35,7 @@ const EnquiryForm = ({ type, isUnique }: { type: string, isUnique?: boolean }) =
         resolver: zodResolver(enquirySchema)
     });
 
+    const [otpVerified, setOtpVerified] = useState<boolean>(false);
     const handleSubmit = async (value: CreateEnquirySchema) => {
         try {
             setLoading(true);
@@ -41,6 +43,7 @@ const EnquiryForm = ({ type, isUnique }: { type: string, isUnique?: boolean }) =
             toast({ title: 'Enquiry submitted successfully!', variant: 'success' });
             client.invalidateQueries({ queryKey: ['enquiries'] });
             form.reset();
+            setOtpVerified(false);
         } catch (error: any) {
             toast({ title: `${error.message}`, variant: 'destructive' });
         } finally {
@@ -96,9 +99,17 @@ const EnquiryForm = ({ type, isUnique }: { type: string, isUnique?: boolean }) =
                                     )}
                                 />
                                 {type === 'webinar' && <WebinarEnquirySubForm control={form.control} />}
+                                {type === 'webinar' && (
+                                    <div className='mt-2'>
+                                        <VerifyOtp 
+                                            data={{ email: form.watch('email'), phone: form.watch('phone') }} 
+                                            onVerify={() => setOtpVerified(true)} 
+                                        />
+                                    </div>
+                                )}
                                 {type === 'general' && <GeneralEnquirySubForm control={form.control} />}
                                 <div className='flex justify-end pt-5'>
-                                    <Button disabled={loading} type='submit'>Submit</Button>
+                                    <Button disabled={loading || (type === 'webinar' && !otpVerified)} type='submit'>Submit</Button>
                                 </div>
                             </CardContent>
                         </Card>

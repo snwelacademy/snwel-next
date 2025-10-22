@@ -429,101 +429,11 @@ const CdtWidgetSubForm: React.FC<CdtWidgetSubFormProps> = ({ control }) => {
 
 
             <div className='pt-5'>
-                <Typography as="h3">Appearence</Typography>
+                <Typography as="h3">Appearance</Typography>
                 <Separator></Separator>
-            </div>
-            <div className="space-y-5">
-                <FormField
-                    control={control}
-                    name="settings.appearance.colors.timerColor"
-                    render={({ field }) => (
-                        <FormItem className='w-full'>
-                            <FormLabel>Timer Color</FormLabel>
-                            <FormControl>
-                                <Input type="color" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={control}
-                    name="settings.appearance.colors.timerTextColor"
-                    render={({ field }) => (
-                        <FormItem className='w-full'>
-                            <FormLabel>Timer Text Color</FormLabel>
-                            <FormControl>
-                                <Input type="color" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={control}
-                    name="settings.appearance.colors.labelsColor"
-                    render={({ field }) => (
-                        <FormItem className='w-full'>
-                            <FormLabel>Labels Color</FormLabel>
-                            <FormControl>
-                                <Input type="color" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={control}
-                    name="settings.appearance.colors.messageColor"
-                    render={({ field }) => (
-                        <FormItem className='w-full'>
-                            <FormLabel>Message Color</FormLabel>
-                            <FormControl>
-                                <Input type="color" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={control}
-                    name="settings.appearance.colors.buttonColor"
-                    render={({ field }) => (
-                        <FormItem className='w-full'>
-                            <FormLabel>Button Color</FormLabel>
-                            <FormControl>
-                                <Input type="color" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={control}
-                    name="settings.appearance.colors.buttonTextColor"
-                    render={({ field }) => (
-                        <FormItem className='w-full'>
-                            <FormLabel>Button Text Color</FormLabel>
-                            <FormControl>
-                                <Input type="color" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={control}
-                    name="settings.appearance.colors.bgColor"
-                    render={({ field }) => (
-                        <FormItem className='w-full'>
-                            <FormLabel>Background Color</FormLabel>
-                            <FormControl>
-                                <Input type="color" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                <p className="text-sm text-muted-foreground mt-2">
+                  All appearance settings have been moved to the Style tab for better organization.
+                </p>
             </div>
         </>
     );

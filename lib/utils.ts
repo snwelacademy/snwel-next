@@ -10,13 +10,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function getCurrencySymbol(currencyCode: string){
+export function getCurrencySymbol(currencyCode?: string){
   const currencySymbolMap = {
     'INR': '₹',
     'USD': '$'
   };
 
-  return currencySymbolMap[currencyCode.toLocaleUpperCase() as keyof typeof currencySymbolMap] || ''
+  const code = (currencyCode || '').toUpperCase();
+  return currencySymbolMap[code as keyof typeof currencySymbolMap] || ''
 }
 
 

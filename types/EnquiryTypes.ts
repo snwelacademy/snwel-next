@@ -27,6 +27,9 @@ const WebinarEnquiry = z.object({
     state: z.string({ required_error: "State is required" }),
     address: z.string({ required_error: "Address is required" })
   }).optional(),
+  qualification: z.string().optional(),
+  presentStatus: z.enum(['JOB_SEEKER', 'STUDENT', 'WORKING_PROFESSIONAL']).optional(),
+  addressFull: z.string().optional(),
 });
 
 // Create a union schema for all enquiry types

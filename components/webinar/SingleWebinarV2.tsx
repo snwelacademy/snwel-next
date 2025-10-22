@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CalendarDays, Clock, Users, Play, X, IndianRupee } from 'lucide-react'
 import { Webinar } from '@/types'
+import EnquiryForm from '@/components/forms/EnquiryForm'
+import { getCurrencySymbol } from '@/lib/utils'
 
 // Function to extract YouTube video ID
 const getYouTubeId = (url: string) => {
@@ -12,41 +14,9 @@ const getYouTubeId = (url: string) => {
   return (match && match[2].length === 11) ? match[2] : null
 }
 
-// Mock data based on the provided schema
-// const webinar = {
-//   id: '1',
-//   title: 'Advanced React Techniques for Senior Developers',
-//   shortDescription: 'Elevate your React skills to the next level with industry experts',
-//   content: 'Join us for an intensive webinar where we dive deep into advanced React concepts, best practices, and cutting-edge techniques used by top tech companies.',
-//   startDate: new Date('2023-08-15T10:00:00Z'),
-//   slug: 'advanced-react-techniques',
-//   thumbnail: 'https://youtu.be/h3BKjZMGoIw?si=wvzn8e41g3TDCoU8', // Example YouTube link
-//   coverImage: 'https://ik.imagekit.io/public.blob.vercel-storage.com/react-cover-YNLB6YVXO/react-cover.jpg',
-//   isActive: true,
-//   hosts: [{ name: 'Jane Doe', avatar: 'https://ik.imagekit.io/public.blob.vercel-storage.com/avatar-YNLB6YVXO/avatar1.jpg' }],
-//   price: 199,
-//   currency: 'INR',
-//   curriculum: [
-//     { title: 'Advanced State Management', duration: '1 hour' },
-//     { title: 'Performance Optimization', duration: '1 hour' },
-//     { title: 'Custom Hooks and Patterns', duration: '1 hour' },
-//     { title: 'Server-Side Rendering Deep Dive', duration: '1 hour' },
-//   ],
-// }
-
 export default function SingleWebinarV2({webinar}: {webinar: Webinar}) {
-  const [isRegistering, setIsRegistering] = useState(false)
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [youtubeid, setYoutubeId] = useState<string|null>(null)
-
-  const handleRegister = () => {
-    setIsRegistering(true)
-    // Simulating API call
-    setTimeout(() => {
-      setIsRegistering(false)
-      alert('Registration successful!')
-    }, 2000)
-  }
 
   const youtubeId = getYouTubeId(webinar.videoUrl||"")
   const thumbnailUrl = youtubeId
@@ -120,20 +90,14 @@ export default function SingleWebinarV2({webinar}: {webinar: Webinar}) {
               <div className="mt-4 flex items-center space-x-4">
                 <IndianRupee className="h-6 w-6 text-blue-600" />
                 <span className="text-2xl font-bold">
-                  {webinar.price} {webinar.currency}
+                  {getCurrencySymbol(webinar.currency)} {webinar.price ?? 0}
                 </span>
               </div>
             </div>
-
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-full rounded-md bg-blue-600 px-8 py-3 font-bold text-white shadow-lg transition-colors hover:bg-blue-700"
-              onClick={handleRegister}
-              disabled={isRegistering}
-            >
-              {isRegistering ? 'Registering...' : 'Register Now'}
-            </motion.button>
+            <div className="rounded-lg bg-white p-6 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)]">
+              <h2 className="mb-4 text-2xl font-bold">Register for this webinar</h2>
+              <EnquiryForm type="webinar" isUnique />
+            </div>
           </motion.div>
 
           <motion.div
@@ -170,28 +134,28 @@ export default function SingleWebinarV2({webinar}: {webinar: Webinar}) {
           </div>
         </motion.div>
 
-       {
-        webinar.hosts.length > 0 && 
-        <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.2, duration: 0.5 }}
-        className="mt-12"
-      >
-        <h2 className="mb-6 text-3xl font-bold">Your Host</h2>
-        <div className="flex items-center space-x-4 rounded-lg bg-white p-6 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)]">
-          <img
-            src={webinar.hosts[0].profilePic}
-            alt={webinar.hosts[0].name}
-            className="h-16 w-16 rounded-full"
-          />
-          <div>
-            <h3 className="text-xl font-bold">{webinar.hosts[0].name}</h3>
-            <p className="text-gray-600">Expert React Developer</p>
-          </div>
-        </div>
-      </motion.div>
-       }
+        {
+          webinar.hosts.length > 0 && 
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.2, duration: 0.5 }}
+            className="mt-12"
+          >
+            <h2 className="mb-6 text-3xl font-bold">Your Host</h2>
+            <div className="flex items-center space-x-4 rounded-lg bg-white p-6 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)]">
+              <img
+                src={webinar.hosts[0].profilePic}
+                alt={webinar.hosts[0].name}
+                className="h-16 w-16 rounded-full"
+              />
+              <div>
+                <h3 className="text-xl font-bold">{webinar.hosts[0].name}</h3>
+                {webinar.hosts[0].email && <p className="text-gray-600">{webinar.hosts[0].email}</p>}
+              </div>
+            </div>
+          </motion.div>
+        }
       </main>
 
       <AnimatePresence>

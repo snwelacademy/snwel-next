@@ -21,3 +21,12 @@ export async function verifyOtp(input: {
         throw new Error("Error: verifyOtp")
     }
 }
+
+export async function resendOtp(input: { token: string }){
+    try {
+        const res = await api.post<ApiResponse<{resent?: boolean}>>("/course-enroll/resend-otp", input);
+        return res.data.data;
+    } catch (error) {
+        throw new Error("Error: resendOtp")
+    }
+}

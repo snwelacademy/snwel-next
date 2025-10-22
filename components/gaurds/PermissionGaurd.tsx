@@ -1,7 +1,7 @@
 // components/guards/PermissionGuard.tsx
 'use client'
 
-import { usePermission } from '@/modules/user-management/hooks/usePermission'
+import { useAuth } from '@/context/AuthContext'
 import { PermissionCode } from '@/modules/user-management/types/permission.types'
 import { ReactNode } from 'react'
 
@@ -11,8 +11,17 @@ interface PermissionGuardProps {
   fallback?: ReactNode
 }
 
-export function PermissionGuard({ permission, children, fallback }: PermissionGuardProps) {
-  const hasPermission = usePermission(permission)
+export function PermissionGaurd({ permission, children, fallback }: PermissionGuardProps) {
+  const { hasPerm, loaded } = useAuth()
+  const hasPermission = hasPerm(permission as unknown as string)
+
+  if (!loaded) {
+    return fallback || (
+      <div className="flex items-center justify-center min-h-[120px]">
+        <p className="text-muted-foreground text-sm">Loading permissions...</p>
+      </div>
+    )
+  }
 
   if (!hasPermission) {
     return fallback || (
@@ -24,3 +33,6 @@ export function PermissionGuard({ permission, children, fallback }: PermissionGu
 
   return <>{children}</>
 }
+
+// Optional alias with corrected spelling for new imports
+export const PermissionGuard = PermissionGaurd

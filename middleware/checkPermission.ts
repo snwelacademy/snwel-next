@@ -22,7 +22,7 @@ export async function checkPermission(
         code: PermissionCode
       }>
     }>;
-    
+    console.log(userRoles)
     const hasPermission = userRoles?.some((role) => 
       role.permissions.some((permission) => permission.code === requiredPermission)
     );

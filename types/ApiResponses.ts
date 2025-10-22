@@ -5,6 +5,13 @@ export type ApiResponse<T=any> = {
     data: T
 }
 
+// New standard API response format from backend team
+export type StandardApiResponse<T=any> = {
+    success: boolean,
+    data: T,
+    message?: string
+}
+
 export type ListResponse<T = any> = {
     docs: T[],
     limit: number,
@@ -15,6 +22,19 @@ export type ListResponse<T = any> = {
     hasNext: boolean,
     currentPage: number,
     totalPages?: number | null
+}
+
+// Pagination response format from backend team
+export type PaginatedResponse<T = any> = {
+    docs: T[],
+    totalDocs: number,
+    limit: number,
+    page: number,
+    totalPages: number,
+    hasNextPage: boolean,
+    hasPrevPage: boolean,
+    nextPage?: number,
+    prevPage?: number
 }
 
 

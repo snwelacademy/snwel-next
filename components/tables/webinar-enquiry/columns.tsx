@@ -57,11 +57,6 @@ export const WebinarEnquiryColumn: ColumnDef<DynamicEnquiry<WebinarEnquiry>>[] =
     cell: ({ row }) => formatDate(row.original.createdAt),
   },
   {
-    accessorKey: "updatedAt",
-    header: "UPDATED AT",
-    cell: ({ row }) => formatDate(row.original.updatedAt),
-  },
-  {
     id: "actions",
     cell: ({ row }) => <CellAction data={row.original} />,
   },

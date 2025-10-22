@@ -16,6 +16,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import EnquiryViewSheet from "./EnquiryViewSheet";
 
 
 interface CellActionProps {
@@ -51,6 +52,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         onConfirm={onConfirm}
         loading={loading}
       />
+      <div className="flex items-center gap-2">
+        <EnquiryViewSheet data={data} />
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -71,6 +74,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      </div>
     </>
   );
-};
+}

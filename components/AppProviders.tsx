@@ -7,6 +7,7 @@ import { SessionProvider } from 'next-auth/react'
 import { Session } from 'next-auth';
 import { Toaster } from './ui/toaster';
 import { Setting } from '@/types';
+import { AuthProvider } from '@/context/AuthContext';
 
 type AppContextType = {
   settings: Setting[]
@@ -29,12 +30,14 @@ const AppProviders = ({
   return (
     <AppContext.Provider value={data}>
       <SessionProvider session={session} refetchOnWindowFocus={false} refetchWhenOffline={false}>
-      <QueryClientProvider client={client}>
-        {children}
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-      <Toaster />
-    </SessionProvider>
+        <QueryClientProvider client={client}>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+        <Toaster />
+      </SessionProvider>
     </AppContext.Provider>
   )
 }

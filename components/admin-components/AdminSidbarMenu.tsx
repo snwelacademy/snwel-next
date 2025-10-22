@@ -7,9 +7,7 @@ import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import { Icons } from '../icons'
-import { usePermission, usePermissions } from '@/modules/user-management/hooks/usePermission'
-import { useSession } from 'next-auth/react'
-import { Permission, PermissionCode } from '@/modules/user-management/types/permission.types'
+import { useAuth } from '@/context/AuthContext'
 
 
 interface NavItem {
@@ -40,14 +38,28 @@ const navItems: NavItem[] = [
     href: "/admin/course-category", 
     icon: "category",
     label: "Courses",
-    permissions: "COURSE_VIEW"
+    permissions: "CATEGORY_MANAGE"
   },
   {
     title: "Course Queries",
     href: "/admin/course-queries",
     icon: "enrollments",
     label: "course queries",
-    permissions: "COURSE_VIEW"
+    permissions: ["ENQUIRY_VIEW", "ENROLLMENT_VIEW"]
+  },
+  {
+    title: "Blogs",
+    href: "/admin/blogs",
+    icon: "blog",
+    label: "Blogs",
+    permissions: "BLOG_VIEW"
+  },
+  {
+    title: "Blog Categories",
+    href: "/admin/blog-category",
+    icon: "blogCategory",
+    label: "Blog Categories",
+    permissions: "BLOG_CATEGORY_VIEW"
   },
   {
     title: "Job Vacancy",
@@ -71,6 +83,20 @@ const navItems: NavItem[] = [
     permissions: "JOB_VIEW"
   },
   {
+    title: "Users",
+    href: "/admin/users",
+    icon: "user",
+    label: "Users",
+    permissions: "USER_VIEW"
+  },
+  {
+    title: "Roles",
+    href: "/admin/roles",
+    icon: "settings",
+    label: "Roles",
+    permissions: "ROLE_VIEW"
+  },
+  {
     title: "Pages",
     href: "/admin/pages",
     icon: "pages",
@@ -87,24 +113,28 @@ const navItems: NavItem[] = [
     href: "/admin/webinar-queries",
     icon: "webinarEnroll",
     label: "weibinar-queries",
+    permissions: "WEBINAR_VIEW"
   },
   {
     title: "Widgets",
     href: "/admin/widgets",
     icon: "component",
     label: "widgets",
+    permissions: "WIDGET_VIEW"
   },
   {
     title: "General Enq",
     href: "/admin/general-enquiry",
     icon: "user",
     label: "Enquiries",
+    permissions: "ENQUIRY_VIEW"
   },
   {
     title: "Manage Gallery",
     href: "/admin/gallery-manager",
     icon: "gallery",
     label: "Manage Gallery",
+    permissions: "GALLERY_VIEW"
   },
   {
     title: "Master",
@@ -117,43 +147,41 @@ const navItems: NavItem[] = [
     href: "/admin/settings",
     icon: "kanban",
     label: "kanban",
+    permissions: "SETTINGS_VIEW"
   },
   {
     title: "App Center",
     href: "/admin/app-center",
     icon: "apps",
     label: "App Center",
+    permissions: "INTEGRATION_VIEW"
   },
+  // {
+  //   title: "Snwel Enquiries",
+  //   href: "/admin/snwel-enquiry",
+  //   icon: "snwelEnquiry",
+  //   label: "Snwel Enquiries",
+  //   permissions: "SNWEL_ENQUIRY_VIEW"
+  // },
   {
-    title: "Snwel Enquiries",
-    href: "/admin/snwel-enquiry",
-    icon: "snwelEnquiry",
-    label: "Snwel Enquiries",
+    title: "Analytics",
+    href: "/admin/analytics",
+    icon: "laptop",
+    label: "Analytics",
+    permissions: "ANALYTICS_VIEW"
   },
 ]
 
 export default function AdminNavbar() {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const pathname = usePathname();
-  const session = useSession();
-
-
-  function checkPermission(permission: string | string[]) {
-    if (!session.data?.user?.roles || !Array.isArray(session.data.user.roles)) return false
-    const permissionsForCheck = Array.isArray(permission) ? permission : [permission];
-    return permissionsForCheck.every(permission => 
-      session.data.user.roles?.some(role => 
-        role.permissions?.some(p => p.code === permission as PermissionCode)
-      )
-    );
-  }
+  const { hasAny } = useAuth()
 
   const menuItems = navItems.filter(item => {
     if (!item.permissions) return true
-    return checkPermission(item.permissions)
+    const req = Array.isArray(item.permissions) ? item.permissions : [item.permissions]
+    return hasAny(req)
   })
-
-  console.log(session.data?.user?.roles)
 
   return (
     <div className={cn(
@@ -183,8 +211,11 @@ export default function AdminNavbar() {
                 isCollapsed && "justify-center"
               )}
             >
-              {/* {Icons[item.icon as any]}
-              {!isCollapsed && <span>{item.title}</span>} */}
+              {(() => {
+                const Icon = Icons[item.icon as keyof typeof Icons]
+                return Icon ? <Icon className="h-5 w-5" /> : null
+              })()}
+              {!isCollapsed && <span>{item.title}</span>}
             </Link>
           ))}
         </nav>
