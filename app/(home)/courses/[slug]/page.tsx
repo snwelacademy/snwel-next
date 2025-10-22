@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import RenderWidget from "@/components/widget/RenderWidget"
 import { PrebuiltComponent } from "@/data/prebuiltComponents"
 import { formatToLocalCurrency } from "@/lib/utils"
-import { getCourse } from "@/services/admin/admin-course-service"
+import { getPublicCourseBySlug } from "@/services/public/course-service"
 import { useQuery } from "@tanstack/react-query"
 import { Book, Dot } from "lucide-react"
 import { nanoid } from "nanoid"
@@ -21,8 +21,8 @@ import { useSearchParams } from "next/navigation"
 export default function Page({ params }: { params: { slug: string } }) {
   const searchParams = useSearchParams()
   const { data: course, isLoading } = useQuery({
-    queryKey: ["course", params.slug],
-    queryFn: () => getCourse(params.slug || "")
+    queryKey: ["public/course", params.slug],
+    queryFn: () => getPublicCourseBySlug(params.slug || "")
   })
   if (isLoading) {
     return <PageLoader />

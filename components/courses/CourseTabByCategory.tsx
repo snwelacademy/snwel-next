@@ -4,17 +4,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { nanoid } from "nanoid";
 import CourseCard from "./CourseCard";
 import { useQuery } from "@tanstack/react-query";
-import { getAllCourses } from "@/services/admin/admin-course-service";
+import { getPublicCourses } from "@/services/public/course-service";
 import Loader from "../Loader";
-import { getAllCourseCategories } from "@/services/admin/course-category-service";
+import { getPublicCourseCategories } from "@/services/public/course-category-service";
 import Typography from "../typography";
 
 
 const CourseListByCategory = ({ ctg }: { ctg: string }) => {
     const { data, isLoading } = useQuery({
-        queryKey: ['/admin/course', { category: ctg }],
+        queryKey: ['public/courses', { category: ctg }],
         queryFn: () => {
-            return getAllCourses({ filter: { category: ctg } })
+            return getPublicCourses({ filter: { category: ctg } })
         }
     })
 
@@ -42,8 +42,8 @@ const CourseListByCategory = ({ ctg }: { ctg: string }) => {
 
 const CourseTabByCategory = () => {
     const { data, isLoading } = useQuery({
-        queryKey: ['admin/course-category'],
-        queryFn: () => getAllCourseCategories()
+        queryKey: ['public/course-category'],
+        queryFn: () => getPublicCourseCategories()
     })
 
     if(isLoading){

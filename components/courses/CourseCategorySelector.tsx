@@ -1,4 +1,3 @@
-
 import {
     Select,
     SelectContent,
@@ -6,7 +5,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { getAllCourseCategories } from "@/services/admin/course-category-service";
+import { getPublicCourseCategories } from "@/services/public/course-category-service";
 import { useQuery } from "@tanstack/react-query";
 import { nanoid } from "nanoid";
 
@@ -18,8 +17,8 @@ const CourseCategorySelector = ({
     value?: string
 }) => {
     const { data: categories } = useQuery({
-        queryKey: ['/admin/course-category'],
-        queryFn: () => getAllCourseCategories()
+        queryKey: ['public/course-category'],
+        queryFn: () => getPublicCourseCategories()
       });
     return (
         <Select onValueChange={onChange} defaultValue={value}>

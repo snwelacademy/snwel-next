@@ -1,14 +1,12 @@
-
 import CourseCard from '@/components/courses/CourseCard'
 import PageHeader from '@/components/shared/PageHeader'
 import { getListOptionsFromSearchParams } from '@/lib/utils'
-import { getAllCourses } from '@/services/admin/admin-course-service'
+import { getPublicCourses } from '@/services/public/course-service'
 import { nanoid } from 'nanoid'
 
 
 const CourseListPage = async ({searchParams}: {searchParams: any}) => {
-    const courses = await getAllCourses(getListOptionsFromSearchParams(new URLSearchParams(searchParams) ))
-
+    const courses = await getPublicCourses(getListOptionsFromSearchParams(new URLSearchParams(searchParams) ))
     return (
         <>
             <PageHeader title="Course Listing" />

@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { getAllCourses } from '@/services/admin/admin-course-service'
+import { getPublicCourses } from '@/services/public/course-service'
 import { useListOptions } from '@/hooks/useListOption'
 import PremiumCourseSectionUi from './PremiumCourseSectionUi'
 import { useState } from 'react'
@@ -12,9 +12,9 @@ const PremiumCourseClientWrapper = ({ className }: { className?: string }) => {
     const [courseFilter, setFilter] = useState<CourseFilterData>();
     const [options] = useListOptions()
     const {data, isLoading} = useQuery({
-        queryKey: ['/admin/course', options.filter], 
+        queryKey: ['public/courses', options.filter], 
         queryFn: () => {
-            return getAllCourses({filter: {isPremium: true}})
+            return getPublicCourses({filter: {isPremium: true}})
         },
         enabled: Boolean(options)
       })

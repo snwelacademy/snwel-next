@@ -9,16 +9,16 @@ import {
 } from "@/components/ui/carousel"
 import CourseCard from './CourseCard';
 import { useQuery } from '@tanstack/react-query';
-import { getAllCourses } from '@/services/admin/admin-course-service';
+import { getPublicCourses } from '@/services/public/course-service';
 import { useListOptions } from '@/hooks/useListOption';
 import Loader from '../Loader';
 
 const PopularCourseSlider = () => {
     const [options] = useListOptions()
     const {data, isLoading} = useQuery({
-        queryKey: ['/admin/course', {isPopular: true}], 
+        queryKey: ['public/courses', {isPopular: true}], 
         queryFn: () => {
-            return getAllCourses({filter: {isPopular: true}})
+            return getPublicCourses({filter: {isPopular: true}})
         },
         enabled: Boolean(options)
       })
