@@ -69,14 +69,14 @@ export default function page() {
               Here's what's happening with your platform today.
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" asChild>
               <Link href="/admin/analytics">
                 <Activity className="h-4 w-4 mr-2" />
                 View Analytics
               </Link>
             </Button>
-          </div>
+          </div> */}
         </div>
         {/* Quick Actions */}
         <Card>

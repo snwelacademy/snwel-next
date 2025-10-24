@@ -8,6 +8,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { User, UserFormData } from '../types/user.types';
 import { Role } from '../types/role.types';
+import { Badge } from "@/components/ui/badge";
+import { X } from 'lucide-react'
 
 interface UserFormProps {
   user?: User;
@@ -15,6 +17,7 @@ interface UserFormProps {
   onSave: (userData: UserFormData) => void;
   onCancel: () => void;
 }
+
 export function UserForm({ user, roles, onSave, onCancel }: UserFormProps) {
   const [formData, setFormData] = useState<UserFormData>({
     name: user?.name || '',
@@ -36,14 +39,27 @@ export function UserForm({ user, roles, onSave, onCancel }: UserFormProps) {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleRoleChange = (roleName: string) => {
+  const handleRoleChange = (roleId: string) => {
     setFormData(prev => ({
       ...prev,
-      roles: prev.roles.includes(roleName)
-        ? prev.roles.filter(r => r !== roleName)
-        : [...prev.roles, roleName]
+      roles: prev.roles.includes(roleId)
+        ? prev.roles.filter(r => r !== roleId)
+        : [...prev.roles, roleId]
     }));
   };
+
+  const handleAddRole = (roleId: string) => {
+    if (!roleId) return;
+    setFormData(prev => (
+      prev.roles.includes(roleId)
+        ? prev
+        : { ...prev, roles: [...prev.roles, roleId] }
+    ));
+  }
+
+  const handleRemoveRole = (roleId: string) => {
+    setFormData(prev => ({ ...prev, roles: prev.roles.filter(r => r !== roleId) }));
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,7 +67,7 @@ export function UserForm({ user, roles, onSave, onCancel }: UserFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 max-h-[75vh] overflow-y-auto p-1">
       <h2 className="text-xl font-semibold mb-4">
         {user?._id ? 'Edit User' : 'Add New User'}
       </h2>
@@ -95,17 +111,30 @@ export function UserForm({ user, roles, onSave, onCancel }: UserFormProps) {
 
       <div>
         <Label>Roles</Label>
-        <div className="flex space-x-4">
-          {roles.map(role => (
-            <div key={role._id} className="flex items-center space-x-2">
-              <Checkbox
-                id={`role-${role._id}`}
-                checked={formData.roles.includes(role._id)}
-                onCheckedChange={() => handleRoleChange(role._id)}
-              />
-              <label htmlFor={`role-${role._id}`}>{role.name}</label>
-            </div>
-          ))}
+        <div className="flex flex-col gap-2">
+          <Select onValueChange={(value) => handleAddRole(value)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select role" />
+            </SelectTrigger>
+            <SelectContent>
+              {roles.map(role => (
+                <SelectItem key={role._id} value={role._id}>{role.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <div className="flex flex-wrap gap-2">
+            {formData.roles.map((roleId) => {
+              const r = roles.find(rr => rr._id === roleId);
+              return (
+                <Badge key={roleId} variant="secondary" className="flex items-center gap-1">
+                  {r?.name || roleId}
+                  <button type="button" onClick={() => handleRemoveRole(roleId)} className="ml-1 opacity-70 hover:opacity-100">
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              )
+            })}
+          </div>
         </div>
       </div>
 

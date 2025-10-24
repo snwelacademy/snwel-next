@@ -5,7 +5,7 @@ import { nanoid } from "nanoid";
 import CourseCard from "./CourseCard";
 import { useQuery } from "@tanstack/react-query";
 import { getPublicCourses } from "@/services/public/course-service";
-import Loader from "../Loader";
+import ModernLoader from "../ModernLoader";
 import { getPublicCourseCategories } from "@/services/public/course-category-service";
 import Typography from "../typography";
 
@@ -22,7 +22,7 @@ const CourseListByCategory = ({ ctg }: { ctg: string }) => {
         <>
             {
                 isLoading ? 
-                <Loader type="default" />:
+                <ModernLoader variant="default" />:
                 data?.docs && data?.docs?.length > 0 ? 
                 data?.docs.map(cs => {
                     return <div key={nanoid()} className="w-full">
@@ -47,7 +47,7 @@ const CourseTabByCategory = () => {
     })
 
     if(isLoading){
-        return <Loader type="default"/>
+        return <ModernLoader variant="default"/>
     }
     return (
         <Tabs defaultValue={data ? data?.docs[0].slug : ''} className="">

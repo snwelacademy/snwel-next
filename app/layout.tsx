@@ -35,7 +35,7 @@ export default async function RootLayout({
 }>) {
   const session = await getSession();
   const settings = await fetchAllSettings();
-  const integrations = await getAllIntegrations()
+  // const integrations = await getAllIntegrations()
   return (
     <html lang="en">
       <body className={GeistSans.className}>

@@ -1,7 +1,7 @@
 'use client'
 
 import BreadCrumb from '@/components/BreadCrumb';
-import Loader from '@/components/Loader';
+import ModernLoader from '@/components/ModernLoader';
 import MutateCourse from '@/components/courses/MutateCourse';
 import { Heading } from '@/components/ui/Heading';
 import { Separator } from '@/components/ui/separator';
@@ -26,7 +26,7 @@ const MutateBlogPage = () => {
            
 
             {
-                isLoading ? <Loader type={'default'} /> : !data ? <div>Invalid Blog id</div> : <ModernBlogCreator blogData={data} />
+                isLoading ? <ModernLoader variant={'default'} /> : !data ? <div>Invalid Blog id</div> : <ModernBlogCreator blogData={data} />
             }
         </div>
     )

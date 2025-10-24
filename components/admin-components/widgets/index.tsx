@@ -1,7 +1,7 @@
 'use client'
 
 import BreadCrumb from '@/components/BreadCrumb';
-import Loader from '@/components/Loader';
+import ModernLoader from '@/components/ModernLoader';
 import { DataTable } from '@/components/shared/DataTable';
 import { widgetColumns as columns } from '@/components/tables/widget-table/widget-columns';
 import { Heading } from '@/components/ui/Heading';
@@ -36,7 +36,7 @@ const WidgetPage = () => {
       <Separator />
 
       {isLoading ?
-        <Loader type="default" /> :
+        <ModernLoader variant="default" /> :
         <DataTable
           searchKey="title"
           pageNo={data?.currentPage || 1}

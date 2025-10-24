@@ -16,6 +16,7 @@ import WebinarEnquirySubForm from './WebinarEnquiryForm';
 import GeneralEnquirySubForm from './GeneralEnquiryForm';
 import { createEnquiry } from '@/services/enquiry-service';
 import VerifyOtp from '@/components/ui/verify-otp';
+import PhoneInput from '@/components/ui/phoneInput';
 
 const EnquiryForm = ({ type, isUnique }: { type: string, isUnique?: boolean }) => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -92,7 +93,7 @@ const EnquiryForm = ({ type, isUnique }: { type: string, isUnique?: boolean }) =
                                         <FormItem className='w-full'>
                                             <FormLabel>Phone</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Phone" {...field} />
+                                                <PhoneInput inputStyle={{ width: "100%" }} country={'in'} placeholder="Your phone" {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>

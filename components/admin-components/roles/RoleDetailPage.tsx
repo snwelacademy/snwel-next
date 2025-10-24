@@ -118,7 +118,7 @@ export default function RoleDetailPage({ roleId }: RoleDetailPageProps) {
 
     try {
       if (isEditMode) {
-        await updateRole({ id: roleId, data: formData })
+        await updateRole({ _id: roleId as string, ...formData })
         toast.success('Role updated successfully')
       } else {
         await addRole(formData)

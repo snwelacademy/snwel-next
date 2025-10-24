@@ -16,7 +16,7 @@ import { createSetting, getSetting, updateSetting } from '@/services/admin/setti
 import { EmailSettingTypeSchema, EMAIL_TRANSPORTER, GeneralSetting } from "@/types/Setting";
 import { SETTINGS } from '@/types/Setting';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import Loader from '../Loader';
+import ModernLoader from '../ModernLoader';
 import { Separator } from '../ui/separator';
 import { Switch } from '../ui/switch';
 
@@ -76,7 +76,7 @@ const EmailSettingForm = () => {
 
 
     if (isLoading) {
-        return <div className='flex items-center w-full h-1/2 justify-center'><Loader type='default' /></div>
+        return <div className='flex items-center w-full h-1/2 justify-center'><ModernLoader variant='default' /></div>
     }
 
     return (

@@ -30,10 +30,11 @@ interface DropdownSelectorProps {
     selectorKey?: keyof Master,
     type?: MASTER_TYPE,
     placeholder?: string,
-    forcedData?: Master[]
+    forcedData?: Master[],
+    allowCustom?: boolean
 }
 
-export function MasterDropdown({ parentCode, onChange, value, selectorKey = '_id', type, placeholder, forcedData }: DropdownSelectorProps) {
+export function MasterDropdown({ parentCode, onChange, value, selectorKey = '_id', type, placeholder, forcedData, allowCustom = false }: DropdownSelectorProps) {
     const [open, setOpen] = React.useState(false);
     const [search, setSearch] = React.useState("");
 
@@ -55,9 +56,18 @@ export function MasterDropdown({ parentCode, onChange, value, selectorKey = '_id
         return filter;
     }
     
-    // console.log(forcedData)
-    if (isLoading && (!forcedData || forcedData.length === 0)) return <div>Loading...</div>;
-    if (error) return <div>Error fetching data</div>;
+    // Note: Avoid early returns to keep hooks order stable across renders
+    const selectedItemLabel = React.useMemo(() => {
+        const match = items.find((item: Master) => String(item[selectorKey]) === String(value));
+        if (match) return match.name;
+        if (allowCustom && value) return String(value);
+        return undefined;
+    }, [items, value, selectorKey, allowCustom]);
+
+    // const noMatch = React.useMemo(() => {
+    //     return !items.some((item: Master) => String(item[selectorKey]) === String(value));
+    // }, [items, value, selectorKey]);
+
     return (
         <div className="relative">
             <Popover open={open} onOpenChange={(v)=>{ setOpen(v); if(!v) setSearch(""); }}>
@@ -68,9 +78,7 @@ export function MasterDropdown({ parentCode, onChange, value, selectorKey = '_id
                         aria-expanded={open}
                         className="w-full max-w-full justify-between"
                     >
-                        {value
-                            ? items.find((item: Master) => String(item[selectorKey]) === String(value))?.name || (placeholder || "Select item...")
-                            : (placeholder || "Select item...")}
+                        {selectedItemLabel || (placeholder || "Select item...")}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                 </PopoverTrigger>
@@ -83,31 +91,57 @@ export function MasterDropdown({ parentCode, onChange, value, selectorKey = '_id
                             onChangeCapture={(e) => setSearch(e.currentTarget.value)}
                         />
                         <CommandList>
-                            <CommandEmpty>No item found.</CommandEmpty>
-                            <CommandGroup>
-                                {items.map((item: Master) => {
-                                    // console.log({forcedData})
-                                    return <CommandItem
-                                    key={nanoid()}
-                                        className="cursor-pointer"
-                                        // key={nanoid()}
-                                        value={String(item[selectorKey])}
-                                        onSelect={(currentValue) => {
-                                            onChange(currentValue === value ? "" : currentValue);
-                                            setSearch("");
-                                            setOpen(false);
-                                        }}
-                                    >
-                                        <Check
-                                            className={cn(
-                                                "mr-2 h-4 w-4",
-                                                String(value) === String(item[selectorKey]) ? "opacity-100" : "opacity-0"
-                                            )}
-                                        />
-                                        {item.name}
-                                    </CommandItem>
-                                })}
-                            </CommandGroup>
+                            { (isLoading && (!forcedData || forcedData.length === 0)) ? (
+                                <div className="p-2 text-sm">Loading...</div>
+                            ) : error ? (
+                                <div className="p-2 text-sm text-destructive">Error fetching data</div>
+                            ) : (
+                                <>
+                                    <CommandEmpty>
+                                        {allowCustom && search ? (
+                                            <div className="p-2 text-sm text-muted-foreground">No item found. Use custom value below.</div>
+                                        ) : (
+                                            "No item found."
+                                        )}
+                                    </CommandEmpty>
+                                    <CommandGroup>
+                                        {items.map((item: Master) => {
+                                            return <CommandItem
+                                                key={nanoid()}
+                                                className="cursor-pointer"
+                                                value={String(item[selectorKey])}
+                                                onSelect={(currentValue) => {
+                                                    onChange(currentValue === value ? "" : currentValue);
+                                                    setSearch("");
+                                                    setOpen(false);
+                                                }}
+                                            >
+                                                <Check
+                                                    className={cn(
+                                                        "mr-2 h-4 w-4",
+                                                        String(value) === String(item[selectorKey]) ? "opacity-100" : "opacity-0"
+                                                    )}
+                                                />
+                                                {item.name}
+                                            </CommandItem>
+                                        })}
+                                        {allowCustom && search && (
+                                            <CommandItem
+                                                key="__custom__"
+                                                className="cursor-pointer text-primary"
+                                                value={search}
+                                                onSelect={(currentValue) => {
+                                                    onChange(currentValue);
+                                                    setSearch("");
+                                                    setOpen(false);
+                                                }}
+                                            >
+                                                Use "{search}"
+                                            </CommandItem>
+                                        )}
+                                    </CommandGroup>
+                                </>
+                            )}
                         </CommandList>
                     </Command>
                 </PopoverContent>

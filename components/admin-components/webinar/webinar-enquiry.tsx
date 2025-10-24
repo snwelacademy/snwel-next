@@ -1,6 +1,6 @@
 'use client'
 import BreadCrumb from '@/components/BreadCrumb'
-import Loader from '@/components/Loader'
+import ModernLoader from '@/components/ModernLoader'
 import { DataTable } from '@/components/shared/DataTable'
 import { WebinarEnquiryColumn } from '@/components/tables/webinar-enquiry/columns'
 import { Heading } from '@/components/ui/Heading'
@@ -46,7 +46,7 @@ const WebinarEnquiryPage = () => {
 
       {
         isLoading ? 
-        <Loader type="default" />
+        <ModernLoader variant="default" />
         : <DataTable
         searchKey="title"
         pageNo={data?.currentPage||1}

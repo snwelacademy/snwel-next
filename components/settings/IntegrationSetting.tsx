@@ -14,7 +14,7 @@ import { Checkbox } from '../ui/checkbox';
 import { useToast } from '../ui/use-toast';
 import { createSetting, getSetting, updateSetting } from '@/services/admin/setting-service';
 import { IntegrationSetting, IntegrationSettingTypeSchema, SETTINGS } from '@/types/Setting';
-import Loader from '../Loader';
+import ModernLoader from '../ModernLoader';
 import { useQuery } from '@tanstack/react-query';
 import { Separator } from '../ui/separator';
 
@@ -66,7 +66,7 @@ const IntegrationSettingForm = () => {
 
     
     if(isLoading){
-        return <div className='flex items-center w-full h-1/2 justify-center'><Loader type='default' /></div>
+        return <div className='flex items-center w-full h-1/2 justify-center'><ModernLoader variant='default' /></div>
     }
 
     return (

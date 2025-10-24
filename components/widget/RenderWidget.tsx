@@ -3,7 +3,7 @@
 import { fetchWidgetById } from '@/services/widget-service';
 import { useQuery } from '@tanstack/react-query'
 import React from 'react'
-import Loader from '../Loader';
+import ModernLoader from '../ModernLoader';
 import { WidgetType } from '@/types/WidgetTypes';
 import CdtWidget from './cdt-widget/CdtWidget';
 
@@ -21,7 +21,7 @@ const RenderWidget = ({code}: {code?: string}) => {
       });
       const Component = WidgetUiRegistery[data?.type||"cdtWidget"] as any;
     if(isLoading){
-        return <Loader type='default' />
+        return <ModernLoader variant='default' />
     }
     if(!data || !data._id){
         console.log({data})

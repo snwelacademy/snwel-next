@@ -179,13 +179,13 @@ export const navGroups: NavGroup[] = [
         label: "Integrations",
         permissions: "INTEGRATION_VIEW",
       },
-      {
-        title: "Analytics",
-        href: "/admin/analytics",
-        icon: "laptop",
-        label: "Analytics",
-        permissions: "ANALYTICS_VIEW",
-      },
+      // {
+      //   title: "Analytics",
+      //   href: "/admin/analytics",
+      //   icon: "laptop",
+      //   label: "Analytics",
+      //   permissions: "ANALYTICS_VIEW",
+      // },
     ],
   },
 ];

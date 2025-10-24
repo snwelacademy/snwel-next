@@ -1,6 +1,6 @@
 'use client'
 import BreadCrumb from '@/components/BreadCrumb'
-import Loader from '@/components/Loader'
+import ModernLoader from '@/components/ModernLoader'
 import { DataTable } from '@/components/ui/data-table'
 import { columns } from '@/components/tables/course-query-table/columns'
 import { Heading } from '@/components/ui/Heading'

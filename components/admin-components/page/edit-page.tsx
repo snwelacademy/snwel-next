@@ -1,5 +1,5 @@
 'use client'
-import Loader from '@/components/Loader';
+import ModernLoader from '@/components/ModernLoader';
 import { PageEditor } from '@/components/page-builder/PageEditor';
 import { getMaster } from '@/services/admin/admin-master';
 import { useQuery } from '@tanstack/react-query';
@@ -18,7 +18,7 @@ const EditPage = () => {
     <>
       {
         isLoading ? 
-        <Loader type={'default'} /> : 
+        <ModernLoader variant={'default'} /> : 
         !data ? <div>Invalid Page</div> : 
         <div className='relative pt-12'>
             <PageEditor data={data}/>

@@ -1,6 +1,6 @@
 'use client'
 import BreadCrumb from '@/components/BreadCrumb';
-import Loader from '@/components/Loader';
+import ModernLoader from '@/components/ModernLoader';
 import { DataTable } from '@/components/shared/DataTable';
 import { GeneralEnquiryColumn } from '@/components/tables/general-enquiry/columns';
 import { Heading } from '@/components/ui/Heading';
@@ -43,7 +43,7 @@ const GeneralEnquiryPage = () => {
       <Separator />
 
       {isLoading ? 
-        <Loader type="default" /> :
+        <ModernLoader variant="default" /> :
         <DataTable
           searchKey="name"
           pageNo={data?.currentPage || 1}

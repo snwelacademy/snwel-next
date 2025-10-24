@@ -102,10 +102,10 @@ export function useUsers(options = { page: 1, limit: 10 }) {
   return {
     users: query.data?.data.docs || [],
     pagination: query.data ? {
-      total: query.data.data.total,
-      page: query.data.data.currentPage,
-      limit: query.data.data.limit,
-      totalPages: Math.ceil(query.data.data.total / query.data.data.limit),
+      total: Number(query.data.data.total),
+      page: Number((query.data.data as any).page ?? (query.data.data as any).currentPage ?? 1),
+      limit: Number(query.data.data.limit),
+      totalPages: Math.ceil(Number(query.data.data.total) / Number(query.data.data.limit)),
     } : undefined,
     isLoading: query.isLoading,
     error: query.error,

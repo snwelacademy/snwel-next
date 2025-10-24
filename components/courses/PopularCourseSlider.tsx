@@ -11,7 +11,7 @@ import CourseCard from './CourseCard';
 import { useQuery } from '@tanstack/react-query';
 import { getPublicCourses } from '@/services/public/course-service';
 import { useListOptions } from '@/hooks/useListOption';
-import Loader from '../Loader';
+import ModernLoader from '../ModernLoader';
 
 const PopularCourseSlider = () => {
     const [options] = useListOptions()
@@ -40,7 +40,7 @@ const PopularCourseSlider = () => {
                   
                     {
                     isLoading ? 
-                    <Loader type="default" />:
+                    <ModernLoader variant="default" />:
                     data?.docs.map((courseData) => (
                         <CarouselItem className='md:basis-1/2 lg:basis-1/3' key={courseData._id}>
                             <CourseCard course={courseData}  />

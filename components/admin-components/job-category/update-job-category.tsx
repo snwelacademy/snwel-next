@@ -1,7 +1,7 @@
 'use client'
 
 import BreadCrumb from '@/components/BreadCrumb';
-import Loader from '@/components/Loader';
+import ModernLoader from '@/components/ModernLoader';
 import MutateJobCategory from '@/components/job-category/mutate-job-category';
 import { Heading } from '@/components/ui/Heading';
 import { Separator } from '@/components/ui/separator';
@@ -31,7 +31,7 @@ const UpdateJobCategoryPage = () => {
       <Separator />
 
       {
-        isLoading ? <Loader type={'default'} /> : !data ? <div>Invalid Job Category</div> : <MutateJobCategory data={data} />
+        isLoading ? <ModernLoader variant={'default'} /> : !data ? <div>Invalid Job Category</div> : <MutateJobCategory data={data} />
       }
     </div>
   )

@@ -8,20 +8,19 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Pencil, Trash2, MoreHorizontal, Mail, Shield, CheckCircle2, XCircle } from 'lucide-react';
-import { useState } from 'react';
-import { useUsers } from '../hooks/useUsers';
+import { useMemo } from 'react';
 
 interface UserTableProps {
   onEdit: (user: User) => void;
   onDelete: (userId: string) => void;
   onToggleStatus: (userId: string) => void;
   users: User[];
-  pagination: any;
+  pagination?: { total: number; page: number; limit: number; totalPages: number };
   isLoading: boolean;
+  onPageChange?: (page: number) => void;
 }
 
-export function UserTable({ onEdit, onDelete, onToggleStatus, users, pagination, isLoading }: UserTableProps) {
-  const [page, setPage] = useState(1);
+export function UserTable({ onEdit, onDelete, onToggleStatus, users, pagination, isLoading, onPageChange }: UserTableProps) {
 
   if (isLoading) return (
     <div className="flex items-center justify-center py-8 text-muted-foreground">
@@ -131,15 +130,23 @@ export function UserTable({ onEdit, onDelete, onToggleStatus, users, pagination,
       {pagination && pagination.totalPages > 1 && (
         <div className="flex items-center justify-between px-2">
           <div className="text-sm text-muted-foreground">
-            Showing <span className="font-medium">{users.length}</span> of{' '}
-            <span className="font-medium">{pagination.totalDocs}</span> users
+            {(() => {
+              const start = (pagination.page - 1) * pagination.limit + 1;
+              const end = Math.min(pagination.page * pagination.limit, pagination.total);
+              return (
+                <>
+                  Showing <span className="font-medium">{start}-{end}</span> of{' '}
+                  <span className="font-medium">{pagination.total}</span> users
+                </>
+              );
+            })()}
           </div>
           <div className="flex items-center gap-2">
             <Button 
               variant="outline"
               size="sm"
-              onClick={() => setPage(p => Math.max(1, p - 1))}
-              disabled={page === 1}
+              onClick={() => onPageChange && onPageChange(Math.max(1, pagination.page - 1))}
+              disabled={pagination.page <= 1}
             >
               Previous
             </Button>
@@ -149,8 +156,8 @@ export function UserTable({ onEdit, onDelete, onToggleStatus, users, pagination,
             <Button 
               variant="outline"
               size="sm"
-              onClick={() => setPage(p => p + 1)}
-              disabled={page >= pagination.totalPages}
+              onClick={() => onPageChange && onPageChange(Math.min(pagination.totalPages, pagination.page + 1))}
+              disabled={pagination.page >= pagination.totalPages}
             >
               Next
             </Button>

@@ -51,7 +51,7 @@ export default function NoActiveJobs() {
         >
           There are currently no active job listings. Check back later or create a job alert to stay updated.
         </motion.p>
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.5 }}
@@ -59,7 +59,7 @@ export default function NoActiveJobs() {
           <Button className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-2 px-6 rounded-full shadow-lg hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1">
             Create Job Alert
           </Button>
-        </motion.div>
+        </motion.div> */}
       </motion.div>
     </div>
   )

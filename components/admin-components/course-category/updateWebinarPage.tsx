@@ -1,5 +1,5 @@
 import BreadCrumb from '@/components/BreadCrumb';
-import Loader from '@/components/Loader';
+import ModernLoader from '@/components/ModernLoader';
 import { Heading } from '@/components/ui/Heading';
 import { Separator } from '@/components/ui/separator';
 import MutateWebinar from '@/components/webinar/MutateWebinar';
@@ -30,7 +30,7 @@ const UpdateWebinarPage = () => {
       <Separator />
 
       {
-        isLoading ? <Loader type={'default'}/> : !data ? <div>Invalid Webinar</div> : <MutateWebinar data={data} />
+        isLoading ? <ModernLoader variant={'default'}/> : !data ? <div>Invalid Webinar</div> : <MutateWebinar data={data} />
       }
     </div>
   )

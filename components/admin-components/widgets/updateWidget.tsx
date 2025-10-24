@@ -1,7 +1,7 @@
 'use client'
 
 import BreadCrumb from '@/components/BreadCrumb';
-import Loader from '@/components/Loader';
+import ModernLoader from '@/components/ModernLoader';
 import { Heading } from '@/components/ui/Heading';
 import { Separator } from '@/components/ui/separator';
 import MutateWidgetForm from '@/components/widget/MutateWidgetForm';
@@ -25,7 +25,7 @@ const UpdateWidgetPage = () => {
       
 
       {
-        isLoading ? <Loader type={'default'} /> : !data ? <div>Invalid Webinar</div> : <WidgetEditor widgetData={data} type={data.type} />
+        isLoading ? <ModernLoader variant={'default'} /> : !data ? <div>Invalid Webinar</div> : <WidgetEditor widgetData={data} type={data.type} />
       }
     </div>
   )

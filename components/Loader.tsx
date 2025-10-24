@@ -1,7 +1,7 @@
 'use client'
 import { InfinitySpin } from 'react-loader-spinner'
 
-const Loader = (_op: { type: 'table' | 'page' | 'default' }) => {
+const ModernLoader = (_op: { type: 'table' | 'page' | 'default' }) => {
     return (
         <InfinitySpin
             width="200"
@@ -10,4 +10,4 @@ const Loader = (_op: { type: 'table' | 'page' | 'default' }) => {
     )
 }
 
-export default Loader
+export default ModernLoader

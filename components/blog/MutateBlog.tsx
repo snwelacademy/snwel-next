@@ -30,6 +30,7 @@ import { CategorySelector } from '../blog-category/CategorySelector'
 import { MultiChipInput } from '../ui/chip-input'
 import slugify from 'slugify'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 const BlogEditor = dynamic(() => import('./editor/BlogEditor'), { ssr: false })
 
@@ -52,12 +53,13 @@ const formSchema = z.object({
 export default function ModernBlogCreator({ blogData }: { blogData?: Blog }) {
     const { toast } = useToast()
     const { data: session } = useSession();
+    const router = useRouter();
     const [loading, setLoading] = useState(false)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             title: '',
-            content: null,
+            content: '',
             excerpt: '',
             category: null,
             tags: [],
@@ -81,14 +83,20 @@ export default function ModernBlogCreator({ blogData }: { blogData?: Blog }) {
     const handleSubmit = async (value: z.infer<typeof formSchema>) => {
         try {
             setLoading(true);
+            // Transform for backend expectations
+            const payload: any = {
+                ...value,
+                status: value.published ? 'PUBLISHED' : 'DRAFT',
+            }
             if (blogData) {
-                await updateBlog(blogData._id, value);
+                await updateBlog((blogData as any)._id, payload);
             } else {
-                await createBlog(value)
+                await createBlog(payload)
             }
             toast({
                 title: `Blog ${blogData ? "Updated" : "created"} successfully!`,
             });
+            router.push('/admin/blog');
         } catch (error: any) {
             toast({ title: `Error: ${error.message}` });
         } finally {
@@ -159,13 +167,31 @@ export default function ModernBlogCreator({ blogData }: { blogData?: Blog }) {
 
     useEffect(() => {
         if (blogData) {
-            Object.keys(blogData).map((key: any) => {
-
-                form.setValue(key, blogData[key as keyof Blog]);
-
-            });
+            // Basic fields
+            form.setValue('title', (blogData as any).title || '')
+            form.setValue('content', (blogData as any).content || '')
+            form.setValue('excerpt', (blogData as any).excerpt || '')
+            // Category may be id or object
+            const categoryId = (blogData as any).category?._id || (blogData as any).category || null
+            form.setValue('category', categoryId)
+            // Tags could be array of strings
+            form.setValue('tags', (blogData as any).tags || [])
+            form.setValue('coverImage', (blogData as any).coverImage || '')
+            // Published/status mapping
+            const published = typeof (blogData as any).published === 'boolean'
+                ? (blogData as any).published
+                : ((blogData as any).status === 'PUBLISHED')
+            form.setValue('published', published)
+            // SEO mapping
+            const slug = (blogData as any).slug || ''
+            form.setValue('seo.metaTitle', (blogData as any).seo?.metaTitle || (blogData as any).title || '')
+            form.setValue('seo.metaDescription', (blogData as any).seo?.metaDescription || (blogData as any).excerpt || '')
+            form.setValue('seo.urlSlug', slug)
+            // Author
+            const authorId = (blogData as any).author?._id || (blogData as any).author || ''
+            form.setValue('author', authorId)
         }
-    }, [blogData]);
+    }, [blogData])
 
     useEffect(() => {
         console.log(form.formState.errors)
@@ -185,7 +211,7 @@ export default function ModernBlogCreator({ blogData }: { blogData?: Blog }) {
                     <header className="bg-white shadow-sm">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
                             <div className="flex items-center">
-                                <Button variant="ghost" size="icon" type='button'>
+                                <Button variant="ghost" size="icon" type='button' onClick={() => router.back()}>
                                     <ChevronLeft className="h-6 w-6" />
                                 </Button>
                                 <h1 className="ml-4 text-xl font-semibold text-gray-900">{blogData ? "Update Blog Post" : "Create New Blog Post"}</h1>

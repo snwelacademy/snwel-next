@@ -10,6 +10,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { CountrySelector } from '@/components/country-state-city/Country';
 import { StateSelector } from '@/components/country-state-city/StateSelector';
 import { CitySelector } from '@/components/country-state-city/CitySelector';
+import { MasterDropdown } from '@/components/master/master-dropdown';
+import { MASTER_CODES } from '@/types/master';
+import { Country } from 'country-state-city';
 
 interface WebinarEnquirySubFormProps {
   control: any;
@@ -22,6 +25,20 @@ const WebinarEnquirySubForm: React.FC<WebinarEnquirySubFormProps> = ({ control }
   useEffect(() => {
     methods.setValue('extraInfo.webinarId', currentWebinar?._id)
   }, [currentWebinar])
+
+  // Prefix phone field with selected country's dial code
+  const selectedCountry = methods.watch('extraInfo.location.country');
+  useEffect(() => {
+    if (!selectedCountry) return;
+    const c = Country.getCountryByCode(selectedCountry);
+    const phonecode = c?.phonecode;
+    if (!phonecode) return;
+    const dial = phonecode.startsWith('+') ? phonecode : `+${phonecode}`;
+    const currentPhone: string = methods.getValues('phone') || '';
+    // remove existing leading +<digits> and optional space
+    const stripped = currentPhone.replace(/^\+\d+\s*/,'');
+    methods.setValue('phone', `${dial} ${stripped}`.trim(), { shouldDirty: true });
+  }, [selectedCountry])
   
   return (
     
@@ -42,7 +59,7 @@ const WebinarEnquirySubForm: React.FC<WebinarEnquirySubFormProps> = ({ control }
         />
         }
         {/* Registration Fields */}
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+        <div className='grid grid-cols-2 md:grid-cols-2 gap-4'>
           <FormField
             control={control}
             name="extraInfo.qualification"
@@ -50,14 +67,18 @@ const WebinarEnquirySubForm: React.FC<WebinarEnquirySubFormProps> = ({ control }
               <FormItem className='w-full'>
                 <FormLabel>Qualification</FormLabel>
                 <FormControl>
-                  <Input placeholder="Highest Qualification" {...field} />
+                  <MasterDropdown
+                    parentCode={MASTER_CODES.QUALIFICATIONS}
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Select qualification"
+                    allowCustom
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-        </div>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           <FormField
             control={control}
             name="extraInfo.presentStatus"
@@ -136,58 +157,6 @@ const WebinarEnquirySubForm: React.FC<WebinarEnquirySubFormProps> = ({ control }
             </FormItem>
           )}
         />
-        {/* <FormField
-          control={control}
-          name="extraInfo.location.country"
-          render={({ field }) => (
-            <FormItem className='w-full'>
-              <FormLabel>Country</FormLabel>
-              <FormControl>
-                <Input placeholder="Country" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name="extraInfo.location.city"
-          render={({ field }) => (
-            <FormItem className='w-full'>
-              <FormLabel>City</FormLabel>
-              <FormControl>
-                <Input placeholder="City" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name="extraInfo.location.state"
-          render={({ field }) => (
-            <FormItem className='w-full'>
-              <FormLabel>State</FormLabel>
-              <FormControl>
-                <Input placeholder="State" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name="extraInfo.location.address"
-          render={({ field }) => (
-            <FormItem className='w-full'>
-              <FormLabel>Address</FormLabel>
-              <FormControl>
-                <Input placeholder="Address" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        /> */}
         
         </>
      

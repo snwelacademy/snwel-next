@@ -13,7 +13,7 @@ import FileUploadModal from '../modal/FileUploadModal'; // Assuming you have thi
 import { createSetting, getSetting, updateSetting } from '@/services/admin/setting-service';
 import { GeneralSetting, GeneralSettingSchema, SETTINGS } from '@/types/Setting';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import Loader from '../Loader';
+import ModernLoader from '../ModernLoader';
 import { Label } from '../ui/label';
 import { FacebookIcon, InstagramIcon, LinkedinIcon, X, Youtube } from 'lucide-react';
 import { GoogleMyBusinessIcon } from '../custom-icons/GoogleBIcon';
@@ -84,7 +84,7 @@ const GeneralSettingForm = () => {
     }, [settingData]);
 
     if (isLoading) {
-        return <div className='flex items-center w-full h-1/2 justify-center'><Loader type='default' /></div>
+        return <div className='flex items-center w-full h-1/2 justify-center'><ModernLoader variant='default' /></div>
     }
 
     return (

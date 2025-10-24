@@ -3,7 +3,7 @@
 import { PermissionGuard } from '@/components/gaurds/PermissionGaurd'
 import { withErrorHandling } from '@/components/hoc/withErrorHandling'
 import BreadCrumb from '@/components/BreadCrumb';
-import Loader from '@/components/Loader';
+import ModernLoader from '@/components/ModernLoader';
 import { DataTable } from '@/components/shared/DataTable';
 import { JobVacancyColumns } from '@/components/tables/job-vacancy/JobVacancyColumns';
 import { Heading } from '@/components/ui/Heading';
@@ -48,7 +48,7 @@ const JobVacancyPage = () => {
 
       {
         isLoading ? 
-        <Loader type="default" />
+        <ModernLoader variant="default" />
         : <DataTable
         searchKey="title"
         pageNo={data?.currentPage || 1}

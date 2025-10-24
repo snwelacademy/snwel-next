@@ -1,5 +1,5 @@
 
-import Loader from '@/components/Loader';
+import ModernLoader from '@/components/ModernLoader';
 import { DataTable } from '@/components/shared/DataTable';
 import { MasterColumns } from '@/components/tables/master/master-columns';
 import { getListOptionsFromSearchParams, getTotalPages } from '@/lib/utils';
@@ -25,7 +25,7 @@ const SubMasterList = () => {
 
       {
         isLoading ? 
-        <Loader type="default" />
+        <ModernLoader variant="default" />
         : <DataTable
             searchKey="name" 
             pageNo={data?.currentPage || 1}

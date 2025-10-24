@@ -29,6 +29,8 @@ export default function UserManagement() {
   const [isRoleSheetOpen, setIsRoleSheetOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [roleSearchQuery, setRoleSearchQuery] = useState('')
+  const [page, setPage] = useState(1)
+  const [limit, setLimit] = useState(10)
   
   const canViewUsers = usePermission(AdminPanelPermissions.VIEW_USERS)
   const canCreateUser = usePermission(AdminPanelPermissions.CREATE_USERS)
@@ -46,7 +48,7 @@ export default function UserManagement() {
     deleteUser, 
     toggleUserStatus,
     isModifying: isModifyingUser 
-  } = useUsers()
+  } = useUsers({ page, limit })
 
   const {
     roles,
@@ -140,6 +142,7 @@ export default function UserManagement() {
                   onEdit={canUpdateUser ? (user: User) => {setEditingUser(user); setIsSheetOpen(true)} : () => {}}
                   onDelete={canDeleteUser ? (userId: string) => deleteUser(userId) : () => {}}
                   onToggleStatus={canUpdateUser ? (userId: string) => toggleUserStatus(userId) : () => {}}
+                  onPageChange={(p) => setPage(p)}
                 />
               </div>
             </CardContent>

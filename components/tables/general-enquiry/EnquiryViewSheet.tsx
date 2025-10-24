@@ -42,7 +42,7 @@ export default function EnquiryViewSheet({ data }: { data: DynamicEnquiry<Genera
               </div>
               <div className="col-span-2">
                 <div className="text-muted-foreground">Message</div>
-                <div className="font-medium break-words">{data.message || '-'}</div>
+                <div className="font-medium break-words">{data.message || data.extraInfo?.message || '-'}</div>
               </div>
             </div>
           </section>

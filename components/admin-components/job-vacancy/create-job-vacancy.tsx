@@ -1,3 +1,5 @@
+'use client'
+
 import BreadCrumb from '@/components/BreadCrumb';
 import { PermissionGuard } from '@/components/gaurds/PermissionGaurd';
 import { withErrorHandling } from '@/components/hoc/withErrorHandling';
@@ -11,7 +13,10 @@ import { AdminPanelPermissions } from '@/data/permissions-list';
 
 const CreateNewJobVacancyPage = () => {
 
-    const breadcrumbItems = [{ title: "New Webinar", link: "/admin/vacancy/create" }];
+    const breadcrumbItems = [
+        { title: "Job Vacancies", link: "/admin/job-vacancies" },
+        { title: "New", link: "/admin/job-vacancies/new" },
+    ];
 
     return (
         <div className="flex-1 space-y-4  p-4 md:p-8 pt-6">

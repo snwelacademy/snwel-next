@@ -1,7 +1,7 @@
 'use client'
 
 import BreadCrumb from '@/components/BreadCrumb';
-import Loader from '@/components/Loader';
+import ModernLoader from '@/components/ModernLoader';
 import { DataTable } from '@/components/shared/DataTable';
 import { MasterColumns } from '@/components/tables/master/master-columns'; // Import your MasterColumns
 import { Heading } from '@/components/ui/Heading';
@@ -45,7 +45,7 @@ const MasterPage = () => {
 
       {
         isLoading ? 
-        <Loader type="default" />
+        <ModernLoader variant="default" />
         : <DataTable
             searchKey="name" 
             pageNo={data?.currentPage || 1}

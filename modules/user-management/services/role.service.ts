@@ -1,78 +1,30 @@
 import { ApiResponse, ListResponse } from '@/types/ApiResponses';
 import { Role, RoleFormData } from '../types/role.types';
-import { getSession } from 'next-auth/react';
+import { protectedApi } from '@/lib/api';
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/roles`;
 
 export const roleService = {
   getRoles: async (): Promise<ApiResponse<ListResponse<Role>>> => {
-    const session = await getSession();
-    const response = await fetch(BASE_URL, {
-      headers: {
-        'Authorization': `Bearer ${session?.user.jwt}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    
-    if (!response.ok) {
-      throw new Error('Failed to fetch roles');
-    }
-    
-    return response.json();
+    const res = await protectedApi.get<ApiResponse<ListResponse<Role>>>(BASE_URL);
+    return res.data;
   },
 
   createRole: async (roleData: RoleFormData): Promise<ApiResponse<Role>> => {
-    const session = await getSession();
     delete roleData._id;
-    const response = await fetch(BASE_URL, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${session?.user.jwt}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(roleData),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to create role');
-    }
-
-    return response.json();
+    const res = await protectedApi.post<ApiResponse<Role>>(BASE_URL, roleData);
+    return res.data;
   },
 
   updateRole: async (roleId: string, roleData: Partial<RoleFormData>): Promise<ApiResponse<Role>> => {
-    const session = await getSession();
-    const response = await fetch(`${BASE_URL}/${roleId}`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${session?.user.jwt}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(roleData),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to update role');
-    }
-
-    return response.json();
+    const res = await protectedApi.put<ApiResponse<Role>>(`${BASE_URL}/${roleId}`, roleData);
+    return res.data;
   },
 
   deleteRole: async (roleId: string): Promise<void> => {
-    const session = await getSession();
-    const response = await fetch(`${BASE_URL}/${roleId}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${session?.user.jwt}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Failed to delete role');
+    const res = await protectedApi.delete(`${BASE_URL}/${roleId}`);
+    if (res.status < 200 || res.status >= 300) {
+      throw new Error('Failed to delete role');
     }
   },
 }; 

@@ -1,7 +1,7 @@
 'use client'
 
 import BreadCrumb from '@/components/BreadCrumb';
-import Loader from '@/components/Loader';
+import ModernLoader from '@/components/ModernLoader';
 import { DataTable } from '@/components/shared/DataTable';
 import { SnwelEnquiryColumns } from '@/components/tables/snwel-enquiry/columns';
 import { Heading } from '@/components/ui/Heading';
@@ -63,7 +63,7 @@ const SnwelEnquiryPage = () => {
       <Separator />
 
       {isLoading ? 
-        <Loader type="default" /> :
+        <ModernLoader variant="default" /> :
         <DataTable
           searchKey="name"
           pageNo={data?.currentPage || 1}

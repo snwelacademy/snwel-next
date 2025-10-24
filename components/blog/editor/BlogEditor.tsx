@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo } from 'react';
 import YooptaEditor, { createYooptaEditor, YooptaPlugin } from '@yoopta/editor'
 import Paragraph from '@yoopta/paragraph';
 import Blockqoute from '@yoopta/blockquote';
@@ -59,7 +59,6 @@ const TOOLS = {
 
 const Editor = ({ defaultValue, onChange, readOnly }: { defaultValue?: string, onChange?: (value: string) => void, readOnly?: boolean }) => {
     const editor = useMemo(() => createYooptaEditor(), []);
-    const val = html.deserialize(editor, defaultValue || "")
 
 
     const change = (htmlstr: string) => {
@@ -69,8 +68,14 @@ const Editor = ({ defaultValue, onChange, readOnly }: { defaultValue?: string, o
     }
 
     useEffect(() => {
-        function handleChange(data: any) {
-            onChange?.(html.serialize(editor, data));
+        function handleChange() {
+            const current = (editor as any)?.getEditorValue?.();
+            if (!current) return;
+            try {
+                onChange?.(html.serialize(editor, current));
+            } catch (err) {
+                console.error('Yoopta HTML serialize failed', err);
+            }
         }
         editor.on('change', handleChange);
 
@@ -78,11 +83,18 @@ const Editor = ({ defaultValue, onChange, readOnly }: { defaultValue?: string, o
             editor.off('change', handleChange);
         };
 
-    }, [])
+    }, [editor, onChange])
 
     useEffect(() => {
-        editor.setEditorValue(change(defaultValue||''))
-    }, [defaultValue])
+        const htmlStr = (defaultValue ?? '').trim();
+        if (!htmlStr) return;
+        try {
+            const val = change(htmlStr);
+            if (val) editor.setEditorValue(val);
+        } catch (err) {
+            console.error('Yoopta HTML deserialize failed', err);
+        }
+    }, [defaultValue, editor])
 
     return (
         <YooptaEditor readOnly={readOnly} placeholder='Type here' style={{maxWidth: "100%", width: '100%'}} editor={editor} plugins={plugins} tools={TOOLS} />

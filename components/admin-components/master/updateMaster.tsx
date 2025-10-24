@@ -1,7 +1,7 @@
 'use client'
 
 import BreadCrumb from '@/components/BreadCrumb';
-import Loader from '@/components/Loader';
+import ModernLoader from '@/components/ModernLoader';
 import MutateMaster from '@/components/master/mutateMasterForm';
 import { Heading } from '@/components/ui/Heading';
 import { Separator } from '@/components/ui/separator';
@@ -31,7 +31,7 @@ const UpdateMasterPage = () => {
       <Separator />
 
       {
-        isLoading ? <Loader type={'default'} /> : !data ? <div>Invalid Master</div> : <MutateMaster data={data} />
+        isLoading ? <ModernLoader variant={'default'} /> : !data ? <div>Invalid Master</div> : <MutateMaster data={data} />
       }
     </div>
   )

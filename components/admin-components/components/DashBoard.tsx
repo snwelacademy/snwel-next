@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import Loader from '@/components/Loader';
+import ModernLoader from '@/components/ModernLoader';
 // import { CalendarDateRangePicker } from '@/components/date-range-picker';
 import { Overview } from '@/components/overview';
 import { RecentSales } from '@/components/recent-sales';
@@ -61,7 +61,7 @@ export default function page() {
                 </CardHeader>
                 <CardContent>
                   {
-                    revenueLoading ? <Loader type='default' /> :
+                    revenueLoading ? <ModernLoader variant='default' /> :
                       <>
                         <div className="text-2xl font-bold">{`${getCurrencySymbol(totalRevenue?.currency || '')} ${totalRevenue?.amount || 0}`}</div>
                         {/* <p className="text-xs text-muted-foreground">
@@ -92,7 +92,7 @@ export default function page() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{countLoading ? <Loader type='default' /> : count?.totalCourses}</div>
+                  <div className="text-2xl font-bold">{countLoading ? <ModernLoader variant='default' /> : count?.totalCourses}</div>
                   {/* <p className="text-xs text-muted-foreground">
                     +180.1% from last month
                   </p> */}
@@ -116,7 +116,7 @@ export default function page() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{countLoading ? <Loader type='default' /> : count?.paidEnrollments}</div>
+                  <div className="text-2xl font-bold">{countLoading ? <ModernLoader variant='default' /> : count?.paidEnrollments}</div>
                   {/* <p className="text-xs text-muted-foreground">
                     +19% from last month
                   </p> */}
@@ -141,7 +141,7 @@ export default function page() {
                   </svg>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{countLoading ? <Loader type='default' /> : count?.allEnrollments}</div>
+                  <div className="text-2xl font-bold">{countLoading ? <ModernLoader variant='default' /> : count?.allEnrollments}</div>
                   {/* <p className="text-xs text-muted-foreground">
                     +201 since last hour
                   </p> */}

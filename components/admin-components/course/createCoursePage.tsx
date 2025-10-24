@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import BreadCrumb from '@/components/BreadCrumb';
 import MutateCourse from '@/components/courses/MutateCourse';
@@ -18,6 +18,9 @@ import {
   Send
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { changeCourseStatus } from '@/services/admin/admin-course-service';
+import { COURSE_STATUS, Course } from '@/types/Course';
+import { useToast } from '@/components/ui/use-toast';
 
 const steps = [
   { id: 1, name: 'Basic Info', icon: FileText, description: 'Course title and description' },
@@ -29,7 +32,34 @@ const steps = [
 const CreateNewCoursePage = () => {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
+  const [statusLoading, setStatusLoading] = useState(false);
+  const [intendedStatus, setIntendedStatus] = useState<COURSE_STATUS | null>(null);
+  const submitRef = useRef<(() => void) | null>(null);
+  const { toast } = useToast();
   const breadcrumbItems = [{ title: "Courses", link: "/admin/courses" }];
+  
+  const handleHeaderAction = (status: COURSE_STATUS) => {
+    setIntendedStatus(status);
+    submitRef.current?.();
+  }
+  
+  const handleCreated = async (course: Course) => {
+    if (!intendedStatus) return;
+    setStatusLoading(true);
+    try {
+      await changeCourseStatus(course._id, intendedStatus);
+      toast({
+        title: 'Success',
+        description: intendedStatus === COURSE_STATUS.SAVED ? 'Course saved as draft.' : 'Course published.',
+        variant: 'success'
+      })
+    } catch (error: any) {
+      toast({ title: 'Error', description: error?.message || 'Failed to update status', variant: 'destructive' })
+    } finally {
+      setStatusLoading(false);
+      setIntendedStatus(null);
+    }
+  }
     
   return (
     <div className="min-h-screen bg-muted/20">
@@ -61,15 +91,11 @@ const CreateNewCoursePage = () => {
             </div>
             
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" className="gap-2">
-                <Eye className="h-4 w-4" />
-                Preview
-              </Button>
-              <Button variant="outline" size="sm" className="gap-2">
+              <Button variant="outline" size="sm" className="gap-2" onClick={() => handleHeaderAction(COURSE_STATUS.SAVED)} disabled={statusLoading}>
                 <Save className="h-4 w-4" />
                 Save Draft
               </Button>
-              <Button size="sm" className="gap-2">
+              <Button size="sm" className="gap-2" onClick={() => handleHeaderAction(COURSE_STATUS.PUBLISHED)} disabled={statusLoading}>
                 <Send className="h-4 w-4" />
                 Publish
               </Button>
@@ -119,7 +145,7 @@ const CreateNewCoursePage = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 md:px-8 py-6">
-        <MutateCourse currentStep={currentStep} setCurrentStep={setCurrentStep} />
+        <MutateCourse currentStep={currentStep} setCurrentStep={setCurrentStep} externalSubmitRef={submitRef} onCreated={handleCreated} />
       </div>
     </div>
   )

@@ -163,13 +163,13 @@ const navItems: NavItem[] = [
   //   label: "Snwel Enquiries",
   //   permissions: "SNWEL_ENQUIRY_VIEW"
   // },
-  {
-    title: "Analytics",
-    href: "/admin/analytics",
-    icon: "laptop",
-    label: "Analytics",
-    permissions: "ANALYTICS_VIEW"
-  },
+  // {
+  //   title: "Analytics",
+  //   href: "/admin/analytics",
+  //   icon: "laptop",
+  //   label: "Analytics",
+  //   permissions: "ANALYTICS_VIEW"
+  // },
 ]
 
 export default function AdminNavbar() {

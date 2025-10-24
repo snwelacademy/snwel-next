@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect, useState } from "react"
+import { useEffect, useState, MutableRefObject } from "react"
 import { useFieldArray, useForm, useWatch } from "react-hook-form"
 import { z } from "zod"
 import slugify from "slugify"
@@ -80,11 +80,15 @@ const createCourseSchema = z.object({
 export default function MutateCourse({ 
   courseData, 
   currentStep, 
-  setCurrentStep 
+  setCurrentStep,
+  externalSubmitRef,
+  onCreated
 }: { 
   courseData?: Course
   currentStep?: number
   setCurrentStep?: (step: number) => void
+  externalSubmitRef?: MutableRefObject<(() => void) | null>
+  onCreated?: (course: Course) => void
 }) {
   const [open, setOpen] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
@@ -117,7 +121,8 @@ export default function MutateCourse({
       if (courseData) {
         await updateCourse(courseData._id, value)
       } else {
-        await createCourse(value)
+        const created = await createCourse(value)
+        onCreated?.(created)
         setOpen(true)
       }
       toast({
@@ -147,6 +152,16 @@ export default function MutateCourse({
       form.setValue("slug", slugify(Watch.title, { lower: true }))
     }
   }, [Watch.title, form])
+
+  // Expose external submit trigger to parent (for create flow header actions)
+  useEffect(() => {
+    if (externalSubmitRef) {
+      externalSubmitRef.current = () => form.handleSubmit(handleSubmit)();
+      return () => {
+        externalSubmitRef.current = null
+      }
+    }
+  }, [externalSubmitRef, form])
 
   useEffect(() => {
     if (courseData) {
