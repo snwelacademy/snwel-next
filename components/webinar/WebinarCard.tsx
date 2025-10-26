@@ -24,7 +24,10 @@ const WebinarCard = ({
                
                 <div className='flex items-center justify-between'>
                     <span className='text-xs font-bold text-gray-600'>{dayjs(webinar.startDate).format('MMM DD, YYYY')}</span>
-                    <Link href={`/webinars/${webinar.slug}`} ><Button variant={'secondary'} className='space-x-2 border rounded-full'><span>Watch Now</span> <PlayCircle/></Button></Link>
+                    <div className='flex items-center gap-2'>
+                        <Link href={`/webinars/${webinar.slug}`} ><Button className='space-x-2 rounded-full'><span>View & Enroll</span></Button></Link>
+                        <Link href={`/webinars/${webinar.slug}`} ><Button variant={'secondary'} className='space-x-2 border rounded-full'><span>Watch Now</span> <PlayCircle/></Button></Link>
+                    </div>
                 </div>
             </div>
         </div>

@@ -69,6 +69,7 @@ const WebinarEnquirySubForm: React.FC<WebinarEnquirySubFormProps> = ({ control }
                 <FormControl>
                   <MasterDropdown
                     parentCode={MASTER_CODES.QUALIFICATIONS}
+                    selectorKey="name"
                     value={field.value}
                     onChange={field.onChange}
                     placeholder="Select qualification"

@@ -4,6 +4,10 @@ import { useState, useEffect } from "react"
 import { ChevronDown, ChevronUp, Download, Loader2, Trash2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { usePermission } from "@/hooks/usePermissions"
+import { JOB_APPLICATION_PERMISSIONS } from "@/constants/permissions"
+import { PermissionGuard } from "@/components/guards/PermissionGuard"
+import { handlePermissionError } from "@/lib/permissionErrorHandler"
 import {
   Table,
   TableBody,
@@ -60,8 +64,12 @@ import { useDebounce } from "@uidotdev/usehooks"
 
 
 
-export default function JobApplicationTable() {
-const [exporting, setExporting] = useState(false)
+function JobApplicationTableContent() {
+  const canExport = usePermission(JOB_APPLICATION_PERMISSIONS.JOB_APP_EXPORT)
+  const canDelete = usePermission(JOB_APPLICATION_PERMISSIONS.JOB_APP_DELETE)
+  const canUpdate = usePermission(JOB_APPLICATION_PERMISSIONS.JOB_APP_UPDATE)
+  
+  const [exporting, setExporting] = useState(false)
   const [search, setSearch] = useState("")
   const debouncedSearch = useDebounce(search, 300)
   const [sortField, setSortField] = useState<keyof JobApplication>("appliedDate")
@@ -116,7 +124,7 @@ const [exporting, setExporting] = useState(false)
 
   const renderSkeletonRow = () => (
     <TableRow>
-      {Array(8).fill(0).map((_, index) => (
+      {Array(9).fill(0).map((_, index) => (
         <TableCell key={index}>
           <div className="h-4 w-full animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
         </TableCell>
@@ -149,10 +157,8 @@ const [exporting, setExporting] = useState(false)
     setExporting(true)
     // Simulate API call
     try {
-        
-        // In a real application, you would make an API call here to get the CSV data
-      // For this example, we'll create the CSV from the current applications data
-      const csvContent = await exportAllJobApplications(options)
+        const csv = exportAllJobApplications(options);
+        const csvContent = await exportAllJobApplications(options)
         if(!csvContent) {
             setExporting(false);
             return;
@@ -208,10 +214,12 @@ const [exporting, setExporting] = useState(false)
 
         <DateRangePicker onUpdate={value => setOptions(options => ({...options, startDate: value.range.from, endDate: value.range.to}))}/>
 
-        <Button onClick={handleExport} disabled={loading}>
-          <Download className="mr-2 h-4 w-4" />
-          Export CSV
-        </Button>
+        {canExport && (
+          <Button onClick={handleExport} disabled={loading}>
+            <Download className="mr-2 h-4 w-4" />
+            Export CSV
+          </Button>
+        )}
       </div>
 
       <div className="rounded-md border">
@@ -222,8 +230,8 @@ const [exporting, setExporting] = useState(false)
               <TableHead>Job</TableHead>
               <TableHead>Company</TableHead>
               {renderTableHeader("Email", "email")}
+              {renderTableHeader("Phone", "phone")}
               {renderTableHeader("Status", "status")}
-              
               {renderTableHeader("Applied Date", "appliedDate")}
               <TableHead>Resume</TableHead>
               <TableHead>Cover Letter</TableHead>
@@ -235,7 +243,7 @@ const [exporting, setExporting] = useState(false)
               Array(5).fill(0).map((_, index) => renderSkeletonRow())
             ) : currentItems?.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} className="h-24 text-center">
+                <TableCell colSpan={10} className="h-24 text-center">
                   No applications found.
                 </TableCell>
               </TableRow>
@@ -244,14 +252,17 @@ const [exporting, setExporting] = useState(false)
                 <TableRow key={application._id}>
                   <TableCell>{application.applicantName}</TableCell>
                   <TableCell>
-                    {application.jobId.slug && (
-                      <a href={`/admin/job-vacancies/${application.jobId._id}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-                        {application.jobId.title}
+                    {application.jobId?.slug ? (
+                      <a href={`/admin/job-vacancies/${application.jobId?._id}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                        {application.jobId?.title}
                       </a>
+                    ) : (
+                      <span className="text-muted-foreground">N/A</span>
                     )}
                   </TableCell>
-                  <TableCell>{application.jobId.companyName}</TableCell>
+                  <TableCell>{application.jobId?.companyName || 'N/A'}</TableCell>
                   <TableCell>{application.email}</TableCell>
+                  <TableCell>{application.phone || 'N/A'}</TableCell>
                   <TableCell>
                     <Select 
                       value={application.status} 
@@ -300,44 +311,145 @@ const [exporting, setExporting] = useState(false)
                         <SheetTrigger asChild>
                           <Button variant="outline">View Details</Button>
                         </SheetTrigger>
-                        <SheetContent>
+                        <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
                           <SheetHeader>
-                            <SheetTitle>Application Details</SheetTitle>
-                            <SheetDescription>
-                              <div className="space-y-4 mt-4">
-                                <p><strong>Name:</strong> {application.applicantName}</p>
-                                <p><strong>Email:</strong> {application.email}</p>
-                                <p><strong>Phone:</strong> {application.phone || 'N/A'}</p>
-                                <p><strong>Status:</strong> {application.status}</p>
-                                <p><strong>Applied Date:</strong> {new Date(application.appliedDate).toLocaleDateString()}</p>
-                                <p><strong>Notes:</strong> {application.notes || 'N/A'}</p>
-                              </div>
+                            <SheetTitle className="text-2xl">Application Details</SheetTitle>
+                            <SheetDescription className="text-sm text-muted-foreground">
+                              Complete information about this job application
                             </SheetDescription>
                           </SheetHeader>
+                          
+                          <div className="space-y-6 mt-6">
+                            {/* Applicant Information Card */}
+                            <div className="rounded-lg border bg-card p-4 space-y-3">
+                              <h3 className="font-semibold text-lg mb-3">Applicant Information</h3>
+                              <div className="grid gap-2">
+                                <div className="flex justify-between">
+                                  <span className="text-sm text-muted-foreground">Name:</span>
+                                  <span className="text-sm font-medium">{application.applicantName}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-sm text-muted-foreground">Email:</span>
+                                  <span className="text-sm font-medium">{application.email}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-sm text-muted-foreground">Phone:</span>
+                                  <span className="text-sm font-medium">{application.phone || 'N/A'}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Job Information Card */}
+                            {application.jobId && (
+                              <div className="rounded-lg border bg-card p-4 space-y-3">
+                                <h3 className="font-semibold text-lg mb-3">Job Information</h3>
+                                <div className="grid gap-2">
+                                  <div className="flex justify-between">
+                                    <span className="text-sm text-muted-foreground">Position:</span>
+                                    <span className="text-sm font-medium">{application.jobId?.title || 'N/A'}</span>
+                                  </div>
+                                  <div className="flex justify-between">
+                                    <span className="text-sm text-muted-foreground">Company:</span>
+                                    <span className="text-sm font-medium">{application.jobId?.companyName || 'N/A'}</span>
+                                  </div>
+                                  {application.jobId?._id && (
+                                    <div className="mt-2">
+                                      <a 
+                                        href={`/admin/job-vacancies/${application.jobId._id}`} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer" 
+                                        className="text-sm text-blue-500 hover:underline"
+                                      >
+                                        View Job Details →
+                                      </a>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Application Status Card */}
+                            <div className="rounded-lg border bg-card p-4 space-y-3">
+                              <h3 className="font-semibold text-lg mb-3">Application Status</h3>
+                              <div className="grid gap-2">
+                                <div className="flex justify-between items-center">
+                                  <span className="text-sm text-muted-foreground">Status:</span>
+                                  <span className="text-sm font-medium capitalize px-2 py-1 rounded-md bg-primary/10">{application.status}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-sm text-muted-foreground">Applied Date:</span>
+                                  <span className="text-sm font-medium">{formatDateInReadable(application.appliedDate)}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-sm text-muted-foreground">Created:</span>
+                                  <span className="text-sm font-medium">{formatDateInReadable(application.createdAt)}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-sm text-muted-foreground">Last Updated:</span>
+                                  <span className="text-sm font-medium">{formatDateInReadable(application.updatedAt)}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Documents Card */}
+                            <div className="rounded-lg border bg-card p-4 space-y-3">
+                              <h3 className="font-semibold text-lg mb-3">Documents</h3>
+                              <div className="grid gap-3">
+                                {application.resumeUrl ? (
+                                  <a 
+                                    href={application.resumeUrl} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="text-sm text-blue-500 hover:underline flex items-center gap-2"
+                                  >
+                                    📄 View Resume
+                                  </a>
+                                ) : (
+                                  <span className="text-sm text-muted-foreground">No resume uploaded</span>
+                                )}
+                                {application.coverLetter && (
+                                  <div className="mt-2">
+                                    <p className="text-sm font-medium mb-1">Cover Letter:</p>
+                                    <p className="text-sm text-muted-foreground bg-muted p-3 rounded-md">{application.coverLetter}</p>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Notes Card */}
+                            {application.notes && (
+                              <div className="rounded-lg border bg-card p-4 space-y-3">
+                                <h3 className="font-semibold text-lg mb-3">Notes</h3>
+                                <p className="text-sm text-muted-foreground">{application.notes}</p>
+                              </div>
+                            )}
+                          </div>
                         </SheetContent>
                       </Sheet>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="destructive" size="icon">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              This action cannot be undone. This will permanently delete the application
-                              of {application.applicantName}.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDelete(application._id)}>
-                              Delete
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                      {canDelete && (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="destructive" size="icon">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete the application
+                                of {application.applicantName}.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => handleDelete(application._id)}>
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
@@ -362,5 +474,14 @@ const [exporting, setExporting] = useState(false)
         </Button>
       </div>
     </div>
+  )
+}
+
+// Wrap with permission guard
+export default function JobApplicationTable() {
+  return (
+    <PermissionGuard permission={JOB_APPLICATION_PERMISSIONS.JOB_APP_VIEW}>
+      <JobApplicationTableContent />
+    </PermissionGuard>
   )
 }

@@ -16,6 +16,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { usePermission } from "@/hooks/usePermissions";
+import { WEBINAR_PERMISSIONS } from "@/constants/permissions";
+import { handlePermissionError } from "@/lib/permissionErrorHandler";
 
 
 interface CellActionProps {
@@ -28,6 +31,9 @@ export const WebinarCellAction: React.FC<CellActionProps> = ({ data }) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const {toast} = useToast();
+  
+  const canUpdateWebinar = usePermission(WEBINAR_PERMISSIONS.WEBINAR_UPDATE);
+  const canDeleteWebinar = usePermission(WEBINAR_PERMISSIONS.WEBINAR_DELETE);
 
   const onConfirm = async () => {
     try {
@@ -37,7 +43,8 @@ export const WebinarCellAction: React.FC<CellActionProps> = ({ data }) => {
       toast({title: "Webinar deleted successfully!"});
       setOpen(false)
     } catch (error: any) {
-      toast({title: "Error: Deleting Webinar", description: error.message})
+      handlePermissionError(error, 'Failed to delete webinar');
+      toast({title: "Error: Deleting Webinar", description: error.message, variant: 'destructive'})
     }finally{
       setLoading(false);
     }
@@ -61,14 +68,18 @@ export const WebinarCellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-          <DropdownMenuItem
-            onClick={() => router.push(`/admin/webinars/${data._id}`)}
-          >
-            <Edit className="mr-2 h-4 w-4" /> Update
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Trash className="mr-2 h-4 w-4" /> Delete
-          </DropdownMenuItem>
+          {canUpdateWebinar && (
+            <DropdownMenuItem
+              onClick={() => router.push(`/admin/webinars/${data._id}`)}
+            >
+              <Edit className="mr-2 h-4 w-4" /> Update
+            </DropdownMenuItem>
+          )}
+          {canDeleteWebinar && (
+            <DropdownMenuItem onClick={() => setOpen(true)}>
+              <Trash className="mr-2 h-4 w-4" /> Delete
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

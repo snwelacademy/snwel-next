@@ -76,7 +76,7 @@ export default function ContactUsCards() {
                     </CardHeader>
                     <CardContent className="relative md:absolute bottom-0">
                         <div className="h-full">
-                            <p className="mb-4">Available Mon-Fri, 9am-5pm</p>
+                            <p className="mb-4">Available Mon-Fri, <br /> 09:30am-06:30pm</p>
                             <a href={`tel:${settingData?.data?.contacts?.phone}`}>
                                 <Button className="w-full" disabled={!Boolean(settingData?.data?.contacts?.phone)}>
                                     <Phone className="mr-2 h-4 w-4" /> Call Now

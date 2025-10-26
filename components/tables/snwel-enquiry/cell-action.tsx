@@ -16,6 +16,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Eye, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { usePermission } from "@/hooks/usePermissions";
+import { SNWEL_ENQUIRY_PERMISSIONS } from "@/constants/permissions";
+import { handlePermissionError } from "@/lib/permissionErrorHandler";
 
 interface CellActionProps {
   data: SnwelEnquiry;
@@ -27,6 +30,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { toast } = useToast();
+  const canDeleteEnquiry = usePermission(SNWEL_ENQUIRY_PERMISSIONS.SNWEL_ENQUIRY_DELETE);
 
   const onConfirm = async () => {
     try {
@@ -36,7 +40,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       toast({ title: "Snwel Enquiry deleted successfully!" });
       setOpen(false);
     } catch (error: any) {
-      toast({ title: "Error: Deleting Snwel Enquiry", description: error.message });
+      handlePermissionError(error, 'Failed to delete SNWEL enquiry');
+      toast({ title: "Error: Deleting Snwel Enquiry", description: error.message, variant: 'destructive' });
     } finally {
       setLoading(false);
     }
@@ -65,9 +70,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           >
             <Eye className="mr-2 h-4 w-4" /> View Details
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Trash className="mr-2 h-4 w-4" /> Delete
-          </DropdownMenuItem>
+          {canDeleteEnquiry && (
+            <DropdownMenuItem onClick={() => setOpen(true)}>
+              <Trash className="mr-2 h-4 w-4" /> Delete
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

@@ -9,10 +9,11 @@ export interface Permission {
 }
 
 // key of all permissions code 
-export type PermissionCode = keyof typeof AdminPanelPermissions;
+import { PermissionCode as UnifiedPermissionCode } from "@/constants/permissions";
+export type PermissionCode = UnifiedPermissionCode;
 
 export interface UserRole {
   _id: string;
   name: string;
   permissions: Permission[];
-} 
+}

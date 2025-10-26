@@ -12,7 +12,11 @@ export async function checkPermission(
 
     if (!token) {
       return NextResponse.json(
-        { error: 'Unauthorized' },
+        { 
+          success: false,
+          code: 'UNAUTHORIZED',
+          message: 'Authentication required'
+        },
         { status: 401 }
       );
     }
@@ -29,7 +33,12 @@ export async function checkPermission(
 
     if (!hasPermission) {
       return NextResponse.json(
-        { error: 'Forbidden' },
+        { 
+          success: false,
+          code: 'PERMISSION_DENIED',
+          message: 'You do not have permission to perform this action',
+          requiredPermission: requiredPermission
+        },
         { status: 403 }
       );
     }

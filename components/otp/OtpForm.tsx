@@ -25,6 +25,8 @@ const FormSchema = z.object({
 const OTPForm = ({token, onVerified}: {token: string, onVerified?: (data:  {isVerified: boolean, enrollmentId?: string}) =>void}) => {
     const [resendCooldown, setResendCooldown] = useState(0)
     const [resending, setResending] = useState(false)
+    const [verificationId, setVerificationId] = useState<string | undefined>(undefined)
+    const [otpExpired, setOtpExpired] = useState<boolean>(false)
    
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -43,7 +45,16 @@ const OTPForm = ({token, onVerified}: {token: string, onVerified?: (data:  {isVe
                return onVerified?.(res)
             }
             if(res.invalidOtp){
-                form.setError("otp", {message: "Invalid Otp"})
+                if (res.otpExpired) {
+                    setOtpExpired(true)
+                    if (res.verificationId) setVerificationId(res.verificationId)
+                    const ra = typeof res.retry_after === 'number' ? res.retry_after : 30
+                    setResendCooldown(ra)
+                    form.setError("otp", { message: "Code expired. Please resend." })
+                    toast({ title: 'Code expired', description: 'Please resend a new code.', variant: 'destructive' })
+                } else {
+                    form.setError("otp", {message: "Incorrect code"})
+                }
             }
 
             
@@ -55,11 +66,28 @@ const OTPForm = ({token, onVerified}: {token: string, onVerified?: (data:  {isVe
     async function onResend() {
         try {
             const tk = form.getValues('token')
-            if (!tk) return toast({ title: 'Token not found!' })
+            if (!verificationId && !tk) return toast({ title: 'Session invalid', description: 'Please restart the process.', variant: 'destructive' })
             setResending(true)
-            await resendOtp({ token: tk })
-            toast({ title: 'OTP resent', description: 'Please check your email/WhatsApp.' })
-            setResendCooldown(60)
+            const res = await resendOtp(verificationId ? { verificationId } : { token: tk })
+            if (res.invalidToken) {
+                toast({ title: 'Invalid token', description: 'Please restart the process.', variant: 'destructive' })
+                return
+            }
+            if (res.resend_allowed === false) {
+                const ra = typeof res.retry_after === 'number' ? res.retry_after : 0
+                setResendCooldown(ra)
+                if (res.reason === 'COOLDOWN') toast({ title: 'Please wait', description: `You can resend OTP in ${ra}s.` })
+                if (res.reason === 'RESEND_LIMIT_REACHED') toast({ title: 'Limit reached', description: `Please try again in ${ra}s.`, variant: 'destructive' })
+                if (res.reason === 'SESSION_EXPIRED') toast({ title: 'Session expired', description: 'Please restart the process.', variant: 'destructive' })
+                return
+            }
+            if (res.resend_allowed && res.token) {
+                form.setValue('token', res.token)
+                setOtpExpired(false)
+                const ra = typeof res.retry_after === 'number' ? res.retry_after : 30
+                setResendCooldown(ra)
+                toast({ title: 'OTP resent', description: 'Please check your email/WhatsApp.' })
+            }
         } catch (error: any) {
             toast({ title: error.message || 'Failed to resend OTP', variant: 'destructive' })
         } finally {
@@ -102,7 +130,9 @@ const OTPForm = ({token, onVerified}: {token: string, onVerified?: (data:  {isVe
                                     </InputOTP>
                                 </FormControl>
                                 <FormDescription>
-                                    Please enter the one-time password sent to your email & whatsapp.
+                                    {otpExpired
+                                        ? (resendCooldown > 0 ? `Code expired. Resend available in ${resendCooldown}s.` : 'Code expired. You can resend a new code now.')
+                                        : 'Please enter the one-time password sent to your email & whatsapp.'}
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>

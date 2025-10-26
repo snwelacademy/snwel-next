@@ -9,6 +9,10 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import ModernLoader, { CardLoader, TableLoader } from '@/components/ModernLoader'
 import BreadCrumb from '@/components/BreadCrumb'
+import { usePermission } from '@/hooks/usePermissions'
+import { BLOG_PERMISSIONS } from '@/constants/permissions'
+import { PermissionGuard } from '@/components/guards/PermissionGuard'
+import { handlePermissionError } from '@/lib/permissionErrorHandler'
 import { 
   FileText, 
   Plus, 
@@ -45,11 +49,15 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 
 const breadcrumbItems = [{ title: "Blogs", link: "/admin/blog" }]
 
-export default function BlogPage() {
+function BlogPageContent() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
   const queryClient = useQueryClient()
   const { toast } = useToast()
+  
+  const canCreateBlog = usePermission(BLOG_PERMISSIONS.BLOG_CREATE)
+  const canUpdateBlog = usePermission(BLOG_PERMISSIONS.BLOG_UPDATE)
+  const canDeleteBlog = usePermission(BLOG_PERMISSIONS.BLOG_DELETE)
   
   const { data, isLoading } = useQuery({
     queryKey: ['/admin/blogs'],
@@ -70,6 +78,7 @@ export default function BlogPage() {
       await queryClient.invalidateQueries({ queryKey: ['/admin/blogs'] })
       toast({ title: 'Blog post deleted successfully!' })
     } catch (error: any) {
+      handlePermissionError(error, 'Failed to delete blog post')
       toast({ title: 'Blog deletion failed', description: error?.message || 'There was a problem deleting the blog post!', variant: 'destructive' })
     }
   }
@@ -89,12 +98,14 @@ export default function BlogPage() {
             Create and manage your blog content
           </p>
         </div>
-        <Button asChild size="lg" className="gap-2">
-          <Link href="/admin/blog/new">
-            <Plus className="h-4 w-4" />
-            Create Blog Post
-          </Link>
-        </Button>
+        {canCreateBlog && (
+          <Button asChild size="lg" className="gap-2">
+            <Link href="/admin/blog/new">
+              <Plus className="h-4 w-4" />
+              Create Blog Post
+            </Link>
+          </Button>
+        )}
       </div>
 
       {/* Stats Cards */}
@@ -221,35 +232,44 @@ export default function BlogPage() {
                                     View
                                   </Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem asChild>
-                                  <Link href={`/admin/blog/${blog._id}`}>
-                                    <Edit className="h-4 w-4 mr-2" />
-                                    Edit
-                                  </Link>
-                                </DropdownMenuItem>
+                                {canUpdateBlog && (
+                                  <DropdownMenuItem asChild>
+                                    <Link href={`/admin/blog/${blog._id}`}>
+                                      <Edit className="h-4 w-4 mr-2" />
+                                      Edit
+                                    </Link>
+                                  </DropdownMenuItem>
+                                )}
+                                {!canUpdateBlog && !canDeleteBlog && (
+                                  <DropdownMenuItem disabled>
+                                    No actions available
+                                  </DropdownMenuItem>
+                                )}
                               </DropdownMenuContent>
                             </DropdownMenu>
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button variant="destructive" size="icon" title="Delete">
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>Delete this blog?</AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    This action cannot be undone. This will permanently delete the blog "{blog.title}".
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction onClick={() => handleDelete(blog._id)}>
-                                    Delete
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
+                            {canDeleteBlog && (
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button variant="destructive" size="icon" title="Delete">
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Delete this blog?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      This action cannot be undone. This will permanently delete the blog "{blog.title}".
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction onClick={() => handleDelete(blog._id)}>
+                                      Delete
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            )}
                           </div>
                         </TableCell>
                       </TableRow>
@@ -262,5 +282,14 @@ export default function BlogPage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+// Wrap with permission guard
+export default function BlogPage() {
+  return (
+    <PermissionGuard permission={BLOG_PERMISSIONS.BLOG_VIEW}>
+      <BlogPageContent />
+    </PermissionGuard>
   )
 }

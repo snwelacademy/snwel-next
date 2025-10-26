@@ -17,6 +17,7 @@ import GeneralEnquirySubForm from './GeneralEnquiryForm';
 import { createEnquiry } from '@/services/enquiry-service';
 import VerifyOtp from '@/components/ui/verify-otp';
 import PhoneInput from '@/components/ui/phoneInput';
+import { Loader2 } from 'lucide-react';
 
 const EnquiryForm = ({ type, isUnique }: { type: string, isUnique?: boolean }) => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -100,7 +101,7 @@ const EnquiryForm = ({ type, isUnique }: { type: string, isUnique?: boolean }) =
                                     )}
                                 />
                                 {type === 'webinar' && <WebinarEnquirySubForm control={form.control} />}
-                                {type === 'webinar' && (
+                                { (
                                     <div className='mt-2'>
                                         <VerifyOtp 
                                             data={{ email: form.watch('email'), phone: form.watch('phone') }} 
@@ -110,7 +111,16 @@ const EnquiryForm = ({ type, isUnique }: { type: string, isUnique?: boolean }) =
                                 )}
                                 {type === 'general' && <GeneralEnquirySubForm control={form.control} />}
                                 <div className='flex justify-end pt-5'>
-                                    <Button disabled={loading || (type === 'webinar' && !otpVerified)} type='submit'>Submit</Button>
+                                    <Button disabled={loading || (type === 'webinar' && !otpVerified)} type='submit'>
+                                        {loading ? (
+                                            <>
+                                                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                                                Submitting...
+                                            </>
+                                        ) : (
+                                            'Submit'
+                                        )}
+                                    </Button>
                                 </div>
                             </CardContent>
                         </Card>

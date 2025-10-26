@@ -10,13 +10,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
-import { deleteEnquiry } from "@/services/admin/admin-enquiry-service"; // Replace with your actual service
-import { GeneralEnquiry, DynamicEnquiry } from "@/types/EnquiryTypes"; // Replace with your actual type
+import { deleteEnquiry } from "@/services/admin/admin-enquiry-service";
+import { GeneralEnquiry, DynamicEnquiry } from "@/types/EnquiryTypes";
 import { useQueryClient } from "@tanstack/react-query";
 import { MoreHorizontal, Trash } from "lucide-react";
 import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
 import EnquiryViewSheet from "./EnquiryViewSheet";
+import { usePermission } from "@/hooks/usePermissions";
+import { ENQUIRY_PERMISSIONS } from "@/constants/permissions";
+import { handlePermissionError } from "@/lib/permissionErrorHandler";
 
 interface CellActionProps {
   data: DynamicEnquiry<GeneralEnquiry>;
@@ -26,18 +28,19 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
-//   const navigate = useNavigate();
   const {toast} = useToast();
+  const canDeleteEnquiry = usePermission(ENQUIRY_PERMISSIONS.ENQUIRY_DELETE);
 
   const onConfirm = async () => {
     try {
       setLoading(true);
-      await deleteEnquiry(data._id); // Adjust to your delete function
-      await queryClient.invalidateQueries({ queryKey: ['/admin/enquiry'] }); // Adjust query key as necessary
+      await deleteEnquiry(data._id);
+      await queryClient.invalidateQueries({ queryKey: ['/admin/enquiry'] });
       toast({ title: "Inquiry deleted successfully!" });
       setOpen(false);
     } catch (error: any) {
-      toast({ title: "Error: Deleting Inquiry", description: error.message });
+      handlePermissionError(error, 'Failed to delete enquiry');
+      toast({ title: "Error: Deleting Inquiry", description: error.message, variant: 'destructive' });
     } finally {
       setLoading(false);
     }
@@ -62,9 +65,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => setOpen(true)}>
-              <Trash className="mr-2 h-4 w-4" /> Delete
-            </DropdownMenuItem>
+            {canDeleteEnquiry && (
+              <DropdownMenuItem onClick={() => setOpen(true)}>
+                <Trash className="mr-2 h-4 w-4" /> Delete
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

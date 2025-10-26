@@ -3,7 +3,9 @@ import { Switch } from '@/components/ui/switch'
 import { useToast } from '@/components/ui/use-toast'
 import { updateWebinar } from '@/services/admin/webinar-service'
 import  { useState } from 'react'
-
+import { usePermission } from '@/hooks/usePermissions'
+import { WEBINAR_PERMISSIONS } from '@/constants/permissions'
+import { handlePermissionError } from '@/lib/permissionErrorHandler'
 
 const WebinarActiveToggle = ({
   value = false,
@@ -19,8 +21,13 @@ const WebinarActiveToggle = ({
   const [isActive, setIsActive] = useState(value || false)
   const [loading, setLoading] = useState<boolean>(false);
   const { toast } = useToast()
+  const canPublishWebinar = usePermission(WEBINAR_PERMISSIONS.WEBINAR_PUBLISH);
 
   const handleOnChange = async (value: boolean) => {
+    if (!canPublishWebinar) {
+      toast({ title: "Permission Denied", description: "You don't have permission to publish/unpublish webinars", variant: 'destructive' });
+      return;
+    }
     if (!selfMode) {
       onChange?.(value);
       return;
@@ -38,10 +45,15 @@ const WebinarActiveToggle = ({
       const res = await updateWebinar(id, { isActive });
       return res.isActive;
     } catch (error: any) {
-      toast({ title: `Error: ${error.message}` });
+      handlePermissionError(error, 'Failed to update webinar status');
+      toast({ title: `Error: ${error.message}`, variant: 'destructive' });
     } finally {
       setLoading(false);
     }
+  }
+
+  if (!canPublishWebinar) {
+    return null;
   }
 
   return (

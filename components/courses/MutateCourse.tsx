@@ -46,6 +46,7 @@ const createCourseSchema = z.object({
   certificate: z.boolean().optional().default(false),
   currency: z.string().optional(),
   price: z.number().default(0),
+  rating: z.number().min(0).max(5).default(0),
   isPremium: z.boolean().default(false),
   isPopular: z.boolean().default(false),
   categories: z.array(z.string()).default([]),
@@ -514,6 +515,27 @@ export default function MutateCourse({
                             <Input
                               type="number"
                               placeholder="Price"
+                              {...field}
+                              onChange={(e) => field.onChange(Number(e.target.value))}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="rating"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Course Rating (0-5)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              step="0.1"
+                              min="0"
+                              max="5"
+                              placeholder="4.5"
                               {...field}
                               onChange={(e) => field.onChange(Number(e.target.value))}
                             />

@@ -12,11 +12,14 @@ import { useQuery } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { PermissionGuard } from '@/components/guards/PermissionGuard';
+import { withErrorHandling } from '@/components/hoc/withErrorHandling';
+import { ENQUIRY_PERMISSIONS } from '@/constants/permissions';
 
 
 const breadcrumbItems = [{ title: "General Enquiry", link: "/admin/general-enquiry" }];
 
-const GeneralEnquiryPage = () => {
+const GeneralEnquiryPageContent = () => {
   const searchParams = useSearchParams();
   const { data, isLoading } = useQuery({
     queryKey: ['/admin/enquiry', searchParams], 
@@ -57,4 +60,10 @@ const GeneralEnquiryPage = () => {
   );
 };
 
-export default GeneralEnquiryPage;
+export default withErrorHandling(function ProtectedGeneralEnquiryPage() {
+  return (
+    <PermissionGuard permission={ENQUIRY_PERMISSIONS.ENQUIRY_VIEW}>
+      <GeneralEnquiryPageContent />
+    </PermissionGuard>
+  )
+})

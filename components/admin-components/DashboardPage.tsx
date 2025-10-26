@@ -35,6 +35,9 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { getDashboardStats } from '@/services/admin/dashboard-service';
+import { usePermission } from '@/hooks/usePermissions';
+import { ANALYTICS_PERMISSIONS, COURSE_PERMISSIONS, BLOG_PERMISSIONS, USER_PERMISSIONS, JOB_PERMISSIONS } from '@/constants/permissions';
+import { InlinePermissionGuard } from '@/components/guards/PermissionGuard';
 
 export default function page() {
   const { data: totalRevenue, isLoading: revenueLoading } = useTotalRevenue();
@@ -50,10 +53,10 @@ export default function page() {
   });
 
   const quickActions = [
-    { label: 'New Course', href: '/admin/courses/new', icon: GraduationCap, permission: 'COURSE_CREATE' },
-    { label: 'New Blog', href: '/admin/blogs/new', icon: FileText, permission: 'BLOG_CREATE' },
-    { label: 'New User', href: '/admin/users?action=new', icon: Users, permission: 'CREATE_USERS' },
-    { label: 'New Job', href: '/admin/job-vacancies/new', icon: Briefcase, permission: 'JOB_CREATE' },
+    { label: 'New Course', href: '/admin/courses/new', icon: GraduationCap, permission: COURSE_PERMISSIONS.COURSE_CREATE },
+    { label: 'New Blog', href: '/admin/blogs/new', icon: FileText, permission: BLOG_PERMISSIONS.BLOG_CREATE },
+    { label: 'New User', href: '/admin/users?action=new', icon: Users, permission: USER_PERMISSIONS.USER_CREATE },
+    { label: 'New Job', href: '/admin/job-vacancies/new', icon: Briefcase, permission: JOB_PERMISSIONS.JOB_CREATE },
   ];
 
   return (
@@ -87,17 +90,18 @@ export default function page() {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {quickActions.map((action) => (
-                <Button
-                  key={action.href}
-                  variant="outline"
-                  className="h-auto flex-col gap-2 p-4 hover:bg-primary/5 hover:border-primary"
-                  asChild
-                >
-                  <Link href={action.href}>
-                    <action.icon className="h-5 w-5 text-primary" />
-                    <span className="text-sm font-medium">{action.label}</span>
-                  </Link>
-                </Button>
+                <InlinePermissionGuard key={action.href} permission={action.permission}>
+                  <Button
+                    variant="outline"
+                    className="h-auto flex-col gap-2 p-4 hover:bg-primary/5 hover:border-primary"
+                    asChild
+                  >
+                    <Link href={action.href}>
+                      <action.icon className="h-5 w-5 text-primary" />
+                      <span className="text-sm font-medium">{action.label}</span>
+                    </Link>
+                  </Button>
+                </InlinePermissionGuard>
               ))}
             </div>
           </CardContent>

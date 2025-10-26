@@ -14,13 +14,19 @@ import { Download } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
+import { PermissionGuard } from '@/components/guards/PermissionGuard';
+import { withErrorHandling } from '@/components/hoc/withErrorHandling';
+import { SNWEL_ENQUIRY_PERMISSIONS } from '@/constants/permissions';
+import { usePermission } from '@/hooks/usePermissions';
+import { handlePermissionError } from '@/lib/permissionErrorHandler';
 
 const breadcrumbItems = [{ title: "Snwel Enquiries", link: "/admin/snwel-enquiry" }];
 
-const SnwelEnquiryPage = () => {
+const SnwelEnquiryPageContent = () => {
   const searchParams = useSearchParams();
   const { toast } = useToast();
   const [isExporting, setIsExporting] = useState(false);
+  const canExport = usePermission(SNWEL_ENQUIRY_PERMISSIONS.SNWEL_ENQUIRY_EXPORT);
   
   const { data, isLoading } = useQuery({
     queryKey: ['/admin/snwel-enquiry', searchParams.toString()],
@@ -28,6 +34,10 @@ const SnwelEnquiryPage = () => {
   });
 
   const handleExport = async () => {
+    if (!canExport) {
+      toast({ title: "Permission Denied", description: "You don't have permission to export enquiries", variant: "destructive" });
+      return;
+    }
     try {
       setIsExporting(true);
       const currentPage = Number(searchParams.get('page')) || 1;
@@ -35,6 +45,7 @@ const SnwelEnquiryPage = () => {
       await exportSnwelEnquiries({ page: currentPage, limit: currentLimit });
       toast({ title: "Export successful!", description: "CSV file has been downloaded." });
     } catch (error: any) {
+      handlePermissionError(error, 'Failed to export enquiries');
       toast({ title: "Export failed", description: error.message, variant: "destructive" });
     } finally {
       setIsExporting(false);
@@ -51,14 +62,16 @@ const SnwelEnquiryPage = () => {
           description="Manage All Snwel Business Enquiries"
         />
 
-        <Button
-          onClick={handleExport}
-          disabled={isExporting || isLoading}
-          variant="outline"
-        >
-          <Download className="mr-2 h-4 w-4" />
-          {isExporting ? "Exporting..." : "Export CSV"}
-        </Button>
+        {canExport && (
+          <Button
+            onClick={handleExport}
+            disabled={isExporting || isLoading}
+            variant="outline"
+          >
+            <Download className="mr-2 h-4 w-4" />
+            {isExporting ? "Exporting..." : "Export CSV"}
+          </Button>
+        )}
       </div>
       <Separator />
 
@@ -78,4 +91,10 @@ const SnwelEnquiryPage = () => {
   );
 };
 
-export default SnwelEnquiryPage;
+export default withErrorHandling(function ProtectedSnwelEnquiryPage() {
+  return (
+    <PermissionGuard permission={SNWEL_ENQUIRY_PERMISSIONS.SNWEL_ENQUIRY_VIEW}>
+      <SnwelEnquiryPageContent />
+    </PermissionGuard>
+  )
+})

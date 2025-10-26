@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { Facebook, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react'
+import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin } from 'lucide-react'
 import { GeneralSettingType } from '@/types'
 import { prepareAddressString } from '@/lib/utils'
 import { formatIndianPhoneNumber } from '@/lib/phoneNumberFormat'
@@ -143,19 +143,28 @@ export default function Footer({ footerMenu, settings }: FooterProps) {
           {/* Contact Information */}
           <div>
             <h3 className="text-white text-lg font-semibold mb-4">Contact Us</h3>
-            <ul className="space-y-2">
-              <li>
-                <a href={`mailto:${contact?.email || "#"}`} className="hover:text-white transition-colors">
-                  {contact?.email}
+            <ul className="space-y-3">
+              <li className="flex items-center gap-3">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-primary/10">
+                  <Mail className="h-4 w-4" />
+                </span>
+                <a href={`mailto:${contact?.email || "#"}`} className="hover:text-white transition-colors truncate" aria-label="Email">
+                  {contact?.email || '—'}
                 </a>
               </li>
-              <li>
-                <a href={`tel:${contact?.phone || ''}`} className="hover:text-white transition-colors">
-                  {contact?.phone ? formatIndianPhoneNumber(contact?.phone) : ''}
+              <li className="flex items-center gap-3">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-primary/10 ">
+                  <Phone className="h-4 w-4" />
+                </span>
+                <a href={`tel:${contact?.phone || ''}`} className="hover:text-white transition-colors" aria-label="Phone">
+                  {contact?.phone ? formatIndianPhoneNumber(contact?.phone) : '—'}
                 </a>
               </li>
-              <li>
-                <span>{prepareAddressString(location)}</span>
+              <li className="flex items-start gap-3">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-primary/10 flex-none">
+                  <MapPin className="h-4 w-4" />
+                </span>
+                <span className="text-sm leading-6">{prepareAddressString(location)}</span>
               </li>
             </ul>
           </div>
@@ -163,7 +172,7 @@ export default function Footer({ footerMenu, settings }: FooterProps) {
 
         <div className="mt-8 pt-8 border-t border-gray-700">
           <p className="text-center text-gray-400">
-            © {new Date().getFullYear()} SNWEL Academy. All rights reserved.
+            {new Date().getFullYear()} SNWEL Academy. All rights reserved.
           </p>
         </div>
       </div>

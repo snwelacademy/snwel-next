@@ -13,11 +13,17 @@ import { getAllCourseCategories } from '@/services/admin/course-category-service
 import { columns } from '@/components/tables/course-category/columns';
 import MutateCategoryDrawer from '@/components/course-category/MutateCategoryDrawer';
 import { useSearchParams } from 'next/navigation';
+import { PermissionGuard } from '@/components/guards/PermissionGuard';
+import { withErrorHandling } from '@/components/hoc/withErrorHandling';
+import { COURSE_PERMISSIONS } from '@/constants/permissions';
+import { usePermission } from '@/hooks/usePermissions';
 
 const breadcrumbItems = [{ title: "Course Categories", link: "/admin/course-category" }];
 
-const CourseCategoryPage = () => {
+const CourseCategoryPageContent = () => {
   const searchParams = useSearchParams();
+  const canManageCategory = usePermission(COURSE_PERMISSIONS.CATEGORY_MANAGE);
+  
   const { data, isLoading } = useQuery({
     queryKey: ['/admin/course-category'],
     queryFn: () => getAllCourseCategories(getListOptionsFromSearchParams(searchParams))
@@ -33,7 +39,9 @@ const CourseCategoryPage = () => {
           description="Manage All Course Category List"
         />
 
-        <MutateCategoryDrawer trigger={<Button> <Plus className="mr-2 h-4 w-4" /> Add New</Button>} />
+        {canManageCategory && (
+          <MutateCategoryDrawer trigger={<Button> <Plus className="mr-2 h-4 w-4" /> Add New</Button>} />
+        )}
 
       </div>
       <Separator />
@@ -55,4 +63,10 @@ const CourseCategoryPage = () => {
   );
 };
 
-export default CourseCategoryPage;
+export default withErrorHandling(function ProtectedCourseCategoryPage() {
+  return (
+    <PermissionGuard permission={COURSE_PERMISSIONS.CATEGORY_MANAGE}>
+      <CourseCategoryPageContent />
+    </PermissionGuard>
+  )
+})

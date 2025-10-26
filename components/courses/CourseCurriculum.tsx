@@ -22,7 +22,7 @@ const CourseCurriculum = ({
                     return <div key={nanoid()} className='flex md:items-start md:justify-between justify-start flex-col md:flex-row gap-3 py-2 border-b last:border-b-0'>
                        <div className='flex-auto'>
                        <Typography as="p" className='flex-auto flex items-center gap-2'><Book className='w-4 h-4 text-primary' /><span>{cc.title}</span></Typography>
-                       <p className='text-xs text-gray-500'>{typeof cc.curriculumType === 'string' ? cc.curriculumType : cc?.curriculumType?.name}</p>
+                       {/* <p className='text-xs text-gray-500'>{typeof cc.curriculumType === 'string' ? cc.curriculumType : cc?.curriculumType?.name}</p> */}
                        
                        </div>
 

@@ -12,12 +12,18 @@ import { useQuery } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { PermissionGuard } from '@/components/guards/PermissionGuard';
+import { withErrorHandling } from '@/components/hoc/withErrorHandling';
+import { JOB_CATEGORY_PERMISSIONS } from '@/constants/permissions';
+import { usePermission } from '@/hooks/usePermissions';
 
 
 const breadcrumbItems = [{ title: "Job Vacancies", link: "/admin/job-vacancies" }];
 
-const JobCategoryPage = () => {
+const JobCategoryPageContent = () => {
   const searchParams = useSearchParams();
+  const canCreateJobCategory = usePermission(JOB_CATEGORY_PERMISSIONS.JOB_CATEGORY_CREATE);
+  
   const { data, isLoading } = useQuery({
     queryKey: ['/admin/job-categories', searchParams],
     queryFn: () => getAllJobCategories(getListOptionsFromSearchParams(searchParams))
@@ -33,12 +39,14 @@ const JobCategoryPage = () => {
           description="Manage All Job Category List"
         />
 
-        <Link
-          href={"/admin/job-category/new"}
-          className={cn(buttonVariants({ variant: "default" }))}
-        >
-          <Plus className="mr-2 h-4 w-4" /> Add New
-        </Link>
+        {canCreateJobCategory && (
+          <Link
+            href="/admin/job-category/new"
+            className={cn(buttonVariants({ variant: "default" }))}
+          >
+            <Plus className="mr-2 h-4 w-4" /> Add New
+          </Link>
+        )}
       </div>
       <Separator />
 
@@ -58,4 +66,10 @@ const JobCategoryPage = () => {
   );
 }
 
-export default JobCategoryPage;
+export default withErrorHandling(function ProtectedJobCategoryPage() {
+  return (
+    <PermissionGuard permission={JOB_CATEGORY_PERMISSIONS.JOB_CATEGORY_VIEW}>
+      <JobCategoryPageContent />
+    </PermissionGuard>
+  )
+})

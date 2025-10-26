@@ -16,6 +16,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { usePermission } from "@/hooks/usePermissions";
+import { WIDGET_PERMISSIONS } from "@/constants/permissions";
+import { handlePermissionError } from "@/lib/permissionErrorHandler";
 
 
 interface WidgetCellActionProps {
@@ -28,6 +31,9 @@ export const WidgetCellAction: React.FC<WidgetCellActionProps> = ({ data }) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { toast } = useToast();
+  
+  const canUpdateWidget = usePermission(WIDGET_PERMISSIONS.WIDGET_UPDATE);
+  const canDeleteWidget = usePermission(WIDGET_PERMISSIONS.WIDGET_DELETE);
 
   const onConfirm = async () => {
     try {
@@ -37,7 +43,8 @@ export const WidgetCellAction: React.FC<WidgetCellActionProps> = ({ data }) => {
       toast({ title: "Widget deleted successfully!" });
       setOpen(false);
     } catch (error: any) {
-      toast({ title: "Error: Deleting Widget", description: error.message });
+      handlePermissionError(error, 'Failed to delete widget');
+      toast({ title: "Error: Deleting Widget", description: error.message, variant: 'destructive' });
     } finally {
       setLoading(false);
     }
@@ -60,12 +67,16 @@ export const WidgetCellAction: React.FC<WidgetCellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => router.push(`/admin/widgets/${data._id}?type=${data.type}`)}>
-            <Edit className="mr-2 h-4 w-4" /> Update
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Trash className="mr-2 h-4 w-4" /> Delete
-          </DropdownMenuItem>
+          {canUpdateWidget && (
+            <DropdownMenuItem onClick={() => router.push(`/admin/widgets/${data._id}?type=${data.type}`)}>
+              <Edit className="mr-2 h-4 w-4" /> Update
+            </DropdownMenuItem>
+          )}
+          {canDeleteWidget && (
+            <DropdownMenuItem onClick={() => setOpen(true)}>
+              <Trash className="mr-2 h-4 w-4" /> Delete
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

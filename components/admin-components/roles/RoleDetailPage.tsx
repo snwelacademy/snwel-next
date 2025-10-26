@@ -11,8 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Separator } from '@/components/ui/separator'
 import { ArrowLeft, Save, Shield, Key, Users, CheckCircle2 } from 'lucide-react'
-import { AdminPanelPermissions } from '@/data/permissions-list'
-import { PermissionCode } from '@/modules/user-management/types/permission.types'
+import { PERMISSION_GROUPS, PERMISSION_DESCRIPTIONS, PermissionCode } from '@/constants/permissions'
 import { RoleFormData } from '@/modules/user-management/types/role.types'
 import { useRoles } from '@/modules/user-management/hooks/useRoles'
 import ModernLoader from '@/components/ModernLoader'
@@ -22,34 +21,11 @@ interface RoleDetailPageProps {
   roleId?: string
 }
 
-// Group permissions by category
-const permissionCategories = {
-  'Content Management': [
-    'COURSE_VIEW', 'COURSE_CREATE', 'COURSE_UPDATE', 'COURSE_DELETE',
-    'BLOG_VIEW', 'BLOG_CREATE', 'BLOG_UPDATE', 'BLOG_DELETE',
-    'BLOG_CATEGORY_VIEW', 'BLOG_CATEGORY_CREATE', 'BLOG_CATEGORY_UPDATE', 'BLOG_CATEGORY_DELETE',
-    'WEBINAR_VIEW', 'WEBINAR_CREATE', 'WEBINAR_UPDATE', 'WEBINAR_DELETE',
-    'WIDGET_VIEW', 'WIDGET_CREATE', 'WIDGET_UPDATE', 'WIDGET_DELETE',
-    'CATEGORY_MANAGE',
-  ],
-  'User & Access': [
-    'VIEW_USERS', 'CREATE_USERS', 'EDIT_USERS', 'DELETE_USERS',
-    'ROLE_VIEW', 'ROLE_CREATE', 'ROLE_UPDATE', 'ROLE_DELETE',
-  ],
-  'Enrollments & Enquiries': [
-    'ENROLLMENT_VIEW', 'ENROLLMENT_CREATE', 'ENROLLMENT_UPDATE', 'ENROLLMENT_DELETE',
-    'ENQUIRY_VIEW', 'ENQUIRY_CREATE', 'ENQUIRY_UPDATE', 'ENQUIRY_DELETE',
-    'SNWEL_ENQUIRY_VIEW',
-  ],
-  'Jobs & Recruitment': [
-    'JOB_VIEW', 'JOB_CREATE', 'JOB_UPDATE', 'JOB_DELETE',
-  ],
-  'System & Settings': [
-    'GALLERY_VIEW', 'GALLERY_CREATE', 'GALLERY_UPDATE', 'GALLERY_DELETE',
-    'SETTINGS_VIEW', 'SETTINGS_UPDATE',
-    'INTEGRATION_VIEW', 'ANALYTICS_VIEW',
-  ],
-}
+// Use permission groups from constants
+const permissionCategories = Object.entries(PERMISSION_GROUPS).reduce((acc, [key, value]) => {
+  acc[value.label] = value.permissions
+  return acc
+}, {} as Record<string, readonly string[]>)
 
 export default function RoleDetailPage({ roleId }: RoleDetailPageProps) {
   const router = useRouter()
@@ -239,8 +215,7 @@ export default function RoleDetailPage({ roleId }: RoleDetailPageProps) {
                       >
                         <div className="flex items-center gap-3">
                           <Checkbox
-                            checked={allSelected}
-                            ref={(el) => el && (el.indeterminate = someSelected)}
+                            checked={allSelected ? true : (someSelected ? 'indeterminate' : false)}
                             onCheckedChange={() => handleSelectAllInCategory(category)}
                             onClick={(e) => e.stopPropagation()}
                           />
@@ -257,23 +232,31 @@ export default function RoleDetailPage({ roleId }: RoleDetailPageProps) {
                       </div>
 
                       {selectedCategory === category && (
-                        <div className="grid grid-cols-2 gap-2 ml-6 p-3 border rounded-lg">
+                        <div className="grid grid-cols-1 gap-3 ml-6 p-4 border rounded-lg bg-muted/30">
                           {permissions.map((permission) => (
-                            <div key={permission} className="flex items-center gap-2">
+                            <div key={permission} className="flex items-start gap-3 p-2 rounded hover:bg-background transition-colors">
                               <Checkbox
                                 id={`perm-${permission}`}
                                 checked={formData.permissions.includes(permission as PermissionCode)}
                                 onCheckedChange={() => handlePermissionToggle(permission as PermissionCode)}
+                                className="mt-1"
                               />
-                              <Label 
-                                htmlFor={`perm-${permission}`}
-                                className="text-sm cursor-pointer flex items-center gap-1"
-                              >
-                                {permission}
-                                {formData.permissions.includes(permission as PermissionCode) && (
-                                  <CheckCircle2 className="h-3 w-3 text-primary" />
+                              <div className="flex-1">
+                                <Label 
+                                  htmlFor={`perm-${permission}`}
+                                  className="text-sm font-medium cursor-pointer flex items-center gap-2"
+                                >
+                                  <span>{permission}</span>
+                                  {formData.permissions.includes(permission as PermissionCode) && (
+                                    <CheckCircle2 className="h-3 w-3 text-primary" />
+                                  )}
+                                </Label>
+                                {PERMISSION_DESCRIPTIONS[permission] && (
+                                  <p className="text-xs text-muted-foreground mt-1">
+                                    {PERMISSION_DESCRIPTIONS[permission]}
+                                  </p>
                                 )}
-                              </Label>
+                              </div>
                             </div>
                           ))}
                         </div>

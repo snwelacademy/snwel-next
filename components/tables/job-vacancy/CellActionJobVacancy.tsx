@@ -10,12 +10,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
-import { deleteJobVacancy, updateJobVacancy } from "@/services/admin/admin-jobVacancyService"; // Replace with your actual service
-import { JobVacancyType } from "@/types/JobVacancyTypes"; // Replace with your actual type
+import { deleteJobVacancy, updateJobVacancy } from "@/services/admin/admin-jobVacancyService";
+import { JobVacancyType } from "@/types/JobVacancyTypes";
 import { useQueryClient } from "@tanstack/react-query";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { usePermission } from "@/hooks/usePermissions";
+import { JOB_PERMISSIONS } from "@/constants/permissions";
+import { handlePermissionError } from "@/lib/permissionErrorHandler";
 
 
 interface CellActionProps {
@@ -28,16 +31,20 @@ export const CellActionJobVacancy: React.FC<CellActionProps> = ({ data }) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { toast } = useToast();
+  
+  const canUpdateJob = usePermission(JOB_PERMISSIONS.JOB_UPDATE);
+  const canDeleteJob = usePermission(JOB_PERMISSIONS.JOB_DELETE);
 
   const onConfirm = async () => {
     try {
       setLoading(true);
-      await deleteJobVacancy(data._id); // Adjust to your delete function
-      await queryClient.invalidateQueries({ queryKey: ['/admin/job-vacancies'] }); // Adjust query key as necessary
+      await deleteJobVacancy(data._id);
+      await queryClient.invalidateQueries({ queryKey: ['/admin/job-vacancies'] });
       toast({ title: "Job vacancy deleted successfully!" });
       setOpen(false);
     } catch (error: any) {
-      toast({ title: "Error: Deleting Job Vacancy", description: error.message });
+      handlePermissionError(error, 'Failed to delete job vacancy');
+      toast({ title: "Error: Deleting Job Vacancy", description: error.message, variant: 'destructive' });
     } finally {
       setLoading(false);
     }
@@ -63,14 +70,18 @@ export const CellActionJobVacancy: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-          <DropdownMenuItem
-            onClick={() => router.push(`/admin/job-vacancies/${data._id}`)} // Adjust path as necessary
-          >
-            <Edit className="mr-2 h-4 w-4" /> Update
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Trash className="mr-2 h-4 w-4" /> Delete
-          </DropdownMenuItem>
+          {canUpdateJob && (
+            <DropdownMenuItem
+              onClick={() => router.push(`/admin/job-vacancies/${data._id}`)}
+            >
+              <Edit className="mr-2 h-4 w-4" /> Update
+            </DropdownMenuItem>
+          )}
+          {canDeleteJob && (
+            <DropdownMenuItem onClick={() => setOpen(true)}>
+              <Trash className="mr-2 h-4 w-4" /> Delete
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

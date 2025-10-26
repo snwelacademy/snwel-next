@@ -2,10 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { CalendarDays, Clock, Users, Play, X, IndianRupee } from 'lucide-react'
+import { CalendarDays, Clock, Users, Play, X, IndianRupee, User, UserPlus } from 'lucide-react'
 import { Webinar } from '@/types'
 import EnquiryForm from '@/components/forms/EnquiryForm'
 import { getCurrencySymbol } from '@/lib/utils'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 
 // Function to extract YouTube video ID
 const getYouTubeId = (url: string) => {
@@ -17,6 +21,7 @@ const getYouTubeId = (url: string) => {
 export default function SingleWebinarV2({webinar}: {webinar: Webinar}) {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const [youtubeid, setYoutubeId] = useState<string|null>(null)
+  const [isRegistrationOpen, setIsRegistrationOpen] = useState(false)
 
   const youtubeId = getYouTubeId(webinar.videoUrl||"")
   const thumbnailUrl = youtubeId
@@ -36,14 +41,14 @@ export default function SingleWebinarV2({webinar}: {webinar: Webinar}) {
   }, [webinar])
 
   return (
-    <div className="min-h-screen bg-white text-gray-900">
-      <header className="relative h-[50vh] overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 text-gray-900">
+      <header className="relative h-[60vh] overflow-hidden">
         <img
           src={thumbnailUrl}
           alt={webinar.title}
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-black bg-opacity-50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
         <div className="absolute inset-0 flex items-center justify-center">
           {youtubeId && (
             <motion.button
@@ -51,111 +56,156 @@ export default function SingleWebinarV2({webinar}: {webinar: Webinar}) {
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              className="rounded-full bg-white p-4 shadow-lg"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              className="rounded-full bg-white p-6 shadow-2xl hover:shadow-blue-500/50 transition-all"
             >
               <Play className="h-16 w-16 text-blue-600" />
             </motion.button>
           )}
         </div>
+        <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent">
+          <div className="container mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Badge className="mb-3 bg-blue-600 hover:bg-blue-700">Live Webinar</Badge>
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">{webinar.title}</h1>
+              <p className="text-lg text-gray-200 max-w-3xl">{webinar.shortDescription}</p>
+            </motion.div>
+          </div>
+        </div>
       </header>
 
-      <main className="container mx-auto px-4 py-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-12 text-center"
-        >
-          <h1 className="mb-4 text-4xl font-bold">{webinar.title}</h1>
-          <p className="text-xl text-gray-600">{webinar.shortDescription}</p>
-        </motion.div>
+      <main className="container mx-auto px-4 py-12 -mt-20 relative z-10">
 
-        <div className="grid gap-8 md:grid-cols-2">
+        <div className="grid gap-8 lg:grid-cols-3">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="space-y-6"
+            className="lg:col-span-2 space-y-6"
           >
-            <div className="rounded-lg bg-white p-6 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)]">
-              <h2 className="mb-4 text-2xl font-bold">Webinar Details</h2>
-              <div className="flex items-center space-x-4">
-                <CalendarDays className="h-6 w-6 text-blue-600" />
-                <span>{webinar.startDate ? new Date(webinar.startDate).toLocaleDateString() : "-"}</span>
+            <div className="rounded-2xl bg-white p-8 shadow-lg border border-gray-100">
+              <div className="flex items-start justify-between mb-6">
+                <h2 className="text-3xl font-bold text-gray-900">About This Webinar</h2>
+                <Dialog open={isRegistrationOpen} onOpenChange={setIsRegistrationOpen}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      size="lg" 
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md hover:shadow-lg transition-all"
+                    >
+                      <UserPlus className="mr-2 h-5 w-5" />
+                      Register
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle className="text-2xl font-bold">Register for Webinar</DialogTitle>
+                      <DialogDescription className="text-base">
+                        Fill out the form below to secure your spot for <span className="font-semibold text-gray-900">{webinar.title}</span>
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="mt-4">
+                      <EnquiryForm type="webinar" isUnique />
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
-              <div className="mt-2 flex items-center space-x-4">
-                <Clock className="h-6 w-6 text-blue-600" />
-                <span>{webinar.startDate ? new Date(webinar.startDate).toLocaleTimeString() : "-"}</span>
-              </div>
-              <div className="mt-4 flex items-center space-x-4">
-                <IndianRupee className="h-6 w-6 text-blue-600" />
-                <span className="text-2xl font-bold">
-                  {getCurrencySymbol(webinar.currency)} {webinar.price ?? 0}
-                </span>
-              </div>
+              <div dangerouslySetInnerHTML={{__html: webinar.content}} className="prose prose-lg max-w-none text-gray-700"></div>
             </div>
-            <div className="rounded-lg bg-white p-6 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)]">
-              <h2 className="mb-4 text-2xl font-bold">Register for this webinar</h2>
-              <EnquiryForm type="webinar" isUnique />
-            </div>
+
+            {webinar.hosts.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+                className="rounded-2xl bg-white p-8 shadow-lg border border-gray-100"
+              >
+                <h2 className="mb-6 text-2xl font-bold text-gray-900">Meet Your Host{webinar.hosts.length > 1 ? 's' : ''}</h2>
+                <div className="space-y-4">
+                  {webinar.hosts.map((host, index) => (
+                    <div key={index} className="flex items-center space-x-4 p-4 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 transition-all">
+                      <Avatar className="h-16 w-16 ring-2 ring-blue-200">
+                        <AvatarImage src={host.profilePic} alt={host.name} />
+                        <AvatarFallback className="bg-blue-600 text-white text-xl font-semibold">
+                          {host.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold text-gray-900">{host.name}</h3>
+                        {host.designation && <p className="text-sm text-gray-600">{host.designation}</p>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            className="rounded-lg bg-white p-6 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)]"
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="space-y-6"
           >
-            <h2 className="mb-4 text-2xl font-bold">About This Webinar</h2>
-            <p dangerouslySetInnerHTML={{__html: webinar.content}} className="text-gray-600"></p>
-          </motion.div>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
-          className="mt-12"
-        >
-          <h2 className="mb-6 text-3xl font-bold">Curriculum</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            {webinar.curriculum.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 + index * 0.1, duration: 0.3 }}
-                className="rounded-lg bg-white p-4 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)]"
-              >
-                <h3 className="font-bold">{item.title}</h3>
-                <p className="text-gray-600">{item.duration}</p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {
-          webinar.hosts.length > 0 && 
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.2, duration: 0.5 }}
-            className="mt-12"
-          >
-            <h2 className="mb-6 text-3xl font-bold">Your Host</h2>
-            <div className="flex items-center space-x-4 rounded-lg bg-white p-6 shadow-[0_4px_14px_0_rgba(0,0,0,0.1)]">
-              <img
-                src={webinar.hosts[0].profilePic}
-                alt={webinar.hosts[0].name}
-                className="h-16 w-16 rounded-full"
-              />
-              <div>
-                <h3 className="text-xl font-bold">{webinar.hosts[0].name}</h3>
-                {webinar.hosts[0].email && <p className="text-gray-600">{webinar.hosts[0].email}</p>}
+            <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 p-8 shadow-xl text-white sticky top-24">
+              <h2 className="mb-6 text-2xl font-bold">Webinar Details</h2>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-4 p-4 rounded-xl bg-white/10 backdrop-blur-sm">
+                  <CalendarDays className="h-6 w-6 flex-shrink-0 mt-1" />
+                  <div>
+                    <p className="text-sm text-blue-100">Date</p>
+                    <p className="font-semibold">{webinar.startDate ? new Date(webinar.startDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : "-"}</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-4 p-4 rounded-xl bg-white/10 backdrop-blur-sm">
+                  <Clock className="h-6 w-6 flex-shrink-0 mt-1" />
+                  <div>
+                    <p className="text-sm text-blue-100">Time</p>
+                    <p className="font-semibold">{webinar.startDate ? new Date(webinar.startDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : "-"}</p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-4 p-4 rounded-xl bg-white/10 backdrop-blur-sm">
+                  <IndianRupee className="h-6 w-6 flex-shrink-0 mt-1" />
+                  <div>
+                    <p className="text-sm text-blue-100">Price</p>
+                    <p className="text-3xl font-bold">
+                      {getCurrencySymbol(webinar.currency)} {webinar.price ?? 0}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-8 pt-6 border-t border-white/20">
+                <Dialog open={isRegistrationOpen} onOpenChange={setIsRegistrationOpen}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      size="lg" 
+                      className="w-full bg-white text-blue-600 hover:bg-gray-100 font-bold text-lg py-6 shadow-lg hover:shadow-xl transition-all"
+                    >
+                      <UserPlus className="mr-2 h-5 w-5" />
+                      Register Now
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle className="text-2xl font-bold">Register for Webinar</DialogTitle>
+                      <DialogDescription className="text-base">
+                        Fill out the form below to secure your spot for <span className="font-semibold text-gray-900">{webinar.title}</span>
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="mt-4">
+                      <EnquiryForm type="webinar" isUnique />
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           </motion.div>
-        }
+        </div>
+
       </main>
 
       <AnimatePresence>

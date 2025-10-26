@@ -13,19 +13,23 @@ import { useQuery } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-
+import { usePermission } from '@/hooks/usePermissions'
+import { WEBINAR_PERMISSIONS } from '@/constants/permissions'
+import { PermissionGuard } from '@/components/guards/PermissionGuard'
+import { withErrorHandling } from '@/components/hoc/withErrorHandling'
 
 const breadcrumbItems = [{ title: "Webinars", link: "/admin/webinar" }];
 
-const WebinarPage = () => {
+const WebinarPageContent = () => {
   const totalUsers = 10;
   const searchParams = useSearchParams();
+  const canCreateWebinar = usePermission(WEBINAR_PERMISSIONS.WEBINAR_CREATE);
+  const canViewWebinar = usePermission(WEBINAR_PERMISSIONS.WEBINAR_VIEW);
+  
   const {data, isLoading} = useQuery({
     queryKey: ['/admin/webinar'], 
     queryFn: () => getAllWebinars(getListOptionsFromSearchParams(searchParams))
   })
-
-
 
   return (
     <div className="flex-1 space-y-4  p-4 md:p-8 pt-6">
@@ -37,12 +41,14 @@ const WebinarPage = () => {
           description="Manage All Webinar List"
         />
 
-        <Link
-          href={"/admin/webinars/new"}
-          className={cn(buttonVariants({ variant: "default" }))}
-        >
-          <Plus className="mr-2 h-4 w-4" /> Add New
-        </Link>
+        {canCreateWebinar && (
+          <Link
+            href="/admin/webinars/new"
+            className={cn(buttonVariants({ variant: "default" }))}
+          >
+            <Plus className="mr-2 h-4 w-4" /> Add New
+          </Link>
+        )}
       </div>
       <Separator />
 
@@ -62,4 +68,10 @@ const WebinarPage = () => {
   )
 }
 
-export default WebinarPage
+export default withErrorHandling(function ProtectedWebinarPage() {
+  return (
+    <PermissionGuard permission={WEBINAR_PERMISSIONS.WEBINAR_VIEW}>
+      <WebinarPageContent />
+    </PermissionGuard>
+  )
+})

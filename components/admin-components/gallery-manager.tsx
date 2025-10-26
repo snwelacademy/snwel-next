@@ -26,6 +26,11 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { cn, extractYouTubeVideoId } from "@/lib/utils"
 import { DialogTrigger } from "@radix-ui/react-dialog"
+import { usePermission } from "@/hooks/usePermissions"
+import { GALLERY_PERMISSIONS } from "@/constants/permissions"
+import { handlePermissionError } from "@/lib/permissionErrorHandler"
+import { PermissionGuard } from "@/components/guards/PermissionGuard"
+import { withErrorHandling } from "@/components/hoc/withErrorHandling"
 
 interface IGalleryAsset {
   _id: string
@@ -45,7 +50,10 @@ interface CreateAssetItem {
   description?: string
 }
 
-export default function ManageGallery() {
+function ManageGalleryContent() {
+  const canCreateGallery = usePermission(GALLERY_PERMISSIONS.GALLERY_CREATE);
+  const canUpdateGallery = usePermission(GALLERY_PERMISSIONS.GALLERY_UPDATE);
+  const canDeleteGallery = usePermission(GALLERY_PERMISSIONS.GALLERY_DELETE);
   const [activeTab, setActiveTab] = useState<'image' | 'youtube'>('image')
   const [newAsset, setNewAsset] = useState<Partial<IGalleryAsset>>({
     name: '',
@@ -65,14 +73,15 @@ export default function ManageGallery() {
   const { toast } = useToast();
   const client = useQueryClient()
 
-
   useEffect(() => {
     setOptions(opt => ({...opt, filter: {...opt.filter, linkType: activeTab}}))
   }, [activeTab])
-  
-
 
   const addAsset = async (data: CreateAssetItem | CreateAssetItem[]) => {
+    if (!canCreateGallery) {
+      toast({ title: "Permission Denied", description: "You don't have permission to create gallery assets", variant: 'destructive' });
+      return;
+    }
     try {
       let sequense = (assets?.total || 0) + 1;
       const items = Array.isArray(data) ? data : [data];
@@ -86,29 +95,40 @@ export default function ManageGallery() {
       await client.invalidateQueries({ queryKey: ['/admin/gallery', JSON.stringify(options)] });
       toast({ title: "Assets successfully added!", variant: 'success' })
     } catch (error: any) {
-      toast({ title: "Adding asset failed", description: error.message || "There is problem in adding assets." })
+      handlePermissionError(error, 'Failed to add gallery assets');
+      toast({ title: "Adding asset failed", description: error.message || "There is problem in adding assets.", variant: 'destructive' })
     }
 
   }
 
   const deleteAsset = async (id: string) => {
+    if (!canDeleteGallery) {
+      toast({ title: "Permission Denied", description: "You don't have permission to delete gallery assets", variant: 'destructive' });
+      return;
+    }
     try {
 
       const response = await deleteGalleryAsset(id);
       await client.invalidateQueries({ queryKey: ['/admin/gallery', JSON.stringify(options)] });
       toast({ title: "Assets successfully delted!", variant: 'success' })
     } catch (error: any) {
-      toast({ title: "Deleting asset failed", description: error.message || "There is problem in deleting assets." })
+      handlePermissionError(error, 'Failed to delete gallery asset');
+      toast({ title: "Deleting asset failed", description: error.message || "There is problem in deleting assets.", variant: 'destructive' })
     }
   }
 
   const updateAsset = async (data: Partial<GalleryAsset> | Partial<GalleryAsset>[]) => {
+    if (!canUpdateGallery) {
+      toast({ title: "Permission Denied", description: "You don't have permission to update gallery assets", variant: 'destructive' });
+      return;
+    }
     try {
       const response = await bulkUpsertGalleryAsset(Array.isArray(data) ? data : [data]);
       await client.invalidateQueries({ queryKey: ['/admin/gallery', JSON.stringify(options)] });
       toast({ title: "Assets successfully updated!", variant: 'success' })
     } catch (error: any) {
-      toast({ title: "Updating asset failed", description: error.message || "There is problem in updating assets." })
+      handlePermissionError(error, 'Failed to update gallery assets');
+      toast({ title: "Updating asset failed", description: error.message || "There is problem in updating assets.", variant: 'destructive' })
     }
   }
 
@@ -517,3 +537,11 @@ function EditAssetModal({ asset, onSave, onClose }: {
     </Dialog>
   )
 }
+
+export default withErrorHandling(function ProtectedManageGallery() {
+  return (
+    <PermissionGuard permission={GALLERY_PERMISSIONS.GALLERY_VIEW}>
+      <ManageGalleryContent />
+    </PermissionGuard>
+  )
+})

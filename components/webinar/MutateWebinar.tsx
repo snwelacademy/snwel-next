@@ -35,7 +35,7 @@ const createWebinarSchema = z.object({
     price: z.number().default(0),
     createdBy: z.string(),
     coverImage: z.string().optional(),
-    videoUrl: z.string().optional()
+    videoUrl: z.string().optional().nullable()
 })
 
 

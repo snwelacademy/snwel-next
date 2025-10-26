@@ -29,6 +29,7 @@ import { StateSelector } from '../country-state-city/StateSelector';
 import { CitySelector } from '../country-state-city/CitySelector';
 import { useQuery } from '@tanstack/react-query';
 import { Course } from '@/types';
+import { getPublicMasters } from '@/services/public/master-service';
 
 
 const formSchema = z.object({
@@ -60,7 +61,12 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
   });
 
   const [state, setState] = useState<{ isVerified: boolean, token?: string, invalidOtp?: boolean, invalidToken?: boolean, enrollmentId?: string } | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<Course | undefined>(targetCourse);
   const Watch = useWatch({ control: form.control })
+  const { data: candidateStatuses } = useQuery({
+    queryKey: ['public/masters', MASTER_CODES.CANDIDATE_STATUS],
+    queryFn: () => getPublicMasters({ filter: { parentCode: MASTER_CODES.CANDIDATE_STATUS } })
+  })
   async function onSubmit(value: z.infer<typeof formSchema>) {
     try {
       setLoading(true)
@@ -143,7 +149,7 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
                     placeholder='Qualifications'
                     type={"SUB_MASTER"}
                     parentCode={MASTER_CODES.QUALIFICATIONS}
-                    forcedData={targetCourse?.qualifications}
+                    forcedData={selectedCourse?.qualifications}
                     selectorKey="_id"
                     {...field}
                   />
@@ -162,7 +168,19 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
               <FormItem>
                 {/* <FormLabel>Select Course </FormLabel> */}
                 <FormControl>
-                  <CourseSelector filter={{ qualifications: Watch.qualification, trainingModes: Watch.mode}} {...field} />
+                  <CourseSelector 
+                    filter={{ qualifications: Watch.qualification, trainingModes: Watch.mode}}
+                    onCourseSelect={(course)=>{
+                      setSelectedCourse(course)
+                      const q = course.qualifications?.[0]?._id
+                      const m = course.trainingModes?.[0]?._id
+                      if(q) form.setValue('qualification', q, { shouldValidate: true })
+                      if(m) form.setValue('mode', m, { shouldValidate: true })
+                      const defaultStatus = candidateStatuses?.docs?.[0]?._id
+                      if(defaultStatus) form.setValue('occupation', defaultStatus, { shouldValidate: true })
+                    }}
+                    {...field} 
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -181,7 +199,7 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
                     type={"SUB_MASTER"}
                     parentCode={MASTER_CODES.TRAINING_MODE}
                     selectorKey="_id"
-                    forcedData={targetCourse?.trainingModes}
+                    forcedData={selectedCourse?.trainingModes}
                     {...field}
                   />
                 </FormControl>

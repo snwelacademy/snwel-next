@@ -39,7 +39,7 @@ export default function Page({ params }: { params: { slug: string } }) {
             {
                 course?.widget && <RenderWidget code={course.widget}/>
             }
-              <div className='aspect-video bg-primary bg-center bg-cover relative rounded-2xl shadow-md' style={{ backgroundImage: `url(${course.image})` }}>
+              <div className='aspect-[3/2] max-h-[400px] bg-primary bg-center bg-cover relative rounded-2xl shadow-md' style={{ backgroundImage: `url(${course.image})` }}>
               </div>
               <div className='px-2 md:px-5 lg:px-10'>
                   <div className='rounded-xl bg-background p-2 md:p-5 lg:p-5 md:shadow-xl -translate-y-1/2'>

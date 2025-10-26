@@ -10,12 +10,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
-import { deleteMaster } from "@/services/admin/admin-master"; // Replace with your actual service
-import { Master } from "@/types/master"; // Replace with your actual type
+import { deleteMaster } from "@/services/admin/admin-master";
+import { Master } from "@/types/master";
 import { useQueryClient } from "@tanstack/react-query";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { usePermission } from "@/hooks/usePermissions";
+import { MASTER_PERMISSIONS } from "@/constants/permissions";
+import { handlePermissionError } from "@/lib/permissionErrorHandler";
 
 
 interface CellActionProps {
@@ -28,6 +31,9 @@ export const CellActionMaster: React.FC<CellActionProps> = ({ data }) => {
   const queryClient = useQueryClient();
   const navigate = useRouter();
   const { toast } = useToast();
+  
+  const canUpdateMaster = usePermission(MASTER_PERMISSIONS.MASTER_UPDATE);
+  const canDeleteMaster = usePermission(MASTER_PERMISSIONS.MASTER_DELETE);
 
   const onConfirm = async () => {
     try {
@@ -37,7 +43,8 @@ export const CellActionMaster: React.FC<CellActionProps> = ({ data }) => {
       toast({ title: "Master record deleted successfully!" });
       setOpen(false);
     } catch (error: any) {
-      toast({ title: "Error: Deleting Master Record", description: error.message });
+      handlePermissionError(error, 'Failed to delete master record');
+      toast({ title: "Error: Deleting Master Record", description: error.message, variant: 'destructive' });
     } finally {
       setLoading(false);
     }
@@ -61,14 +68,18 @@ export const CellActionMaster: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-          <DropdownMenuItem
-            onClick={() => navigate.push(`/admin/masters/${data._id}`)} // Adjust path as necessary
-          >
-            <Edit className="mr-2 h-4 w-4" /> Update
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Trash className="mr-2 h-4 w-4" /> Delete
-          </DropdownMenuItem>
+          {canUpdateMaster && (
+            <DropdownMenuItem
+              onClick={() => navigate.push(`/admin/masters/${data._id}`)}
+            >
+              <Edit className="mr-2 h-4 w-4" /> Update
+            </DropdownMenuItem>
+          )}
+          {canDeleteMaster && (
+            <DropdownMenuItem onClick={() => setOpen(true)}>
+              <Trash className="mr-2 h-4 w-4" /> Delete
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

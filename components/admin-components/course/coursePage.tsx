@@ -15,11 +15,16 @@ import { useQuery } from '@tanstack/react-query'
 import { Plus, GraduationCap, BookOpen, Eye, TrendingUp } from 'lucide-react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
+import { usePermission } from '@/hooks/usePermissions'
+import { COURSE_PERMISSIONS } from '@/constants/permissions'
+import { PermissionGuard } from '@/components/guards/PermissionGuard'
 
 const breadcrumbItems = [{ title: "Courses", link: "/admin/courses" }];
 
 const CoursePage = () => {
   const searchParams = useSearchParams();
+  const canCreateCourse = usePermission(COURSE_PERMISSIONS.COURSE_CREATE);
+  
   const {data, isLoading} = useQuery({
     queryKey: ['/admin/course', searchParams.toString()], 
     queryFn: () => getAllCourses(getListOptionsFromSearchParams(searchParams))
@@ -49,12 +54,14 @@ const CoursePage = () => {
             Create, manage and organize your courses
           </p>
         </div>
-        <Button asChild size="lg" className="gap-2">
-          <Link href="/admin/courses/new">
-            <Plus className="h-4 w-4" />
-            Create Course
-          </Link>
-        </Button>
+        {canCreateCourse && (
+          <Button asChild size="lg" className="gap-2">
+            <Link href="/admin/courses/new">
+              <Plus className="h-4 w-4" />
+              Create Course
+            </Link>
+          </Button>
+        )}
       </div>
 
       {/* Stats Cards */}
@@ -136,4 +143,11 @@ const CoursePage = () => {
   )
 }
 
-export default CoursePage
+// Wrap with permission guard
+const CoursePageWithPermission = () => (
+  <PermissionGuard permission={COURSE_PERMISSIONS.COURSE_VIEW}>
+    <CoursePage />
+  </PermissionGuard>
+)
+
+export default CoursePageWithPermission

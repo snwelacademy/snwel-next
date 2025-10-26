@@ -10,7 +10,10 @@ import { useQuery } from '@tanstack/react-query'
 import { getAllIntegrations } from '@/services/admin/admin-integration'
 import { ScrollArea } from '../ui/scroll-area'
 import { apps } from './appcenterConfig'
-
+import { PermissionGuard } from '@/components/guards/PermissionGuard'
+import { withErrorHandling } from '@/components/hoc/withErrorHandling'
+import { INTEGRATION_PERMISSIONS } from '@/constants/permissions'
+import { usePermission } from '@/hooks/usePermissions'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -30,7 +33,8 @@ const itemVariants = {
   }
 }
 
-export default function AppCenter() {
+function AppCenterContent() {
+  const canUpdateIntegration = usePermission(INTEGRATION_PERMISSIONS.INTEGRATION_UPDATE);
   const [selectedApp, setSelectedApp] = useState<any>(null)
   const {data, isLoading} = useQuery({
     queryKey: ["appcenter"],
@@ -102,3 +106,11 @@ export default function AppCenter() {
     </div>
   )
 }
+
+export default withErrorHandling(function ProtectedAppCenter() {
+  return (
+    <PermissionGuard permission={INTEGRATION_PERMISSIONS.INTEGRATION_VIEW}>
+      <AppCenterContent />
+    </PermissionGuard>
+  )
+})

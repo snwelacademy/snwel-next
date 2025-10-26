@@ -11,12 +11,18 @@ import { fetchAllWidgets } from '@/services/admin/admin-widget-service';
 import { Separator } from '@radix-ui/react-separator';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
+import { PermissionGuard } from '@/components/guards/PermissionGuard';
+import { withErrorHandling } from '@/components/hoc/withErrorHandling';
+import { WIDGET_PERMISSIONS } from '@/constants/permissions';
+import { usePermission } from '@/hooks/usePermissions';
 
 
 const breadcrumbItems = [{ title: "Widgets", link: "/admin/widget" }];
 
-const WidgetPage = () => {
+const WidgetPageContent = () => {
   const searchParams = useSearchParams();
+  const canCreateWidget = usePermission(WIDGET_PERMISSIONS.WIDGET_CREATE);
+  
   const { data, isLoading } = useQuery({
     queryKey: ['/admin/widgets'],
     queryFn: () => fetchAllWidgets(getListOptionsFromSearchParams(searchParams))
@@ -31,7 +37,7 @@ const WidgetPage = () => {
           title={`Widgets (${data?.total || 0})`}
           description="Manage All Widget List"
         />
-        <WidgetCatelog />
+        {canCreateWidget && <WidgetCatelog />}
       </div>
       <Separator />
 
@@ -50,4 +56,10 @@ const WidgetPage = () => {
   );
 };
 
-export default WidgetPage;
+export default withErrorHandling(function ProtectedWidgetPage() {
+  return (
+    <PermissionGuard permission={WIDGET_PERMISSIONS.WIDGET_VIEW}>
+      <WidgetPageContent />
+    </PermissionGuard>
+  )
+})

@@ -1,3 +1,4 @@
+'use client'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import BreadCrumb from '@/components/BreadCrumb';
@@ -6,10 +7,11 @@ import { Separator } from '@radix-ui/react-select';
 import { SETTINGS } from "@/types";
 import GeneralSettingForm from "@/components/settings/GeneralSettings";
 import {MenuBuilderComponent} from "../MenuBuilder";
+import { PermissionGuard } from '@/components/guards/PermissionGuard';
+import { withErrorHandling } from '@/components/hoc/withErrorHandling';
+import { SETTINGS_PERMISSIONS } from '@/constants/permissions';
 
-
-
-const Settings = () => {
+const SettingsContent = () => {
     const breadcrumbItems = [{ title: "Settings", link: "/admin/settings" }];
 
     return (
@@ -42,4 +44,10 @@ const Settings = () => {
     )
 }
 
-export default Settings
+export default withErrorHandling(function ProtectedSettings() {
+  return (
+    <PermissionGuard permission={SETTINGS_PERMISSIONS.SETTINGS_VIEW}>
+      <SettingsContent />
+    </PermissionGuard>
+  )
+})

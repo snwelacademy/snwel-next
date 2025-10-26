@@ -15,13 +15,16 @@ import { useQuery } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { AdminPanelPermissions } from '@/data/permissions-list';
+import { usePermission } from '@/hooks/usePermissions';
+import { JOB_PERMISSIONS } from '@/constants/permissions';
 
 const breadcrumbItems = [{ title: "Job Vacancies", link: "/admin/job-vacancies" }];
 
 const JobVacancyPage = () => {
   const totalJobVacancies = 10;
   const searchParams = useSearchParams();
+  const canCreateJob = usePermission(JOB_PERMISSIONS.JOB_CREATE);
+  
   const { data, isLoading } = useQuery({
     queryKey: ['/admin/job-vacancies', searchParams],
     queryFn: () => getAllJobVacancies(getListOptionsFromSearchParams(searchParams))
@@ -37,12 +40,14 @@ const JobVacancyPage = () => {
           description="Manage All Job Vacancies List"
         />
 
-        <Link
-          href={"/admin/job-vacancies/new"}
-          className={cn(buttonVariants({ variant: "default" }))}
-        >
-          <Plus className="mr-2 h-4 w-4" /> Add New
-        </Link>
+        {canCreateJob && (
+          <Link
+            href={"/admin/job-vacancies/new"}
+            className={cn(buttonVariants({ variant: "default" }))}
+          >
+            <Plus className="mr-2 h-4 w-4" /> Add New
+          </Link>
+        )}
       </div>
       <Separator />
 
@@ -65,7 +70,7 @@ const JobVacancyPage = () => {
 // Wrap with both permission guard and error handling
 export default withErrorHandling(function ProtectedJobVacancyPage() {
   return (
-    <PermissionGuard permission={AdminPanelPermissions.VIEW_JOB_VACANCIES}>
+    <PermissionGuard permission={JOB_PERMISSIONS.JOB_VIEW}>
       <JobVacancyPage />
     </PermissionGuard>
   )
