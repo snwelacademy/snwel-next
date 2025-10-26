@@ -41,7 +41,7 @@ export const columns = [
     key: "courseId",
     label: "COURSE",
     sortable: true,
-    render: (row: CourseEnrollment) => row.courseId.title
+    render: (row: CourseEnrollment) => row.courseId?.title || '-'
   },
   {
     key: "userId.email",
