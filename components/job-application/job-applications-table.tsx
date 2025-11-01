@@ -215,7 +215,7 @@ function JobApplicationTableContent() {
         <DateRangePicker onUpdate={value => setOptions(options => ({...options, startDate: value.range.from, endDate: value.range.to}))}/>
 
         {canExport && (
-          <Button onClick={handleExport} disabled={loading}>
+          <Button onClick={handleExport} loading={loading}>
             <Download className="mr-2 h-4 w-4" />
             Export CSV
           </Button>

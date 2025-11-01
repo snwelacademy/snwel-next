@@ -37,7 +37,7 @@ const Hero = () => {
                                     </div>
                                     <div className="flex items-center">
                                         <div className=" lg:mt-0 text-center ">
-                                            <HeadingSubtitle className='hero-title text-primary-foreground before:bg-primary-foreground after:bg-primary-foreground' title='independent institution with' />
+                                            <HeadingSubtitle className='hero-title text-primary-foreground before:bg-primary-foreground after:bg-primary-foreground' title='Independent institution empowering future professionals' />
                                             <Typography as={'heroTitle'} className="hero-subtitle mb-16 text-4xl font-black tracking-tight md:text-6xl xl:text-6xl text-primary-foreground text-center">
                                             Welcome to <span className='text-green-700'>SNWEL Academy</span> <br/> Your Pathway to Professional Excellence
                                             </Typography>

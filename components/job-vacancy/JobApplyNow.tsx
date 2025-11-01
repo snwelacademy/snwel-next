@@ -39,6 +39,7 @@ export default function ApplyNowModal({ data }: { data?: JobVacancyType }) {
   const [otpVerified, setOtpVerified] = useState(false)
   const [otpData, setOtpData] = useState<OTPResponse>()
   const [isSuccessOpen, setIsSuccessOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
   const {toast} = useToast();
   const form = useForm<z.infer<typeof FormInputsSchema>>({
     resolver: zodResolver(FormInputsSchema),
@@ -52,6 +53,7 @@ export default function ApplyNowModal({ data }: { data?: JobVacancyType }) {
       toast({title: "First verify the otp", variant: "destructive"});
       return;
     }
+    setLoading(true)
     try {
       console.log(data)
       const res = await createJobApplication(data);
@@ -60,6 +62,8 @@ export default function ApplyNowModal({ data }: { data?: JobVacancyType }) {
       setIsSuccessOpen(true)
     } catch (error: any) {
       toast({title: "Submission Failed", description: error?.message || "There is problem submitting application"})
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -142,7 +146,7 @@ export default function ApplyNowModal({ data }: { data?: JobVacancyType }) {
                       <FormItem className='w-full'>
                         <FormLabel>Phone</FormLabel>
                         <FormControl>
-                          <PhoneInput placeholder="xxx,xxx,xxx..." {...field} />
+                          <PhoneInput inputStyle={{ width: "100%" }} country={'in'} placeholder="xxx,xxx,xxx..." {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -189,7 +193,7 @@ export default function ApplyNowModal({ data }: { data?: JobVacancyType }) {
 
 
                   <div className="pt-2">
-                  <Button className="w-full" type="submit" disabled={!otpData || !otpData.verified} >
+                  <Button className="w-full" type="submit" loading={loading} disabled={!otpData || !otpData.verified} >
                     Submit
                   </Button>
                   </div>

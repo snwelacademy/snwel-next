@@ -44,6 +44,7 @@ const PremiumCourseCard = ({
             <Link className='block' href={`/courses/${course._id}`}><Typography as="h2" className='text-2xl lg:text-3xl'>{course.title}</Typography></Link>
         </div>
         <EnrollCourseModal
+        targetCourse={course}
         trigger={<Button className='absolute left-5 bottom-5 bg-amber-500 hover:bg-amber-600 text-white'><span>ENROLL NOW</span><ArrowRight/></Button>}
         courseId={course._id}
          />

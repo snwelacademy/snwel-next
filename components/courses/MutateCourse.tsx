@@ -673,7 +673,7 @@ export default function MutateCourse({
                     Next Step
                   </Button>
                 ) : (
-                  <Button disabled={loading} type="submit">
+                  <Button loading={loading} type="submit">
                     {courseData ? "Update Course" : "Create Course"}
                   </Button>
                 )}

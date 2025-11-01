@@ -111,15 +111,8 @@ const EnquiryForm = ({ type, isUnique }: { type: string, isUnique?: boolean }) =
                                 )}
                                 {type === 'general' && <GeneralEnquirySubForm control={form.control} />}
                                 <div className='flex justify-end pt-5'>
-                                    <Button disabled={loading || (type === 'webinar' && !otpVerified)} type='submit'>
-                                        {loading ? (
-                                            <>
-                                                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                                                Submitting...
-                                            </>
-                                        ) : (
-                                            'Submit'
-                                        )}
+                                    <Button loading={loading} disabled={type === 'webinar' && !otpVerified} type='submit'>
+                                        Submit
                                     </Button>
                                 </div>
                             </CardContent>

@@ -162,7 +162,7 @@ const MutateMaster = ({ type, data }: { type?: MASTER_TYPE, data?: Master }) => 
                                     />
                                 </div>
                                 <div className='flex justify-end pt-5'>
-                                    <Button disabled={loading} type='submit'>{data ? "Update" : "Create"}</Button>
+                                    <Button loading={loading} type='submit'>{data ? "Update" : "Create"}</Button>
                                 </div>
                             </CardContent>
                         </Card>

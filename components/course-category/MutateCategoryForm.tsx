@@ -175,7 +175,7 @@ const CourseCategoryForm = ({ categoryData }: CourseCategoryFormProps) => {
                                     />
                                 )}
                                 <div className='flex justify-end pt-5'>
-                                    <Button disabled={loading} type='submit'>
+                                    <Button loading={loading} type='submit'>
                                         {categoryData ? 'Update' : 'Create'}
                                     </Button>
                                 </div>

@@ -138,10 +138,9 @@ export default function VerifyOtpResend({ onVerify, data }: OTPVerifyProps) {
       </div>
       <Button
         onClick={otpSent ? verifyOTP : sendOTP}
-        disabled={loading}
+        loading={loading}
         className="w-full"
       >
-        {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         {otpSent ? "Verify OTP" : "Send OTP"}
       </Button>
       {otpSent && (

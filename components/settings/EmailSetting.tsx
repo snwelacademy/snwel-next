@@ -182,7 +182,7 @@ const EmailSettingForm = () => {
                                     )}
                                 />
                                 <div className='flex justify-end pt-5'>
-                                    <Button disabled={loading} type='submit'>{settingData ? 'Update' : 'Create'}</Button>
+                                    <Button loading={loading} type='submit'>{settingData ? 'Update' : 'Create'}</Button>
                                 </div>
                             </CardContent>
                         </Card>

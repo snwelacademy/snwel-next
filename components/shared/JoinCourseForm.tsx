@@ -67,6 +67,47 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
     queryKey: ['public/masters', MASTER_CODES.CANDIDATE_STATUS],
     queryFn: () => getPublicMasters({ filter: { parentCode: MASTER_CODES.CANDIDATE_STATUS } })
   })
+
+  // Auto-select supported values from targetCourse without overriding user input
+  useEffect(() => {
+    if (!targetCourse) return;
+    // ensure forcedData lists work immediately
+    setSelectedCourse(targetCourse);
+
+    const current = form.getValues();
+
+    // Course ID
+    if (!current.courseId && targetCourse._id) {
+      form.setValue('courseId', targetCourse._id, { shouldValidate: true });
+    }
+
+    // Qualification must be one supported by the course
+    const allowedQualIds = targetCourse.qualifications?.map(q => q?._id).filter(Boolean) || [];
+    if (allowedQualIds.length) {
+      if (!current.qualification || !allowedQualIds.includes(current.qualification)) {
+        form.setValue('qualification', allowedQualIds[0] as string, { shouldValidate: true });
+      }
+    }
+
+    // Training mode must be one supported by the course
+    const allowedModeIds = targetCourse.trainingModes?.map(m => m?._id).filter(Boolean) || [];
+    if (allowedModeIds.length) {
+      if (!current.mode || !allowedModeIds.includes(current.mode)) {
+        form.setValue('mode', allowedModeIds[0] as string, { shouldValidate: true });
+      }
+    }
+  }, [targetCourse, form])
+
+  // Set default occupation if not chosen yet when masters load
+  useEffect(() => {
+    const defaultStatus = candidateStatuses?.docs?.[0]?._id
+    if (!defaultStatus) return;
+    const currentOcc = form.getValues('occupation');
+    if (!currentOcc) {
+      form.setValue('occupation', defaultStatus, { shouldValidate: true });
+    }
+  }, [candidateStatuses, form])
+
   async function onSubmit(value: z.infer<typeof formSchema>) {
     try {
       setLoading(true)
@@ -170,6 +211,7 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
                 <FormControl>
                   <CourseSelector 
                     filter={{ qualifications: Watch.qualification, trainingModes: Watch.mode}}
+                    disabled={!!targetCourse}
                     onCourseSelect={(course)=>{
                       setSelectedCourse(course)
                       const q = course.qualifications?.[0]?._id
@@ -301,7 +343,7 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
 
 
         <div className='pt-5 space-y-3'>
-          <Button type="submit" size={'lg'} className='w-full' disabled={loading}>Submit</Button>
+          <Button type="submit" size={'lg'} className='w-full' loading={loading}>Submit</Button>
           <Typography as="lable" className='text-primary block'>By sharing your email, you agree to our Privacy Policy and Terms and Service.</Typography>
         </div>
       </form>

@@ -15,7 +15,7 @@ import { PrebuiltComponent } from "@/data/prebuiltComponents"
 import { formatToLocalCurrency } from "@/lib/utils"
 import { getPublicCourseBySlug } from "@/services/public/course-service"
 import { useQuery } from "@tanstack/react-query"
-import { Book, Dot, Clock, Users, Star } from "lucide-react"
+import { Book, Dot, Clock, Star } from "lucide-react"
 import { nanoid } from "nanoid"
 import { useSearchParams } from "next/navigation"
 import { motion } from "framer-motion"
@@ -75,10 +75,6 @@ export default function Page({ params }: { params: { slug: string } }) {
                 <div className="flex items-center gap-2">
                   <Book className="h-5 w-5" />
                   <span>{course.curriculum.length} Lessons</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Users className="h-5 w-5" />
-                  <span>{course.enrolled} Enrolled</span>
                 </div>
                 <div className="flex items-center gap-1">
                   {Array.from({ length: 5 }).map((_, i) => (

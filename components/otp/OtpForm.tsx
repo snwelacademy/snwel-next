@@ -27,6 +27,7 @@ const OTPForm = ({token, onVerified}: {token: string, onVerified?: (data:  {isVe
     const [resending, setResending] = useState(false)
     const [verificationId, setVerificationId] = useState<string | undefined>(undefined)
     const [otpExpired, setOtpExpired] = useState<boolean>(false)
+    const [verifying, setVerifying] = useState<boolean>(false)
    
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -38,6 +39,7 @@ const OTPForm = ({token, onVerified}: {token: string, onVerified?: (data:  {isVe
 
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
+        setVerifying(true)
         try {
             if (!data.token) return toast({ title: "Token not found!" });
             const res = await verifyOtp(data);
@@ -60,6 +62,8 @@ const OTPForm = ({token, onVerified}: {token: string, onVerified?: (data:  {isVe
             
         } catch (error: any) {
             toast({ title: error.message||"Sonthing went wrong!", variant: "destructive" });
+        } finally {
+            setVerifying(false)
         }
     }
 
@@ -140,10 +144,10 @@ const OTPForm = ({token, onVerified}: {token: string, onVerified?: (data:  {isVe
                     />
 
                     <div className="flex items-center justify-between gap-2">
-                        <Button type="button" variant="ghost" disabled={resending || resendCooldown > 0} onClick={onResend}>
+                        <Button type="button" variant="ghost" disabled={resendCooldown > 0} loading={resending} onClick={onResend}>
                             {resending ? 'Resending...' : resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend OTP'}
                         </Button>
-                        <Button type="submit">Submit</Button>
+                        <Button type="submit" loading={verifying}>Submit</Button>
                     </div>
                 </form>
             </Form>

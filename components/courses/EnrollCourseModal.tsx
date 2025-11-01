@@ -18,6 +18,7 @@ const EnrollCourseModal = ({
     targetCourse?: Course
 }) => {
   const [open, setOpen] = useState(false)
+  console.log(targetCourse)
   return (
     <Dialog open={open} onOpenChange={setOpen} >
         <DialogTrigger asChild >{trigger}</DialogTrigger>

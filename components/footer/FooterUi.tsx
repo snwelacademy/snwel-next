@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin } from 'lucide-react'
+import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin, MessageCircle } from 'lucide-react'
 import { GeneralSettingType } from '@/types'
 import { prepareAddressString } from '@/lib/utils'
 import { formatIndianPhoneNumber } from '@/lib/phoneNumberFormat'
@@ -158,6 +158,20 @@ export default function Footer({ footerMenu, settings }: FooterProps) {
                 </span>
                 <a href={`tel:${contact?.phone || ''}`} className="hover:text-white transition-colors" aria-label="Phone">
                   {contact?.phone ? formatIndianPhoneNumber(contact?.phone) : '—'}
+                </a>
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-green-600/20 ">
+                  <MessageCircle className="h-4 w-4 text-green-500" />
+                </span>
+                <a 
+                  href={`https://wa.me/${contact?.phone?.replace(/\D/g, '') || ''}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors" 
+                  aria-label="WhatsApp"
+                >
+                  WhatsApp Us
                 </a>
               </li>
               <li className="flex items-start gap-3">
