@@ -11,6 +11,19 @@ export default function SMTPEmailIntegration({ form }: SMTPEmailIntegrationProps
     <div className="space-y-4">
       <FormField
         control={form.control}
+        name="config.sender"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Sender Email</FormLabel>
+            <FormControl>
+              <Input placeholder="Enter Sender Email" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
         name="config.host"
         render={({ field }) => (
           <FormItem>

@@ -1,4 +1,3 @@
-
 const CourseDescription = ({
     desc
 }: {

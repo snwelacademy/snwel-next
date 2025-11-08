@@ -111,7 +111,8 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
   async function onSubmit(value: z.infer<typeof formSchema>) {
     try {
       setLoading(true)
-      const res = await createEnrollmentAnonymous(value);
+      const payload = { ...value, phone: (value.phone || "").toString().replace(/\s+/g, "") }
+      const res = await createEnrollmentAnonymous(payload);
       setState(res);
     } catch (error: any) {
       toast({ title: error.message || "Something went wrong!", variant: 'destructive' })

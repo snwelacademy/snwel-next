@@ -15,10 +15,11 @@ import { PrebuiltComponent } from "@/data/prebuiltComponents"
 import { formatToLocalCurrency } from "@/lib/utils"
 import { getPublicCourseBySlug } from "@/services/public/course-service"
 import { useQuery } from "@tanstack/react-query"
-import { Book, Dot, Clock, Star } from "lucide-react"
+import { Book, Dot, Clock, Star, ChevronLeft, ChevronRight } from "lucide-react"
 import { nanoid } from "nanoid"
 import { useSearchParams } from "next/navigation"
 import { motion } from "framer-motion"
+import { useRef } from "react"
 
 export default function Page({ params }: { params: { slug: string } }) {
   const searchParams = useSearchParams()
@@ -26,6 +27,8 @@ export default function Page({ params }: { params: { slug: string } }) {
     queryKey: ["public/course", params.slug],
     queryFn: () => getPublicCourseBySlug(params.slug || "")
   })
+  const tabsScrollRef = useRef<HTMLDivElement>(null)
+  const scrollTabs = (dx: number) => tabsScrollRef.current?.scrollBy({ left: dx, behavior: 'smooth' })
   if (isLoading) {
     return <PageLoader />
   }
@@ -107,14 +110,40 @@ export default function Page({ params }: { params: { slug: string } }) {
               <Tabs defaultValue={searchParams.get('tab') || course.content?.tabs[0].name} className="w-full">
                 {course.content && course.content.tabs.length && (
                   <>
-                    <TabsList className='w-full justify-start mb-6'>
-                      {course.content.tabs.filter(tb => tb.isActive).map(tab => (
-                        <TabsTrigger key={nanoid()} value={tab.name}>
-                          <Book className='w-4 h-4 mr-2' />
-                          <span>{tab.name}</span>
-                        </TabsTrigger>
-                      ))}
-                    </TabsList>
+                    <div className="relative mb-6">
+                      <button
+                        type="button"
+                        aria-label="Scroll tabs left"
+                        onClick={() => scrollTabs(-200)}
+                        className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-20 items-center justify-center h-8 w-8 rounded-full bg-white shadow border border-gray-200 hover:bg-gray-50"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </button>
+                      <div
+                        ref={tabsScrollRef}
+                        className="overflow-x-auto overflow-y-hidden no-scrollbar"
+                        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                      >
+                        <TabsList className='inline-flex w-max whitespace-nowrap gap-2 px-8'>
+                          {course.content.tabs.filter(tb => tb.isActive).map(tab => (
+                            <TabsTrigger key={nanoid()} value={tab.name} className='shrink-0'>
+                              <Book className='w-4 h-4 mr-2' />
+                              <span>{tab.name}</span>
+                            </TabsTrigger>
+                          ))}
+                        </TabsList>
+                      </div>
+                      <button
+                        type="button"
+                        aria-label="Scroll tabs right"
+                        onClick={() => scrollTabs(200)}
+                        className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-20 items-center justify-center h-8 w-8 rounded-full bg-white shadow border border-gray-200 hover:bg-gray-50"
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </button>
+                      <div className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-white to-transparent" />
+                      <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-white to-transparent" />
+                    </div>
                     <div>
                       {course.content.tabs.filter(tb => tb.isActive).map((tab, index) => {
                         if(tab.contentType === 'RICH_TEXT'){
