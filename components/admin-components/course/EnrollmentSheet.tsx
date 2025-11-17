@@ -6,29 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ReactNode } from "react"
-
-type CourseEnrollment = {
-  _id: string,
-  userId: {
-    _id: string,
-    email: string,
-    name: string,
-    profilePic?: string
-  },
-  courseId: {
-    _id: string,
-    title: string,
-    slug: string,
-    currency: string,
-    price: number
-  },
-  status: 'ACTIVE' | 'PENDING' | 'DECLINED',
-  paymentStatus: 'PAID' | 'PENDING' | 'FAILED',
-  paymentMethod: 'CASH' | 'EXTERNAL' | 'INAPP',
-  expiredAt: string,
-  createdAt: Date,
-  updatedAt: Date,
-}
+import { CourseEnrollment } from "@/types/CourseEnrollment"
 
 // Mock data for a single enrollment
 // const enrollment: CourseEnrollment = {
@@ -89,14 +67,30 @@ export default function SingleEnrollmentSheet({
               <CardTitle>User Information</CardTitle>
             </CardHeader>
             <CardContent className="flex items-center space-x-4">
-              <Avatar>
-                <AvatarImage src={enrollment.userId.profilePic} alt={enrollment.userId.name} />
-                <AvatarFallback>{enrollment.userId.name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div>
-                <p className="font-medium">{enrollment.userId.name}</p>
-                <p className="text-sm text-gray-500">{enrollment.userId.email}</p>
-              </div>
+              {(() => {
+                const displayName = enrollment.userId?.name || enrollment.applicant?.name || "-";
+                const displayEmail = enrollment.userId?.email || enrollment.applicant?.email || "-";
+                const avatarSrc = enrollment.userId?.profilePic;
+                const fallbackInitials = displayName
+                  .split(" ")
+                  .filter(Boolean)
+                  .slice(0, 2)
+                  .map((n) => n.charAt(0).toUpperCase())
+                  .join("") || "?";
+
+                return (
+                  <>
+                    <Avatar>
+                      {avatarSrc && <AvatarImage src={avatarSrc} alt={displayName} />}
+                      <AvatarFallback>{fallbackInitials}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-medium">{displayName}</p>
+                      <p className="text-sm text-gray-500">{displayEmail}</p>
+                    </div>
+                  </>
+                );
+              })()}
             </CardContent>
           </Card>
 

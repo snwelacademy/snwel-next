@@ -35,7 +35,7 @@ export const columns = [
     key: "userId.name",
     label: "NAME",
     sortable: true,
-    render: (row: CourseEnrollment) => row.userId.name
+    render: (row: CourseEnrollment) => row.userId?.name || row.applicant?.name || '-'
   },
   {
     key: "courseId",
@@ -47,7 +47,7 @@ export const columns = [
     key: "userId.email",
     label: "EMAIL",
     sortable: true,
-    render: (row: CourseEnrollment) => row.userId.email
+    render: (row: CourseEnrollment) => row.userId?.email || row.applicant?.email || '-'
   },
   {
     key: "status",

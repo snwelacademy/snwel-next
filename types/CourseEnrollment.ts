@@ -3,7 +3,7 @@ import { Widget } from "./WidgetTypes";
 
 export type CourseEnrollment = {
     _id: string,
-    userId: {
+    userId?: {
         _id: string,
         email: string,
         name: string,
@@ -25,9 +25,19 @@ export type CourseEnrollment = {
     widget?: Widget,
     otp?: {
         verified: boolean;
+    },
+    applicant?: {
+        name: string;
+        email: string;
+        phone?: string;
+        location?: {
+            addr?: string;
+            city?: string;
+            state?: string;
+            country?: string;
+        };
     }
 }
-
 
 export const createCourseEnrollment = z.object({
     userId: z.string(),

@@ -19,7 +19,7 @@ import { Book, Dot, Clock, Star, ChevronLeft, ChevronRight } from "lucide-react"
 import { nanoid } from "nanoid"
 import { useSearchParams } from "next/navigation"
 import { motion } from "framer-motion"
-import { useRef } from "react"
+import { useRef, useState, useEffect } from "react"
 
 export default function Page({ params }: { params: { slug: string } }) {
   const searchParams = useSearchParams()
@@ -29,6 +29,38 @@ export default function Page({ params }: { params: { slug: string } }) {
   })
   const tabsScrollRef = useRef<HTMLDivElement>(null)
   const scrollTabs = (dx: number) => tabsScrollRef.current?.scrollBy({ left: dx, behavior: 'smooth' })
+  const [mobileTabPage, setMobileTabPage] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
+  
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+  
+  const TABS_PER_PAGE = 2
+  const activeTabs = course?.content?.tabs?.filter(tb => tb.isActive) || []
+  const totalPages = Math.ceil(activeTabs.length / TABS_PER_PAGE)
+  
+  const handleNextPage = () => {
+    if (mobileTabPage < totalPages - 1) {
+      setMobileTabPage(prev => prev + 1)
+    }
+  }
+  
+  const handlePrevPage = () => {
+    if (mobileTabPage > 0) {
+      setMobileTabPage(prev => prev - 1)
+    }
+  }
+  
+  const getVisibleTabs = () => {
+    if (!isMobile) return activeTabs
+    const start = mobileTabPage * TABS_PER_PAGE
+    const end = start + TABS_PER_PAGE
+    return activeTabs.slice(start, end)
+  }
   if (isLoading) {
     return <PageLoader />
   }
@@ -39,7 +71,7 @@ export default function Page({ params }: { params: { slug: string } }) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 text-gray-900">
       {/* Hero Section */}
-      <header className="relative h-[60vh] overflow-hidden">
+      <header className="relative h-[360px] md:h-[480px] lg:h-[60vh] overflow-hidden">
         <img
           src={course.image}
           alt={course.title}
@@ -54,7 +86,7 @@ export default function Page({ params }: { params: { slug: string } }) {
           </div>
         )}
         
-        <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/80 to-transparent">
+        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-8 bg-gradient-to-t from-black/80 to-transparent">
           <div className="container mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -67,10 +99,10 @@ export default function Page({ params }: { params: { slug: string } }) {
                   <Badge className="bg-purple-600 hover:bg-purple-700">Premium</Badge>
                 )}
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-white mb-3">{course.title}</h1>
-              <p className="text-lg text-gray-200 max-w-3xl mb-4">{course.shortDescription}</p>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3">{course.title}</h1>
+              <p className="text-base sm:text-lg text-gray-200 max-w-3xl mb-4">{course.shortDescription}</p>
               
-              <div className="flex items-center gap-6 text-gray-200">
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-gray-200">
                 <div className="flex items-center gap-2">
                   <Clock className="h-5 w-5" />
                   <span>{course.courseDuration} {course.content?.durationUnit}</span>
@@ -96,7 +128,7 @@ export default function Page({ params }: { params: { slug: string } }) {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-12 -mt-20 relative z-10">
+      <main className="container mx-auto px-4 py-8 sm:py-12 -mt-16 sm:-mt-20 relative z-10">
         <div className="grid gap-8 lg:grid-cols-3">
           {/* Content Area */}
           <motion.div
@@ -106,28 +138,33 @@ export default function Page({ params }: { params: { slug: string } }) {
             className="lg:col-span-2 space-y-6"
           >
             {/* Course Tabs */}
-            <div className="rounded-2xl bg-white p-8 shadow-lg border border-gray-100">
+            <div className="rounded-2xl bg-white p-4 sm:p-6 lg:p-8 shadow-lg border border-gray-100">
               <Tabs defaultValue={searchParams.get('tab') || course.content?.tabs[0].name} className="w-full">
                 {course.content && course.content.tabs.length && (
                   <>
                     <div className="relative mb-6">
                       <button
                         type="button"
-                        aria-label="Scroll tabs left"
-                        onClick={() => scrollTabs(-200)}
-                        className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-20 items-center justify-center h-8 w-8 rounded-full bg-white shadow border border-gray-200 hover:bg-gray-50"
+                        aria-label="Previous tabs"
+                        onClick={() => isMobile ? handlePrevPage() : scrollTabs(-200)}
+                        disabled={isMobile && mobileTabPage === 0}
+                        className="flex absolute left-0 top-1/2 -translate-y-1/2 z-20 items-center justify-center h-8 w-8 rounded-full bg-white shadow border border-gray-200 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed"
                       >
                         <ChevronLeft className="h-4 w-4" />
                       </button>
                       <div
                         ref={tabsScrollRef}
-                        className="overflow-x-auto overflow-y-hidden no-scrollbar"
+                        className="overflow-x-auto overflow-y-hidden no-scrollbar md:overflow-x-auto"
                         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                       >
-                        <TabsList className='inline-flex w-max whitespace-nowrap gap-2 px-8'>
-                          {course.content.tabs.filter(tb => tb.isActive).map(tab => (
-                            <TabsTrigger key={nanoid()} value={tab.name} className='shrink-0'>
-                              <Book className='w-4 h-4 mr-2' />
+                        <TabsList className='inline-flex w-max md:w-max whitespace-nowrap gap-2 px-9 md:px-12'>
+                          {getVisibleTabs().map((tab) => (
+                            <TabsTrigger 
+                              key={nanoid()} 
+                              value={tab.name} 
+                              className='shrink-0 text-xs sm:text-sm'
+                            >
+                              <Book className='w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2' />
                               <span>{tab.name}</span>
                             </TabsTrigger>
                           ))}
@@ -135,14 +172,24 @@ export default function Page({ params }: { params: { slug: string } }) {
                       </div>
                       <button
                         type="button"
-                        aria-label="Scroll tabs right"
-                        onClick={() => scrollTabs(200)}
-                        className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-20 items-center justify-center h-8 w-8 rounded-full bg-white shadow border border-gray-200 hover:bg-gray-50"
+                        aria-label="Next tabs"
+                        onClick={() => isMobile ? handleNextPage() : scrollTabs(200)}
+                        disabled={isMobile && mobileTabPage === totalPages - 1}
+                        className="flex absolute right-0 top-1/2 -translate-y-1/2 z-20 items-center justify-center h-8 w-8 rounded-full bg-white shadow border border-gray-200 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed"
                       >
                         <ChevronRight className="h-4 w-4" />
                       </button>
-                      <div className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-white to-transparent" />
-                      <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-white to-transparent" />
+                      {!isMobile && (
+                        <>
+                          <div className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-white to-transparent" />
+                          <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-white to-transparent" />
+                        </>
+                      )}
+                      {isMobile && totalPages > 1 && (
+                        <div className="text-center mt-2 text-xs text-gray-500">
+                          {mobileTabPage + 1} / {totalPages}
+                        </div>
+                      )}
                     </div>
                     <div>
                       {course.content.tabs.filter(tb => tb.isActive).map((tab, index) => {
@@ -175,7 +222,7 @@ export default function Page({ params }: { params: { slug: string } }) {
             transition={{ delay: 0.3, duration: 0.5 }}
             className="space-y-6"
           >
-            <div className="rounded-2xl bg-gradient-to-br from-white-500 to-gray-700 p-8 shadow-xl text-gray-900 sticky top-24">
+            <div className="rounded-2xl bg-gradient-to-br from-white-500 to-gray-700 p-6 sm:p-8 shadow-xl text-gray-900 sticky top-24">
               <h2 className="mb-6 text-2xl font-bold">Course Details</h2>
               
               {/* Course Info */}

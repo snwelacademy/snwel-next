@@ -65,8 +65,8 @@ export async function exportAllEnrollments(options?: ListOptions) {
         const data = await getAllEnrollments(options)
 
         const transformedData = data.docs.map(enrollment => ({
-            studentName: enrollment.userId.name,
-            studentEmail: enrollment.userId.email,
+            studentName: enrollment.userId?.name || enrollment.applicant?.name || "",
+            studentEmail: enrollment.userId?.email || enrollment.applicant?.email || "",
             courseTitle: enrollment.courseId.title,
             coursePrice: `${enrollment.courseId.currency} ${enrollment.courseId.price}`,
             enrollmentStatus: enrollment.status,

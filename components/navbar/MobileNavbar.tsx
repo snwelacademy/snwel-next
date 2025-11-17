@@ -7,6 +7,8 @@ import Link from "next/link"
 import Image from "next/image"
 import { MenuSchemaWithChildrenType } from "@/types"
 import { InstagramLogoIcon, LinkedInLogoIcon } from "@radix-ui/react-icons"
+import EnrollCourseModal from "../courses/EnrollCourseModal"
+import { Button } from "../ui/button"
 
 // const navItems = [
 //   {
@@ -206,6 +208,17 @@ export default function MobileMenu({navItems=[], logo, socialLinks}: {navItems?:
                 </motion.li>
               ))}
             </ul>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="p-4 border-t border-border"
+            >
+              <EnrollCourseModal
+                trigger={<Button className='w-full' size={'lg'} variant={'destructive'}>Register</Button>}
+                courseId=''
+              />
+            </motion.div>
             {/* <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

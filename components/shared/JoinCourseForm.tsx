@@ -115,7 +115,16 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
       const res = await createEnrollmentAnonymous(payload);
       setState(res);
     } catch (error: any) {
-      toast({ title: error.message || "Something went wrong!", variant: 'destructive' })
+      const rawMessage: string = error?.message || "Something went wrong!";
+      let friendlyMessage = rawMessage;
+
+      if (rawMessage.includes("Applicant email is required")) {
+        friendlyMessage = "Email is required to apply for this course.";
+      } else if (rawMessage.includes("Course Enrollment already found")) {
+        friendlyMessage = "You have already applied for this course with this email/phone.";
+      }
+
+      toast({ title: friendlyMessage, variant: 'destructive' })
     } finally {
       setLoading(false)
     }

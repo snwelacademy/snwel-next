@@ -4,10 +4,14 @@ import { ApiResponse } from "@/types/ApiResponses";
 
 export async function createEnrollmentAnonymous(input: any){
     try {
-        const res = await api.post<ApiResponse<{token?: string, isVerified: boolean}>>("/course-enroll/anon", input);
-    return res.data.data;
+        const res = await api.post<ApiResponse<{token?: string, isVerified: boolean, enrollmentId?: string}>>("/course-enroll/anon", input);
+        return res.data.data;
     } catch (error: any) {
-        throw new Error(error.message);
+        const message =
+            error?.response?.data?.message ||
+            error?.message ||
+            "Something went wrong while creating course enrollment.";
+        throw new Error(message);
     }
 }
 
@@ -27,8 +31,12 @@ export async function verifyOtp(input: {
             session_expires_at?: string
         }>>("/course-enroll/verify-otp", input);
         return res.data.data;
-    } catch (error) {
-        throw new Error("Error: verifyOtp")
+    } catch (error: any) {
+        const message =
+            error?.response?.data?.message ||
+            error?.message ||
+            "Error verifying OTP.";
+        throw new Error(message)
     }
 }
 
@@ -44,7 +52,12 @@ export async function resendOtp(input: { token?: string, verificationId?: string
             invalidToken?: boolean
         }>>("/course-enroll/resend-otp", input);
         return res.data.data;
-    } catch (error) {
-        throw new Error("Error: resendOtp")
+    } catch (error: any) {
+        const message =
+            error?.response?.data?.message ||
+            error?.message ||
+            "Error resending OTP.";
+        throw new Error(message)
     }
 }
+
