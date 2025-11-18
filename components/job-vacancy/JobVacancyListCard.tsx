@@ -1,7 +1,7 @@
 import { JobVacancyType } from '@/types/JobVacancyTypes'
 import { Card, CardContent } from '../ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import { formatDate, formatToLocalCurrency, getAvatarLetters } from '@/lib/utils'
+import { formatDate, getAvatarLetters } from '@/lib/utils'
 import { Button } from '../ui/button'
 import { Bookmark } from 'lucide-react'
 import ApplyNowModal from './JobApplyNow'
@@ -40,7 +40,7 @@ const JobVacancyListCard = ({ data }: {
                             </span>
                     }
                     <span className="block font-light md:mt-1 mt-0">
-                        {formatToLocalCurrency(data.salaryRange ||'', 'en-US', 'inr')}
+                        {data.salaryRange || '-'}
                     </span>
                 </div>
 

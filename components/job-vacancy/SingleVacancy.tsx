@@ -78,7 +78,7 @@ const SingleVacancy = ({
                         </CardContent>
                     </Card>
 
-                    <article className='prose prose-zinc mt-10 prose-li:mt-0 prose-li:mb-0'>
+                    <article className='prose prose-tight prose-zinc mt-10'>
                         <h2>Job Description</h2>
                         <div dangerouslySetInnerHTML={{ __html: data.description }}></div>
 

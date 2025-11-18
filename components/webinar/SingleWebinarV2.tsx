@@ -114,7 +114,7 @@ export default function SingleWebinarV2({webinar}: {webinar: Webinar}) {
                   </DialogContent>
                 </Dialog>
               </div>
-              <div dangerouslySetInnerHTML={{__html: webinar.content}} className="prose prose-lg max-w-none text-gray-700"></div>
+              <div dangerouslySetInnerHTML={{__html: webinar.content}} className="prose prose-tight prose-zinc max-w-none text-gray-700"></div>
             </div>
 
             {webinar.hosts.length > 0 && (
@@ -136,7 +136,7 @@ export default function SingleWebinarV2({webinar}: {webinar: Webinar}) {
                       </Avatar>
                       <div className="flex-1">
                         <h3 className="text-xl font-bold text-gray-900">{host.name}</h3>
-                        {host.designation && <p className="text-sm text-gray-600">{host.designation}</p>}
+                        {/* {host.designation && <p className="text-sm text-gray-600">{host?.designation}</p>} */}
                       </div>
                     </div>
                   ))}
