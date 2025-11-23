@@ -20,7 +20,7 @@ export async function getAllBlogs(options?: ListOptions) {
 
 export async function createBlog(mutateBlog: any) {
     try {
-        const res = await protectedApi.post<any, AxiosResponse<ApiResponse<Blog>>>('/blogs', mutateBlog);
+        const res = await protectedApi.post<any, AxiosResponse<ApiResponse<Blog>>>(`/blogs`, mutateBlog);
         const data = res.data.data;
         return data;
     } catch (error) {
@@ -75,7 +75,7 @@ export async function getBlogBySlug(slug: string) {
 
 export async function hardDeleteAllSoftDeletedBlogs() {
     try {
-        const res = await protectedApi.delete<any, AxiosResponse<ApiResponse<{ message: string }>>>('/blogs/hard-delete');
+        const res = await protectedApi.delete<any, AxiosResponse<ApiResponse<{ message: string }>>>(`/blogs/hard-delete`);
         const data = res.data.data;
         return data;
     } catch (error) {

@@ -10,7 +10,7 @@ import { constants } from '@/config/constants';
 export async function getAllBlogs(options?: ListOptions) {
     try {
         options = { ...DEFAULT_LIST_OPTIONS, ...options };
-        const res = await api.get<any, AxiosResponse<ApiResponse<ListResponse<Blog>>>>(`/blogs?${objectToQueryString(options)}`);
+        const res = await api.get<any, AxiosResponse<ApiResponse<ListResponse<Blog>>>>(`/guest/blogs?${objectToQueryString(options)}`);
         const data = res.data.data;
         return data;
     } catch (error) {
@@ -19,27 +19,27 @@ export async function getAllBlogs(options?: ListOptions) {
     }
 }
 
-export async function createBlog(mutateBlog: any) {
-    try {
-        const res = await protectedApi.post<any, AxiosResponse<ApiResponse<Blog>>>('/blogs', mutateBlog);
-        const data = res.data.data;
-        return data;
-    } catch (error) {
-        console.log("Error: createBlog: ", error);
-        throw new Error("Error in creating blog. Please try again");
-    }
-}
+// export async function createBlog(mutateBlog: any) {
+//     try {
+//         const res = await protectedApi.post<any, AxiosResponse<ApiResponse<Blog>>>('/blogs', mutateBlog);
+//         const data = res.data.data;
+//         return data;
+//     } catch (error) {
+//         console.log("Error: createBlog: ", error);
+//         throw new Error("Error in creating blog. Please try again");
+//     }
+// }
 
-export async function updateBlog(blogId: string, mutateBlog: any) {
-    try {
-        const res = await protectedApi.put<any, AxiosResponse<ApiResponse<Blog>>>(`/guest/blogs/${blogId}`, mutateBlog);
-        const data = res.data.data;
-        return data;
-    } catch (error) {
-        console.log("Error: updateBlog: ", error);
-        throw new Error("Error in updating blog. Please try again");
-    }
-}
+// export async function updateBlog(blogId: string, mutateBlog: any) {
+//     try {
+//         const res = await protectedApi.put<any, AxiosResponse<ApiResponse<Blog>>>(`/guest/blogs/${blogId}`, mutateBlog);
+//         const data = res.data.data;
+//         return data;
+//     } catch (error) {
+//         console.log("Error: updateBlog: ", error);
+//         throw new Error("Error in updating blog. Please try again");
+//     }
+// }
 
 // export async function deleteBlog(blogId: string) {
 //     try {

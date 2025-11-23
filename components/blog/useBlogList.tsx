@@ -1,4 +1,4 @@
-import { getAllBlogs } from '@/services/admin/admin-blog-service';
+import { getAllBlogs } from '@/services/blog-service';
 import { Blog } from '@/types';
 import { ListOptions } from '@/types/ListOptions';
 import { useQuery } from '@tanstack/react-query';

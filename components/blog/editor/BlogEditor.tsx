@@ -75,6 +75,7 @@ const Editor = ({ defaultValue, onChange, readOnly }: { defaultValue?: string, o
                 onChange?.(html.serialize(editor, current));
             } catch (err) {
                 console.error('Yoopta HTML serialize failed', err);
+                // If serialization fails, we might want to alert the user or at least not crash
             }
         }
         editor.on('change', handleChange);
@@ -97,7 +98,7 @@ const Editor = ({ defaultValue, onChange, readOnly }: { defaultValue?: string, o
     }, [defaultValue, editor])
 
     return (
-        <YooptaEditor readOnly={readOnly} placeholder='Type here' style={{maxWidth: "100%", width: '100%'}} editor={editor} plugins={plugins} tools={TOOLS} />
+        <YooptaEditor readOnly={readOnly} placeholder='Type here' style={{ maxWidth: "100%", width: '100%' }} editor={editor} plugins={plugins} tools={TOOLS} />
     );
 };
 

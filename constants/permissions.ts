@@ -165,6 +165,16 @@ export const FILE_PERMISSIONS = {
 } as const
 
 // ============================================================================
+// PAGE MODULE
+// ============================================================================
+export const PAGE_PERMISSIONS = {
+  PAGE_CREATE: 'PAGE_CREATE',
+  PAGE_VIEW: 'PAGE_VIEW',
+  PAGE_UPDATE: 'PAGE_UPDATE',
+  PAGE_DELETE: 'PAGE_DELETE',
+} as const
+
+// ============================================================================
 // MASTER DATA MODULE
 // ============================================================================
 export const MASTER_PERMISSIONS = {
@@ -199,6 +209,16 @@ export const ANALYTICS_PERMISSIONS = {
 } as const
 
 // ============================================================================
+// TESTIMONIAL MODULE
+// ============================================================================
+export const TESTIMONIAL_PERMISSIONS = {
+  TESTIMONIAL_CREATE: 'TESTIMONIAL_CREATE',
+  TESTIMONIAL_VIEW: 'TESTIMONIAL_VIEW',
+  TESTIMONIAL_UPDATE: 'TESTIMONIAL_UPDATE',
+  TESTIMONIAL_DELETE: 'TESTIMONIAL_DELETE',
+} as const
+
+// ============================================================================
 // ALL PERMISSIONS (Flat structure for easy lookup)
 // ============================================================================
 export const PERMISSIONS = {
@@ -217,10 +237,12 @@ export const PERMISSIONS = {
   ...INTEGRATION_PERMISSIONS,
   ...SETTINGS_PERMISSIONS,
   ...FILE_PERMISSIONS,
+  ...PAGE_PERMISSIONS,
   ...MASTER_PERMISSIONS,
   ...PAYMENT_PERMISSIONS,
   ...OTP_PERMISSIONS,
   ...ANALYTICS_PERMISSIONS,
+  ...TESTIMONIAL_PERMISSIONS,
 } as const
 
 // ============================================================================
@@ -269,6 +291,7 @@ export const PERMISSION_GROUPS = {
       ...Object.values(SETTINGS_PERMISSIONS),
       ...Object.values(INTEGRATION_PERMISSIONS),
       ...Object.values(FILE_PERMISSIONS),
+      ...Object.values(PAGE_PERMISSIONS),
     ],
   },
   ANALYTICS: {
@@ -278,6 +301,10 @@ export const PERMISSION_GROUPS = {
   OTP: {
     label: 'OTP Management',
     permissions: Object.values(OTP_PERMISSIONS),
+  },
+  MASTER_DATA_MANAGEMENT: {
+    label: 'Master Data Management',
+    permissions: Object.values(MASTER_PERMISSIONS),
   },
 } as const
 
@@ -387,6 +414,12 @@ export const PERMISSION_DESCRIPTIONS: Record<string, string> = {
   FILE_UPLOAD: 'Can upload files',
   FILE_VIEW: 'Can view files',
   FILE_DELETE: 'Can delete files',
+
+  // Page
+  PAGE_CREATE: 'Can create pages',
+  PAGE_VIEW: 'Can view pages',
+  PAGE_UPDATE: 'Can update pages',
+  PAGE_DELETE: 'Can delete pages',
 
   // Master
   MASTER_CREATE: 'Can create master data',

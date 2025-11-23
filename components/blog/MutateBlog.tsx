@@ -10,7 +10,7 @@ import { Switch } from "@/components/ui/switch"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Image as ImageIcon, Settings, ChevronLeft } from 'lucide-react'
+import { Image as ImageIcon, Settings, ChevronLeft, Loader2 } from 'lucide-react'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import FileManagerPopup from '@/components/modal/FileManager'
 import { useToast } from '@/components/ui/use-toast'
@@ -86,7 +86,6 @@ export default function ModernBlogCreator({ blogData }: { blogData?: Blog }) {
             // Transform for backend expectations
             const payload: any = {
                 ...value,
-                status: value.published ? 'PUBLISHED' : 'DRAFT',
             }
             if (blogData) {
                 await updateBlog((blogData as any)._id, payload);
@@ -178,10 +177,7 @@ export default function ModernBlogCreator({ blogData }: { blogData?: Blog }) {
             form.setValue('tags', (blogData as any).tags || [])
             form.setValue('coverImage', (blogData as any).coverImage || '')
             // Published/status mapping
-            const published = typeof (blogData as any).published === 'boolean'
-                ? (blogData as any).published
-                : ((blogData as any).status === 'PUBLISHED')
-            form.setValue('published', published)
+            form.setValue('published', (blogData as any).published || false)
             // SEO mapping
             const slug = (blogData as any).slug || ''
             form.setValue('seo.metaTitle', (blogData as any).seo?.metaTitle || (blogData as any).title || '')
@@ -199,14 +195,21 @@ export default function ModernBlogCreator({ blogData }: { blogData?: Blog }) {
 
 
     useEffect(() => {
-        form.setValue("seo.urlSlug", slugify(watch?.title || '', {lower: true}))
+        form.setValue("seo.urlSlug", slugify(watch?.title || '', { lower: true }))
 
     }, [watch.title])
 
     return (
         <div className="min-h-screen bg-gray-100">
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleSubmit)}>
+                <form onSubmit={form.handleSubmit(handleSubmit, (errors) => {
+                    toast({
+                        title: "Validation Error",
+                        description: "Please check the form for errors. Make sure all required fields are filled correctly.",
+                        variant: "destructive"
+                    });
+                    console.log("Form validation errors:", errors);
+                })}>
                     {/* Header */}
                     <header className="bg-white shadow-sm">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
@@ -234,8 +237,15 @@ export default function ModernBlogCreator({ blogData }: { blogData?: Blog }) {
                                         </FormItem>
                                     )}
                                 />
-                                <Button type="submit">
-                                    {form.watch('published') ? 'Update' : 'Publish'}
+                                <Button type="submit" disabled={loading}>
+                                    {loading ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            {blogData ? 'Updating...' : 'Publishing...'}
+                                        </>
+                                    ) : (
+                                        blogData ? 'Update Post' : (form.watch('published') ? 'Publish Now' : 'Save Draft')
+                                    )}
                                 </Button>
                             </div>
                         </div>

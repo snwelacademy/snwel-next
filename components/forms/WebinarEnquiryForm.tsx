@@ -19,7 +19,7 @@ interface WebinarEnquirySubFormProps {
 }
 
 const WebinarEnquirySubForm: React.FC<WebinarEnquirySubFormProps> = ({ control }) => {
-  const {currentWebinar} = useContext(context);
+  const { currentWebinar } = useContext(context);
   const methods = useFormContext();
 
   useEffect(() => {
@@ -34,17 +34,37 @@ const WebinarEnquirySubForm: React.FC<WebinarEnquirySubFormProps> = ({ control }
     const phonecode = c?.phonecode;
     if (!phonecode) return;
     const dial = phonecode.startsWith('+') ? phonecode : `+${phonecode}`;
+
     const currentPhone: string = methods.getValues('phone') || '';
-    // remove existing leading +<digits> and optional space
-    const stripped = currentPhone.replace(/^\+\d+\s*/,'');
+
+    // Remove all non-digit characters to get the raw numbers
+    const cleanPhone = currentPhone.replace(/\D/g, '');
+
+    let stripped = cleanPhone;
+    if (cleanPhone.length > 0) {
+      const allCountries = Country.getAllCountries();
+      // Sort by length descending to match longest prefix first (e.g. match +1242 before +1)
+      const sortedCountries = [...allCountries].sort((a, b) =>
+        (b.phonecode?.length || 0) - (a.phonecode?.length || 0)
+      );
+
+      const matchedCountry = sortedCountries.find(country =>
+        country.phonecode && cleanPhone.startsWith(country.phonecode)
+      );
+
+      if (matchedCountry) {
+        stripped = cleanPhone.slice(matchedCountry.phonecode.length);
+      }
+    }
+
     methods.setValue('phone', `${dial} ${stripped}`.trim(), { shouldDirty: true });
   }, [selectedCountry])
-  
+
   return (
-    
-        <>
-        {
-          <FormField
+
+    <>
+      {
+        <FormField
           control={control}
           name="extraInfo.webinarId"
           render={({ field }) => (
@@ -57,110 +77,110 @@ const WebinarEnquirySubForm: React.FC<WebinarEnquirySubFormProps> = ({ control }
             </FormItem>
           )}
         />
-        }
-        {/* Registration Fields */}
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          <FormField
-            control={control}
-            name="extraInfo.qualification"
-            render={({ field }) => (
-              <FormItem className='w-full'>
-                <FormLabel>Qualification</FormLabel>
-                <FormControl>
-                  <MasterDropdown
-                    parentCode={MASTER_CODES.QUALIFICATIONS}
-                    selectorKey="name"
-                    value={field.value}
-                    onChange={field.onChange}
-                    placeholder="Select qualification"
-                    allowCustom
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="extraInfo.presentStatus"
-            render={({ field }) => (
-              <FormItem className='w-full'>
-                <FormLabel>Present Status</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="JOB_SEEKER">Job Seeker</SelectItem>
-                    <SelectItem value="STUDENT">Student</SelectItem>
-                    <SelectItem value="WORKING_PROFESSIONAL">Working Professional</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        {/* Country/State/City selectors */}
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-          <FormField
-            control={control}
-            name="extraInfo.location.country"
-            render={({ field }) => (
-              <FormItem className='w-full'>
-                <FormLabel>Country</FormLabel>
-                <FormControl>
-                  <CountrySelector value={field.value} onChange={field.onChange} placeholder="Select country" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="extraInfo.location.state"
-            render={({ field }) => (
-              <FormItem className='w-full'>
-                <FormLabel>State</FormLabel>
-                <FormControl>
-                  <StateSelector value={field.value} onChange={field.onChange} countryCode={methods.watch('extraInfo.location.country')} placeholder="Select state" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="extraInfo.location.city"
-            render={({ field }) => (
-              <FormItem className='w-full'>
-                <FormLabel>City</FormLabel>
-                <FormControl>
-                  <CitySelector value={field.value} onChange={field.onChange} countryCode={methods.watch('extraInfo.location.country')} stateCode={methods.watch('extraInfo.location.state')} placeholder="Select city" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+      }
+      {/* Registration Fields */}
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
         <FormField
           control={control}
-          name="extraInfo.addressFull"
+          name="extraInfo.qualification"
           render={({ field }) => (
             <FormItem className='w-full'>
-              <FormLabel>Address (Full)</FormLabel>
+              <FormLabel>Qualification</FormLabel>
               <FormControl>
-                <Textarea placeholder="Full Address" {...field} />
+                <MasterDropdown
+                  parentCode={MASTER_CODES.QUALIFICATIONS}
+                  selectorKey="name"
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Select qualification"
+                  allowCustom
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        
-        </>
-     
+        <FormField
+          control={control}
+          name="extraInfo.presentStatus"
+          render={({ field }) => (
+            <FormItem className='w-full'>
+              <FormLabel>Present Status</FormLabel>
+              <Select onValueChange={field.onChange} value={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="JOB_SEEKER">Job Seeker</SelectItem>
+                  <SelectItem value="STUDENT">Student</SelectItem>
+                  <SelectItem value="WORKING_PROFESSIONAL">Working Professional</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+      {/* Country/State/City selectors */}
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+        <FormField
+          control={control}
+          name="extraInfo.location.country"
+          render={({ field }) => (
+            <FormItem className='w-full'>
+              <FormLabel>Country</FormLabel>
+              <FormControl>
+                <CountrySelector value={field.value} onChange={field.onChange} placeholder="Select country" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name="extraInfo.location.state"
+          render={({ field }) => (
+            <FormItem className='w-full'>
+              <FormLabel>State</FormLabel>
+              <FormControl>
+                <StateSelector value={field.value} onChange={field.onChange} countryCode={methods.watch('extraInfo.location.country')} placeholder="Select state" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name="extraInfo.location.city"
+          render={({ field }) => (
+            <FormItem className='w-full'>
+              <FormLabel>City</FormLabel>
+              <FormControl>
+                <CitySelector value={field.value} onChange={field.onChange} countryCode={methods.watch('extraInfo.location.country')} stateCode={methods.watch('extraInfo.location.state')} placeholder="Select city" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
+      <FormField
+        control={control}
+        name="extraInfo.addressFull"
+        render={({ field }) => (
+          <FormItem className='w-full'>
+            <FormLabel>Address (Full)</FormLabel>
+            <FormControl>
+              <Textarea placeholder="Full Address" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+    </>
+
   );
 };
 

@@ -54,6 +54,7 @@ export const navGroups: NavGroup[] = [
         href: "/admin/pages",
         icon: "pages",
         label: "Pages",
+        permissions: "PAGE_VIEW",
       },
       {
         title: "Webinars",
@@ -61,6 +62,13 @@ export const navGroups: NavGroup[] = [
         icon: "webinar",
         label: "Webinars",
         permissions: "WEBINAR_VIEW",
+      },
+      {
+        title: "Testimonials",
+        href: "/admin/testimonials",
+        icon: "post",
+        label: "Testimonials",
+        permissions: "TESTIMONIAL_VIEW",
       },
       {
         title: "Widgets",
@@ -164,6 +172,7 @@ export const navGroups: NavGroup[] = [
         href: "/admin/masters?type=MASTER",
         icon: "job_category",
         label: "Master Data",
+        permissions: "MASTER_VIEW",
       },
       {
         title: "Settings",

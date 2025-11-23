@@ -13,12 +13,12 @@ import { usePermission } from '@/hooks/usePermissions'
 import { BLOG_PERMISSIONS } from '@/constants/permissions'
 import { PermissionGuard } from '@/components/guards/PermissionGuard'
 import { handlePermissionError } from '@/lib/permissionErrorHandler'
-import { 
-  FileText, 
-  Plus, 
-  Search, 
-  Eye, 
-  Edit, 
+import {
+  FileText,
+  Plus,
+  Search,
+  Eye,
+  Edit,
   Trash2,
   TrendingUp,
   Clock,
@@ -54,18 +54,18 @@ function BlogPageContent() {
   const [searchQuery, setSearchQuery] = useState('')
   const queryClient = useQueryClient()
   const { toast } = useToast()
-  
+
   const canCreateBlog = usePermission(BLOG_PERMISSIONS.BLOG_CREATE)
   const canUpdateBlog = usePermission(BLOG_PERMISSIONS.BLOG_UPDATE)
   const canDeleteBlog = usePermission(BLOG_PERMISSIONS.BLOG_DELETE)
-  
+
   const { data, isLoading } = useQuery({
     queryKey: ['/admin/blogs'],
     queryFn: () => getAllBlogs({ page: 1, limit: 50 })
   })
 
-  const publishedCount = data?.docs?.filter((b: any) => b.status === 'PUBLISHED').length || 0
-  const draftCount = data?.docs?.filter((b: any) => b.status === 'DRAFT').length || 0
+  const publishedCount = data?.docs?.filter((b: any) => b.published).length || 0
+  const draftCount = data?.docs?.filter((b: any) => !b.published).length || 0
 
   const filteredBlogs = data?.docs?.filter((blog: any) =>
     blog.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -208,8 +208,8 @@ function BlogPageContent() {
                         <TableCell className="font-medium">{blog.title}</TableCell>
                         <TableCell>{blog.author || 'Unknown'}</TableCell>
                         <TableCell>
-                          <Badge variant={blog.status === 'PUBLISHED' ? 'default' : 'outline'}>
-                            {blog.status || 'DRAFT'}
+                          <Badge variant={blog.published ? 'default' : 'outline'}>
+                            {blog.published ? 'PUBLISHED' : 'DRAFT'}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-sm text-muted-foreground">
