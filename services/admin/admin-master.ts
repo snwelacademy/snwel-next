@@ -28,9 +28,12 @@ export async function createMaster(mutateMaster: CreateMasterDTO) {
         return data;
     } catch (error) {
         console.log("Error: createMaster: ", error);
-        throw new Error("Error in creating master record. Please try again.");
+        console.log("Error: createMaster: ", error);
+        // @ts-ignore
+        throw new Error(error.response?.data?.message || error.message || "Error in creating master record.");
     }
 }
+
 
 // Update an existing master record by ID
 export async function updateMaster(masterId: string, mutateMaster: UpdateMasterDTO) {

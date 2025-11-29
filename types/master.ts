@@ -1,11 +1,10 @@
 
-// src/entity-schema/master.ts
-
 import { z } from 'zod';
 
 export const master_type_array = [
   'MASTER',
-  'SUB_MASTER'
+  'SUB_MASTER',
+  'PAGE_TEMPLATE'
 ] as const;
 
 const master_enum = z.enum(master_type_array);
@@ -38,12 +37,12 @@ export type UpdateMasterDTO = z.infer<typeof updateMasterSchema>;
 
 
 export interface Master {
-    _id: string;
-    code: string;
-    parentCode?: string;
-    isActive: boolean;
-    name: string;
-    meta?: Record<string, any>;
-    sequence: number;
-    type: MASTER_TYPE;
-  }
+  _id: string;
+  code: string;
+  parentCode?: string;
+  isActive: boolean;
+  name: string;
+  meta?: Record<string, any>;
+  sequence: number;
+  type: MASTER_TYPE;
+}
