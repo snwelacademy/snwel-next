@@ -103,13 +103,13 @@
 //     { key: 'userId', label: 'User', render: (item: CourseEnrollment) => item.userId.name },
 //     { key: 'userId', label: 'Email', render: (item: CourseEnrollment) => item.userId.email },
 //     { key: 'courseId', label: 'Course', render: (item: CourseEnrollment) => item.courseId.title },
-//     { 
-//       key: 'status', 
-//       label: 'Status', 
+//     {
+//       key: 'status',
+//       label: 'Status',
 //       sortable: true,
 //       render: (item: CourseEnrollment) => (
-//         <Select 
-//           value={item.status} 
+//         <Select
+//           value={item.status}
 //           onValueChange={(value: CourseEnrollment['status']) => handleStatusChange(item._id, value)}
 //         >
 //           <SelectTrigger className="w-[120px]">
@@ -123,13 +123,13 @@
 //         </Select>
 //       )
 //     },
-//     { 
-//       key: 'paymentStatus', 
-//       label: 'Payment Status', 
+//     {
+//       key: 'paymentStatus',
+//       label: 'Payment Status',
 //       sortable: true,
 //       render: (item: CourseEnrollment) => (
-//         <Select 
-//           value={item.paymentStatus} 
+//         <Select
+//           value={item.paymentStatus}
 //           onValueChange={(value: CourseEnrollment['paymentStatus']) => handlePaymentStatusChange(item._id, value)}
 //         >
 //           <SelectTrigger className="w-[120px]">
@@ -137,21 +137,6 @@
 //           </SelectTrigger>
 //           <SelectContent>
 //             <SelectItem value="PAID">Paid</SelectItem>
-//             <SelectItem value="PENDING">Pending</SelectItem>
-//             <SelectItem value="FAILED">Failed</SelectItem>
-//           </SelectContent>
-//         </Select>
-//       )
-//     },
-//     { key: 'paymentMethod', label: 'Payment Method', sortable: true },
-//     { key: 'expiredAt', label: 'Expires On', sortable: true, render: (item: CourseEnrollment) => formatDateInReadable(item.expiredAt) },
-//     { key: 'createdAt', label: 'Enrolled On', sortable: true, render: (item: CourseEnrollment) => formatDateInReadable(item.createdAt) },
-//   ]
-
-//   const renderActions = (item: CourseEnrollment) => (
-//     <div className="flex space-x-2">
-//       <ViewDetailsSheet enrollment={item} />
-//       <DeleteAlertDialog onDelete={() => handleDelete(item._id)} />
 //     </div>
 //   )
 

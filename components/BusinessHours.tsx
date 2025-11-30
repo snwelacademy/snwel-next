@@ -25,6 +25,14 @@ export default function BusinessHours() {
     const [currentTime, setCurrentTime] = useState(new Date())
     const [isExpanded, setIsExpanded] = useState(false)
 
+    const parseTime = (timeStr: string) => {
+        const [time, modifier] = timeStr.split(" ")
+        let [hours, minutes] = time.split(":").map(Number)
+        if (modifier === "PM" && hours < 12) hours += 12
+        if (modifier === "AM" && hours === 12) hours = 0
+        return hours * 60 + minutes
+    }
+
     useEffect(() => {
         const timer = setInterval(() => setCurrentTime(new Date()), 60000)
         return () => clearInterval(timer)
@@ -46,12 +54,9 @@ export default function BusinessHours() {
         const currentHours = currentTime.getHours()
         const currentMinutes = currentTime.getMinutes()
 
-        const [openHour, openMinute] = openTime.split(":").map(Number)
-        const [closeHour, closeMinute] = closeTime.split(":").map(Number)
-
         const currentTimeInMinutes = currentHours * 60 + currentMinutes
-        const openTimeInMinutes = (openHour % 12 + (openTime.includes("PM") ? 12 : 0)) * 60 + openMinute
-        const closeTimeInMinutes = (closeHour % 12 + (closeTime.includes("PM") ? 12 : 0)) * 60 + closeMinute
+        const openTimeInMinutes = parseTime(openTime)
+        const closeTimeInMinutes = parseTime(closeTime)
 
         return currentTimeInMinutes >= openTimeInMinutes && currentTimeInMinutes < closeTimeInMinutes
     }
@@ -63,12 +68,9 @@ export default function BusinessHours() {
         const currentHours = currentTime.getHours()
         const currentMinutes = currentTime.getMinutes()
 
-        const [openHour, openMinute] = openTime.split(":").map(Number)
-        const [closeHour, closeMinute] = closeTime.split(":").map(Number)
-
         const currentTimeInMinutes = currentHours * 60 + currentMinutes
-        const openTimeInMinutes = (openHour % 12 + (openTime.includes("PM") ? 12 : 0)) * 60 + openMinute
-        const closeTimeInMinutes = (closeHour % 12 + (closeTime.includes("PM") ? 12 : 0)) * 60 + closeMinute
+        const openTimeInMinutes = parseTime(openTime)
+        const closeTimeInMinutes = parseTime(closeTime)
 
         if (currentTimeInMinutes >= openTimeInMinutes && currentTimeInMinutes < closeTimeInMinutes) {
             // Time until close
