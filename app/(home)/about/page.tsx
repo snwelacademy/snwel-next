@@ -21,7 +21,7 @@ export const revalidate = 0
 const AboutPage = () => {
   return (
     <div>
-      <PageHeader title="HELO SNWEL Academy" image={"/assets/images/bim.jpg"} subtitle="Empowering careers through industry-aligned, practical training" />
+      <PageHeader title="About SNWEL Academy" image={"/assets/images/bim.jpg"} subtitle="Building careers through industry-aligned, practical trainin" />
 
       <section className="pt-10 pb-32 px-4 text-primary text-center">
         <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
@@ -48,61 +48,24 @@ const AboutPage = () => {
               <div className="space-y-4">
                 <h2 className="text-3xl font-semibold text-blue-700">Our Mission</h2>
                 <p className="text-gray-700">
-                  At SNWEL Academy&apos; we go beyond traditional training methods by focusing on knowledge and skill-based learning that aligns with real-world career goals. Our programs emphasize hands-on practical training and industry-specific projects&apos; ensuring that our students are well-prepared for the demands of today's competitive job market.
+                  At SNWEL Academy, we go beyond traditional training methods by focusing on knowledge- and skill-based learning that aligns with real-world career goals. Our programs emphasize hands-on practical training and industry-specific projects, ensuring that our students are well-prepared for the demands of today’s competitive job market.
                 </p>
                 <p className="text-gray-700">
-                  Our mission is to empower you to achieve further professional success. In an environment where competition is fierce and challenges are greater than ever&apos; SNWEL Academy stands out as a crucial partner in your career development.
+                  Our mission is to empower you to achieve professional success. In an environment where competition is fierce and challenges are greater than ever, SNWEL Academy stands as a crucial partner in your career development.
                 </p>
               </div>
               <div className="space-y-4">
                 <h2 className="text-3xl font-semibold text-purple-700">What We Offer</h2>
                 <p className="text-gray-700">
-                  We offer a wide range of engineering and technology courses tailored to meet industry needs. Delivered in modern&apos; innovative classrooms&apos; our training solutions are designed to truly meet your professional requirements.
+                  We offer a wide range of engineering and technology courses tailored to meet industry needs. Delivered in modern, innovative classrooms, our training solutions are designed to meet your professional requirements.
                 </p>
                 <p className="text-gray-700">
-                  Whether you aim to enhance your skills&apos; increase your productivity&apos; or secure a high-paying job at a top multinational company&apos; SNWEL Academy is here to support your journey.
+                  Whether you aim to enhance your skills, increase your productivity, or secure a high-paying job at a top multinational company, SNWEL Academy is here to support your journey.
                 </p>
               </div>
             </section>
 
-            {/* <section className="space-y-8">
-              <h2 className="text-4xl text-center font-bold from-blue-500 to-purple-500 bg-gradient-to-r bg-clip-text text-transparent inline-block">Who We Serve</h2>
-              <div className="grid md:grid-cols-3 gap-8">
-                {[
-                  {
-                    title: "For Students",
-                    content: "Bridge the gap between classroom learning and real-world industry demands with hands-on experience and practical skills.",
-                    image: "/assets/images/for-student.jpg",
-                  },
-                  {
-                    title: "For Job Seekers",
-                    content: "Stand out in the competitive job market with specialized training programs that make you more marketable.",
-                    image: "/assets/images/for-job-seeker.jpg",
-                  },
-                  {
-                    title: "For Working Professionals",
-                    content: "Stay ahead of the curve and keep your skills sharp with advanced training programs designed for continuous learning.",
-                    image: "/assets/images/for-working-profissional.jpg",
-                  },
-                ].map((item, index) => (
-                  <Card key={index} className="overflow-hidden">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      width={300}
-                      height={200}
-                      className="w-full h-48 object-cover"
-                    />
-                    <CardHeader>
-                      <CardTitle className="text-xl font-bold ">{item.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-600">{item.content}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </section> */}
+
 
             <WheWeServeTwo/>
 
@@ -110,16 +73,17 @@ const AboutPage = () => {
               <h2 className="text-4xl font-semibold text-center from-blue-500 to-purple-500 bg-gradient-to-r bg-clip-text text-transparent inline-block">Why Choose SNWEL Academy</h2>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {[
-                  "Empower Your Career with Industry-Ready Skills",
-                  "Hands-On Training to Bridge the Gap Between Theory and Practice",
-                  "Get Ahead in the Job Market with Specialized Courses",
-                  "Turn Knowledge into Expertise with Real-World Projects",
-                  "Enhance Your Employability with Practical, Job-Oriented Training",
-                  "Stay Competitive: Continuous Learning for Working Professionals",
-                  "Tailored Courses to Meet the Demands of Today's Industries",
-                  "Your Pathway to Professional Success Starts Here",
-                  "From Classroom to Career: Gain the Skills Employers Want",
-                  "Upgrade Your Skills, Boost Your Productivity, and Achieve More",
+
+                    "Master industry-ready skills to kick-start your career",
+                    "Hands-on training bridging theory and practice",
+                    "Real-world projects to turn knowledge into expertise",
+                    "Practical, job-oriented training to boost employability",
+                    "Tailored courses aligned with today’s industry demands",
+                    "Specialized courses to get ahead in the job market",
+                    "Continuous learning for working professionals",
+                    "Upgrade skills, increase productivity, and achieve more",
+
+
                 ].map((item, index) => (
                   <div key={index} className="flex items-start space-x-2">
                     <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
@@ -129,12 +93,63 @@ const AboutPage = () => {
               </div>
             </section>
 
-            <section className="text-center bg-gradient-to-r from-blue-500 to-purple-500 p-12 rounded-lg">
+            {/* <section className="text-center bg-gradient-to-r from-blue-500 to-purple-500 p-12 rounded-lg">
               <h2 className="text-3xl font-semibold mb-4 text-white">Ready to Start Your Journey?</h2>
               <Link href="/courses">
                 <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50">Explore Our Courses</Button>
               </Link>
-            </section>
+            </section> */}
+            <section className="text-center bg-gradient-to-br from-blue-500/90 to-purple-600/90 backdrop-blur-sm p-12 rounded-2xl transition-all duration-700 ease-out group overflow-hidden relative border border-white/20 shadow-2xl hover:shadow-3xl hover:border-white/30 hover:from-blue-600/95 hover:to-purple-700/95">
+  {/* Glass effect overlay */}
+  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
+  
+  {/* Floating particles */}
+  <div className="absolute inset-0 overflow-hidden">
+    {[...Array(5)].map((_, i) => (
+      <div 
+        key={i}
+        className="absolute rounded-full bg-white/10 group-hover:bg-white/20 transition-all duration-1000 ease-out"
+        style={{
+          width: `${Math.random() * 60 + 20}px`,
+          height: `${Math.random() * 60 + 20}px`,
+          top: `${Math.random() * 100}%`,
+          left: `${Math.random() * 100}%`,
+          animationDelay: `${i * 0.2}s`,
+          transform: `scale(0)`,
+        }}
+        className="group-hover:scale-100"
+      ></div>
+    ))}
+  </div>
+  
+  <h2 className="text-4xl font-bold mb-8 text-white relative z-10 drop-shadow-lg">
+    <span className="inline-block transition-all duration-700 ease-out group-hover:translate-y-[-4px]">
+      Ready to Start Your Journey?
+    </span>
+    <div className="h-px w-24 bg-gradient-to-r from-transparent via-white to-transparent mx-auto mt-6 opacity-50 group-hover:w-32 group-hover:opacity-80 transition-all duration-700"></div>
+  </h2>
+  
+  <Link href="/courses" className="inline-block relative z-10">
+    <Button 
+      size="lg"
+      className="bg-white/95 backdrop-blur-sm text-blue-700 font-bold rounded-xl px-10 py-5 shadow-2xl transition-all duration-500 hover:bg-white hover:shadow-3xl hover:-translate-y-2 active:translate-y-0 group/btn border border-white/30"
+    >
+      <span className="flex items-center gap-3">
+        <span className="transition-all duration-500 group-hover/btn:tracking-wider">
+          Explore Our Courses
+        </span>
+        <svg 
+          className="w-5 h-5 transition-all duration-500 group-hover/btn:translate-x-2 group-hover/btn:scale-110" 
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+        </svg>
+      </span>
+    </Button>
+  </Link>
+</section>
           </div>
         </div>
 
