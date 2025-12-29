@@ -21,7 +21,7 @@ export const revalidate = 0
 const AboutPage = () => {
   return (
     <div>
-      <PageHeader title="About SNWEL Academy" image={"/assets/images/bim.jpg"} subtitle="Empowering careers through industry-aligned, practical training" />
+      <PageHeader title="HELOO SNWEL Academy" image={"/assets/images/bim.jpg"} subtitle="Empowering careers through industry-aligned, practical training" />
 
       <section className="pt-10 pb-32 px-4 text-primary text-center">
         <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
