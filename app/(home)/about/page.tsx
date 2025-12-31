@@ -21,7 +21,7 @@ export const revalidate = 0
 const AboutPage = () => {
   return (
     <div>
-      <PageHeader title="About SNWEL Academy" image={"/assets/images/bim.jpg"} subtitle="Building careers through industry-aligned, practical trainin" />
+      <PageHeader title="About SNWEL Academy" image={"/assets/images/About_us.png"} subtitle="Building careers through industry-aligned, practical training" />
 
       <section className="pt-10 pb-32 px-4 text-primary text-center">
         <div className="min-h-screen bg-gradient-to-b from-blue-50 to-purple-50">
@@ -202,7 +202,7 @@ const AboutPage = () => {
       <section className="py-32 px-4 bg-primary/5">
         <div className="container grid grid-cols-1 lg:grid-cols-2 gap-10 items-center justify-items-center">
           <div className="rounded-xl overflow-hidden">
-            <img className="w-full" src={`${constants.imagePath}/about-us-2.webp`} />
+            <img className="w-full" src={`${constants.imagePath}/About_us_study.png`} />
           </div>
 
           <div>

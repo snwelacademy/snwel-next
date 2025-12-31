@@ -5,8 +5,8 @@ import { nanoid } from 'nanoid'
 const content = [
     {
         title: "Learner’s Community",
-        subTitle: "Group learning will always have a beneficial effect on practical and diversified thoughts.",
-        desc: "Our Learners Community” refers to a group of individuals who come together to learn, share knowledge and experiences, and support each other in their educational journeys. This community may consist of students, teachers, mentors, or anyone who is passionate about learning and self-improvement.",
+        subTitle: "Group learning always has a positive impact on practical understanding and diversified thinking.",
+        desc: "Our Learners’ Community refers to a group of individuals who come together to learn, share knowledge and experiences, and support one another in their educational journeys. This community may consist of students, teachers, mentors, and anyone who is passionate about learning and self-improvement.",
         image: getPublicImage('/learners-community.svg')
     },
     {

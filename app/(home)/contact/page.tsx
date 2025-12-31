@@ -13,7 +13,7 @@ import { constants } from "@/config/constants"
 const ContactPage = () => {
   return (
     <>
-      <PageHeader title="Contact" image={`${constants.imagePath}/bim.jpg`} />
+      <PageHeader title="Contact" image={`${constants.imagePath}/contact_us.png`} />
       <section className="py-20 px-4 relative">
         <div className="container mx-auto flex gap-10 flex-col lg:flex-row px-4 items-start">
           <div className="flex-auto ">
