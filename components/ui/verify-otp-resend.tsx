@@ -40,7 +40,11 @@ export default function VerifyOtpResend({ onVerify, data }: OTPVerifyProps) {
   const sendOTP = async () => {
     setLoading(true)
     try {
-      const response = await sendOtp(data)
+      const formattedData = {
+        ...data,
+        phone: data.phone.startsWith('+') ? data.phone : `+${data.phone}`
+      }
+      const response = await sendOtp(formattedData)
       setToken(response.token)
       setOtpSent(true)
       setResendDisabled(true)
@@ -72,7 +76,7 @@ export default function VerifyOtpResend({ onVerify, data }: OTPVerifyProps) {
 
     setLoading(true)
     try {
-      if(!token) return;
+      if (!token) return;
       const response = await verifyOtp({ otp: otp.join(""), token })
       if (response?.otp?.verified) {
         onVerify(response.otp)

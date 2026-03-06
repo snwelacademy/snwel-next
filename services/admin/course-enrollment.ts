@@ -8,10 +8,10 @@ import { objectToQueryString } from '@/lib/utils';
 import dayjs from 'dayjs';
 import XLSX, { IJsonSheet } from 'json-as-xlsx';
 
-export async function getAllEnrollments (options?: ListOptions) {
+export async function getAllEnrollments(options?: ListOptions) {
     try {
-        console.log({options})
-        options = {...DEFAULT_LIST_OPTIONS, ...options}
+        console.log({ options })
+        options = { ...DEFAULT_LIST_OPTIONS, ...options }
         const res = await protectedApi.get<any, AxiosResponse<ApiResponse<ListResponse<CourseEnrollment>>>>(`/course-enroll?${objectToQueryString(options)}`);
         const data = res.data.data;
         return data;
@@ -20,9 +20,9 @@ export async function getAllEnrollments (options?: ListOptions) {
         throw new Error("Error in fetching enrollments list. Please try again")
     }
 }
-export async function createEnrollment (data: CreateCourseQuery) {
+export async function createEnrollment(data: CreateCourseQuery) {
     try {
-        
+
         const res = await protectedApi.post<any, AxiosResponse<ApiResponse<CourseEnrollment>>>('/course-enroll', data);
         return res.data.data;
     } catch (error) {
@@ -30,9 +30,9 @@ export async function createEnrollment (data: CreateCourseQuery) {
         throw new Error("Error in creating Enrollment list. Please try again")
     }
 }
-export async function updateEnrollment (id: string, data: any) {
+export async function updateEnrollment(id: string, data: any) {
     try {
-        
+
         const res = await protectedApi.put<any, AxiosResponse<ApiResponse<CourseEnrollment>>>(`/course-enroll/${id}`, data);
         return res.data.data;
     } catch (error) {
@@ -40,7 +40,7 @@ export async function updateEnrollment (id: string, data: any) {
         throw new Error("Error in updating Enrollment. Please try again")
     }
 }
-export async function deleteEnrollment (id: string) {
+export async function deleteEnrollment(id: string) {
     try {
         const res = await protectedApi.delete<any, AxiosResponse<ApiResponse<CourseEnrollment>>>(`/course-enroll/${id}`);
         return res.data.data;
@@ -49,7 +49,7 @@ export async function deleteEnrollment (id: string) {
         throw new Error("Error in deleting Enrollment. Please try again")
     }
 }
-export async function getEnrollment (id: string) {
+export async function getEnrollment(id: string) {
     try {
         const res = await protectedApi.get<any, AxiosResponse<ApiResponse<CourseEnrollment>>>(`/course-enroll/byId/${id}`);
         const data = res.data.data;
@@ -67,6 +67,7 @@ export async function exportAllEnrollments(options?: ListOptions) {
         const transformedData = data.docs.map(enrollment => ({
             studentName: enrollment.userId?.name || enrollment.applicant?.name || "",
             studentEmail: enrollment.userId?.email || enrollment.applicant?.email || "",
+            studentPhone: enrollment.applicant?.phone || (enrollment as any).phone || (enrollment as any).mobile || (enrollment.userId as any)?.phone || "",
             courseTitle: enrollment.courseId.title,
             coursePrice: `${enrollment.courseId.currency} ${enrollment.courseId.price}`,
             enrollmentStatus: enrollment.status,
@@ -83,6 +84,7 @@ export async function exportAllEnrollments(options?: ListOptions) {
                 columns: [
                     { label: "Student Name", value: "studentName" },
                     { label: "Student Email", value: "studentEmail" },
+                    { label: "Student Phone", value: "studentPhone" },
                     { label: "Course Title", value: "courseTitle" },
                     { label: "Course Price", value: "coursePrice" },
                     { label: "Enrollment Status", value: "enrollmentStatus" },

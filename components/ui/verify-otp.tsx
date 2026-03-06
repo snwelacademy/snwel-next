@@ -53,7 +53,11 @@ export default function VerifyOtp({ onVerify, data }: OTPVerifyProps) {
     }
     setLoading(true)
     try {
-      const response = await sendOtp(data)
+      const formattedData = {
+        ...data,
+        phone: data.phone.startsWith('+') ? data.phone : `+${data.phone}`
+      }
+      const response = await sendOtp(formattedData)
       setToken(response.token)
       setOtpSent(true)
       setResendCooldown(60)
@@ -85,7 +89,7 @@ export default function VerifyOtp({ onVerify, data }: OTPVerifyProps) {
 
     setLoading(true)
     try {
-      if(!token) {
+      if (!token) {
         setLoading(false)
         toast({ title: 'OTP session expired', description: 'Please resend OTP.', variant: 'destructive' })
         return;
@@ -120,7 +124,7 @@ export default function VerifyOtp({ onVerify, data }: OTPVerifyProps) {
     if (otp.every((digit) => digit !== "") && otpSent && !verified) {
       verifyOTP()
     }
-  // Intentionally exclude verifyOTP from deps to avoid recreating function and re-triggering
+    // Intentionally exclude verifyOTP from deps to avoid recreating function and re-triggering
   }, [otp, otpSent, verified])
 
   // Resend cooldown ticker
@@ -146,24 +150,24 @@ export default function VerifyOtp({ onVerify, data }: OTPVerifyProps) {
         {
           otpSent &&
           <div className="flex gap-2" >
-          {otp.map((data, index) => (
-            <Input
-              key={index}
-              type="text"
-              inputMode="numeric"
-              maxLength={1}
-              value={data}
-              onChange={(e) => handleChange(e.target, index)}
-              className="w-10 h-10 text-center"
-            />
-          ))}
-        </div>
+            {otp.map((data, index) => (
+              <Input
+                key={index}
+                type="text"
+                inputMode="numeric"
+                maxLength={1}
+                value={data}
+                onChange={(e) => handleChange(e.target, index)}
+                className="w-10 h-10 text-center"
+              />
+            ))}
+          </div>
         }
       </div>
       <Button
         type="button"
         onClick={otpSent ? verifyOTP : sendOTP}
-        disabled={loading || (!otpSent && !isContactValid) || (otpSent && (otp.some((d)=>d==="") || verified))}
+        disabled={loading || (!otpSent && !isContactValid) || (otpSent && (otp.some((d) => d === "") || verified))}
         className="w-full"
       >
         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
