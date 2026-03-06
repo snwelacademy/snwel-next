@@ -194,81 +194,9 @@ const toMinutes = (time: string) => {
 }
 
 export default function BusinessHours() {
-<<<<<<< HEAD
-    const [currentDay, setCurrentDay] = useState("")
-    const [currentTime, setCurrentTime] = useState(new Date())
-    const [isExpanded, setIsExpanded] = useState(false)
-
-    const parseTime = (timeStr: string) => {
-        const [time, modifier] = timeStr.split(" ")
-        let [hours, minutes] = time.split(":").map(Number)
-        if (modifier === "PM" && hours < 12) hours += 12
-        if (modifier === "AM" && hours === 12) hours = 0
-        return hours * 60 + minutes
-    }
-
-    useEffect(() => {
-        const timer = setInterval(() => setCurrentTime(new Date()), 60000)
-        return () => clearInterval(timer)
-    }, [])
-
-    useEffect(() => {
-        setCurrentDay(currentTime.toLocaleDateString("en-US", { weekday: "long" }))
-    }, [currentTime])
-
-    const getCurrentDaySchedule = () => {
-        return businessHours.find((schedule) => schedule.day === currentDay)
-    }
-
-    const isOpen = (schedule: DaySchedule) => {
-        if (schedule.hours === "Closed") return false
-        if (schedule.hours === "24 hours") return true
-
-        const [openTime, closeTime] = schedule.hours.split(" - ")
-        const currentHours = currentTime.getHours()
-        const currentMinutes = currentTime.getMinutes()
-
-        const currentTimeInMinutes = currentHours * 60 + currentMinutes
-        const openTimeInMinutes = parseTime(openTime)
-        const closeTimeInMinutes = parseTime(closeTime)
-
-        return currentTimeInMinutes >= openTimeInMinutes && currentTimeInMinutes < closeTimeInMinutes
-    }
-
-    const getTimeUntilCloseOrOpen = (schedule: DaySchedule) => {
-        if (schedule.hours === "Closed" || schedule.hours === "24 hours") return null
-
-        const [openTime, closeTime] = schedule.hours.split(" - ")
-        const currentHours = currentTime.getHours()
-        const currentMinutes = currentTime.getMinutes()
-
-        const currentTimeInMinutes = currentHours * 60 + currentMinutes
-        const openTimeInMinutes = parseTime(openTime)
-        const closeTimeInMinutes = parseTime(closeTime)
-
-        if (currentTimeInMinutes >= openTimeInMinutes && currentTimeInMinutes < closeTimeInMinutes) {
-            // Time until close
-            return closeTimeInMinutes - currentTimeInMinutes
-        } else {
-            // Time until open
-            return (openTimeInMinutes - currentTimeInMinutes + 1440) % 1440
-        }
-    }
-
-    const formatTimeLeft = (minutes: number) => {
-        const hours = Math.floor(minutes / 60)
-        const mins = minutes % 60
-        return `${hours}h ${mins}m`
-    }
-
-    const currentSchedule = getCurrentDaySchedule()
-    const openNow = currentSchedule ? isOpen(currentSchedule) : false
-    const timeLeft = currentSchedule ? getTimeUntilCloseOrOpen(currentSchedule) : null
-=======
   const [currentTime, setCurrentTime] = useState(new Date())
   const [currentDay, setCurrentDay] = useState("")
   const [expanded, setExpanded] = useState(false)
->>>>>>> e751e614c1f7fe3f6ae4f45d6589d490da69260d
 
   /* ----------- UPDATE TIME EVERY 1 MIN ----------- */
   useEffect(() => {
@@ -345,9 +273,8 @@ export default function BusinessHours() {
           {businessHours.map((d) => (
             <li
               key={d.day}
-              className={`flex justify-between items-center p-2 rounded ${
-                d.day === currentDay ? "bg-primary/10" : ""
-              }`}
+              className={`flex justify-between items-center p-2 rounded ${d.day === currentDay ? "bg-primary/10" : ""
+                }`}
             >
               <span className="font-medium">{d.day}</span>
               <span className="flex items-center gap-2">
@@ -362,8 +289,8 @@ export default function BusinessHours() {
                     d.hours === "Closed"
                       ? "text-destructive"
                       : d.hours === "24 hours"
-                      ? "text-primary"
-                      : ""
+                        ? "text-primary"
+                        : ""
                   }
                 >
                   {d.hours}
@@ -387,9 +314,8 @@ export default function BusinessHours() {
             {expanded && (
               <div className="mt-2 p-3 rounded bg-primary/5">
                 <p
-                  className={`font-bold ${
-                    openNow ? "text-primary" : "text-destructive"
-                  }`}
+                  className={`font-bold ${openNow ? "text-primary" : "text-destructive"
+                    }`}
                 >
                   {openNow ? "Open Now" : "Closed Now"}
                 </p>
