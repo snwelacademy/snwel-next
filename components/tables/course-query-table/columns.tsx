@@ -9,8 +9,8 @@ import Link from "next/link";
 import { CellAction } from "./cell-action";
 
 const isEnrolledDuringOffer = (
-  enrollmentDate: string | Date, 
-  offerStartDate: string | Date, 
+  enrollmentDate: string | Date,
+  offerStartDate: string | Date,
   offerEndDate: string | Date
 ): boolean => {
   const enrollment = dayjs(enrollmentDate);
@@ -26,7 +26,7 @@ export const columns = [
     render: (row: CourseEnrollment) => (
       <Checkbox
         checked={false} // You'll need to handle selection state
-        onCheckedChange={() => {}} // Handle selection change
+        onCheckedChange={() => { }} // Handle selection change
         aria-label="Select row"
       />
     )
@@ -48,6 +48,11 @@ export const columns = [
     label: "EMAIL",
     sortable: true,
     render: (row: CourseEnrollment) => row.userId?.email || row.applicant?.email || '-'
+  },
+  {
+    key: "applicant.phone",
+    label: "PHONE",
+    render: (row: CourseEnrollment) => row.applicant?.phone || (row as any).phone || (row as any).mobile || (row.userId as any)?.phone || '-'
   },
   {
     key: "status",
@@ -74,10 +79,10 @@ export const columns = [
       { label: "Pending", value: "pending" }
     ],
     render: (row: CourseEnrollment) => (
-      <EnrollmentStausChanger 
-        statusType="PAYMENT_STATUS" 
-        value={row.paymentStatus} 
-        selfMode={{id: row._id}} 
+      <EnrollmentStausChanger
+        statusType="PAYMENT_STATUS"
+        value={row.paymentStatus}
+        selfMode={{ id: row._id }}
       />
     )
   },
@@ -86,21 +91,21 @@ export const columns = [
     label: "Offer Widget",
     render: (row: CourseEnrollment) => {
       const widget: any = row.widget;
-      if(!widget || widget.type !== 'cdtWidget') {
+      if (!widget || widget.type !== 'cdtWidget') {
         return <p>-</p>
       }
       const inOff = isEnrolledDuringOffer(
-        row.createdAt, 
-        widget.content?.startTime, 
+        row.createdAt,
+        widget.content?.startTime,
         widget.content?.endTime
       );
       return (
         <div className="flex flex-col gap-1">
-          <Badge className={cn(['inline-block',{
-            'bg-green-700 text-white': inOff, 
+          <Badge className={cn(['inline-block', {
+            'bg-green-700 text-white': inOff,
             "bg-red-700 text-white": !inOff
           }])}>
-            {inOff ? 'In Offer': 'Not In Offer'}
+            {inOff ? 'In Offer' : 'Not In Offer'}
           </Badge>
           <Link href={`/admin/widgets/${widget._id}?type=cdtWidget`}>
             {widget.title}

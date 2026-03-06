@@ -65,7 +65,7 @@ const initialHeaderMenus = [
     },
     {
         id: nanoid(),
-        name: "Job Vaccancy",
+        name: "Job Vacancy",
         href: "/job-vacancies",
         children: [],
     },
@@ -110,40 +110,40 @@ const initialFormData = {
 
 const extractMenuBuilderSetting = (settings: Setting[]) => {
     const result = settings.find(val => val.code === SETTINGS.MENUBUILDER);
-    console.log({result})
+    console.log({ result })
     return result;
 }
 
 export function MenuBuilderComponent() {
-    const {data: settingData, isLoading} = useQuery({
+    const { data: settingData, isLoading } = useQuery({
         queryKey: ['admin/setting/menu-builder'],
         queryFn: () => getSetting<any>(SETTINGS.MENUBUILDER)
     })
-    const {settings} = useContext(AppContext);
+    const { settings } = useContext(AppContext);
     const [menus, setMenus] = useState<any>(initialHeaderMenus);
     const [footerMenu, setFooterMenus] = useState<any>(initialFooterMenus);
     const [formData, setFormData] = useState(initialFormData);
     const [updating, setUpdating] = useState(false);
     const [changed, setChanged] = useState(false);
-    const {toast} = useToast();
+    const { toast } = useToast();
 
- 
+
     const saveSetting = async () => {
-        if(updating) return true;
+        if (updating) return true;
         setUpdating(true);
         try {
-        await updateSetting("MENUBUILDER", {isChangable: true, data: {menus, footerMenu}, code: "MENUBUILDER" });
-        toast({
-            title: 'Setting Saved Successfully!',
-            variant: 'success'
-        })
-        setUpdating(false)
+            await updateSetting("MENUBUILDER", { isChangable: true, data: { menus, footerMenu }, code: "MENUBUILDER" });
+            toast({
+                title: 'Setting Saved Successfully!',
+                variant: 'success'
+            })
+            setUpdating(false)
         } catch (error) {
             toast({
                 title: 'Problem in updating setting!',
                 variant: 'destructive'
             })
-        }finally{
+        } finally {
             setUpdating(false)
         }
     }
@@ -170,70 +170,70 @@ export function MenuBuilderComponent() {
     };
 
     useEffect(() => {
-      if(settingData && settingData._id){
-        setMenus(settingData.data.menus);
-        setFooterMenus(settingData.data.footerMenu)
-      }
+        if (settingData && settingData._id) {
+            setMenus(settingData.data.menus);
+            setFooterMenus(settingData.data.footerMenu)
+        }
     }, [settingData])
-    
+
 
     useEffect(() => {
-      console.log({menus})
+        console.log({ menus })
     }, [menus])
-    
+
 
     return (
-       <div className="space-y-5 pt-8">
-        <div className="flex items-center justify-end">
-        <Button disabled={updating} onClick={() => saveSetting()}> <Save className="w-4 h-4 mr-2"/> Save</Button>
-        </div>
-             <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
-            <Card className="">
-                <CardHeader className="flex justify-between flex-row items-center">
-                    <CardTitle>Header Menu</CardTitle>
-                    <div className=" flex gap-3 ">
-                        <Button
-                        variant={'outline'}
-                            className=""
-                            onClick={() => {
-                                addMenu();
-                            }}
+        <div className="space-y-5 pt-8">
+            <div className="flex items-center justify-end">
+                <Button disabled={updating} onClick={() => saveSetting()}> <Save className="w-4 h-4 mr-2" /> Save</Button>
+            </div>
+            <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
+                <Card className="">
+                    <CardHeader className="flex justify-between flex-row items-center">
+                        <CardTitle>Header Menu</CardTitle>
+                        <div className=" flex gap-3 ">
+                            <Button
+                                variant={'outline'}
+                                className=""
+                                onClick={() => {
+                                    addMenu();
+                                }}
                             >
-                            <PlusSquareIcon className="mr-2 w-4 h-4"/>
-                            Add Menu
-                        </Button>
-                    </div>
-                </CardHeader>
-                <CardContent className="overflow-auto">
-                    <div>
-                        <MenuBuilder items={menus} setItems={setMenus} />
-                    </div>
-                </CardContent>
-            </Card>
+                                <PlusSquareIcon className="mr-2 w-4 h-4" />
+                                Add Menu
+                            </Button>
+                        </div>
+                    </CardHeader>
+                    <CardContent className="overflow-auto">
+                        <div>
+                            <MenuBuilder items={menus} setItems={setMenus} />
+                        </div>
+                    </CardContent>
+                </Card>
 
-            <Card className="">
-                <CardHeader className="flex justify-between flex-row items-center">
-                    <CardTitle>Footer Menu</CardTitle>
-                    <div className="">
-                    <Button
-                        variant={'outline'}
-                            className=""
-                            onClick={() => {
-                                addFooterMenu();
-                            }}
+                <Card className="">
+                    <CardHeader className="flex justify-between flex-row items-center">
+                        <CardTitle>Footer Menu</CardTitle>
+                        <div className="">
+                            <Button
+                                variant={'outline'}
+                                className=""
+                                onClick={() => {
+                                    addFooterMenu();
+                                }}
                             >
-                            <PlusSquareIcon className="mr-2 w-4 h-4"/>
-                            Add Menu
-                        </Button>
-                    </div>
-                </CardHeader>
-                <CardContent className="overflow-auto">
-                    <div>
-                        <MenuBuilder items={footerMenu} setItems={setFooterMenus} />
-                    </div>
-                </CardContent>
-            </Card>
+                                <PlusSquareIcon className="mr-2 w-4 h-4" />
+                                Add Menu
+                            </Button>
+                        </div>
+                    </CardHeader>
+                    <CardContent className="overflow-auto">
+                        <div>
+                            <MenuBuilder items={footerMenu} setItems={setFooterMenus} />
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
         </div>
-       </div>
     );
 }

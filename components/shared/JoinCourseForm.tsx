@@ -44,7 +44,7 @@ const formSchema = z.object({
     country: z.string({ message: 'Country Required' })
   }),
   extra: z.object({
-    agree: z.boolean({message: "Consent is required!"}),
+    agree: z.boolean({ message: "Consent is required!" }),
   }),
   qualification: z.string(),
   mode: z.string(),
@@ -52,7 +52,7 @@ const formSchema = z.object({
   widget: z.string().optional()
 })
 
-const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className?: string, value?: z.infer<typeof formSchema>, onClose?: () => void, extraData?: {widgetId: string}, targetCourse?: Course }) => {
+const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className?: string, value?: z.infer<typeof formSchema>, onClose?: () => void, extraData?: { widgetId: string }, targetCourse?: Course }) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -111,7 +111,8 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
   async function onSubmit(value: z.infer<typeof formSchema>) {
     try {
       setLoading(true)
-      const payload = { ...value, phone: (value.phone || "").toString().replace(/\s+/g, "") }
+      const cleanPhone = (value.phone || "").toString().replace(/\s+/g, "")
+      const payload = { ...value, phone: cleanPhone.startsWith('+') ? cleanPhone : `+${cleanPhone}` }
       const res = await createEnrollmentAnonymous(payload);
       setState(res);
     } catch (error: any) {
@@ -157,7 +158,7 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
     <Form {...form} >
       <form onSubmit={form.handleSubmit(onSubmit)} className={cn(["space-y-3 rounded-2xl p-4 md:p-10", className])}>
         <FormField
-          
+
           name="name"
           render={({ field }) => (
             <FormItem>
@@ -171,7 +172,7 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <FormField
-            
+
             name={`occupation`}
             render={({ field }) => (
               <FormItem className='max-w-full'>
@@ -190,7 +191,7 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
             )}
           />
           <FormField
-            
+
             name={`qualification`}
             render={({ field }) => (
               <FormItem>
@@ -213,25 +214,25 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <FormField
-            
+
             name="courseId"
             render={({ field }) => (
               <FormItem>
                 {/* <FormLabel>Select Course </FormLabel> */}
                 <FormControl>
-                  <CourseSelector 
-                    filter={{ qualifications: Watch.qualification, trainingModes: Watch.mode}}
+                  <CourseSelector
+                    filter={{ qualifications: Watch.qualification, trainingModes: Watch.mode }}
                     disabled={!!targetCourse}
-                    onCourseSelect={(course)=>{
+                    onCourseSelect={(course) => {
                       setSelectedCourse(course)
                       const q = course.qualifications?.[0]?._id
                       const m = course.trainingModes?.[0]?._id
-                      if(q) form.setValue('qualification', q, { shouldValidate: true })
-                      if(m) form.setValue('mode', m, { shouldValidate: true })
+                      if (q) form.setValue('qualification', q, { shouldValidate: true })
+                      if (m) form.setValue('mode', m, { shouldValidate: true })
                       const defaultStatus = candidateStatuses?.docs?.[0]?._id
-                      if(defaultStatus) form.setValue('occupation', defaultStatus, { shouldValidate: true })
+                      if (defaultStatus) form.setValue('occupation', defaultStatus, { shouldValidate: true })
                     }}
-                    {...field} 
+                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
@@ -240,7 +241,7 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
           />
 
           <FormField
-            
+
             name={`mode`}
             render={({ field }) => (
               <FormItem className='max-w-full'>
@@ -262,7 +263,7 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
         </div>
 
         <FormField
-          
+
           name="email"
           render={({ field }) => (
             <FormItem>
@@ -278,7 +279,7 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
 
 
         <FormField
-          
+
           name="phone"
           render={({ field }) => (
             <FormItem>
@@ -293,7 +294,7 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
 
         <div className="grid grid-cols-1 md:grid-cols-3  gap-3">
           <FormField
-            
+
             name="location.country"
             render={({ field }) => (
               <FormItem>
@@ -306,7 +307,7 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
             )}
           />
           <FormField
-            
+
             name="location.state"
             render={({ field }) => (
               <FormItem>
@@ -319,7 +320,7 @@ const JoinCourseForm = ({ className, value, onClose, targetCourse }: { className
             )}
           />
           <FormField
-            
+
             name="location.city"
             render={({ field }) => (
               <FormItem>

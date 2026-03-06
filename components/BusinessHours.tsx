@@ -273,9 +273,8 @@ export default function BusinessHours() {
           {businessHours.map((d) => (
             <li
               key={d.day}
-              className={`flex justify-between items-center p-2 rounded ${
-                d.day === currentDay ? "bg-primary/10" : ""
-              }`}
+              className={`flex justify-between items-center p-2 rounded ${d.day === currentDay ? "bg-primary/10" : ""
+                }`}
             >
               <span className="font-medium">{d.day}</span>
               <span className="flex items-center gap-2">
@@ -290,8 +289,8 @@ export default function BusinessHours() {
                     d.hours === "Closed"
                       ? "text-destructive"
                       : d.hours === "24 hours"
-                      ? "text-primary"
-                      : ""
+                        ? "text-primary"
+                        : ""
                   }
                 >
                   {d.hours}
@@ -315,9 +314,8 @@ export default function BusinessHours() {
             {expanded && (
               <div className="mt-2 p-3 rounded bg-primary/5">
                 <p
-                  className={`font-bold ${
-                    openNow ? "text-primary" : "text-destructive"
-                  }`}
+                  className={`font-bold ${openNow ? "text-primary" : "text-destructive"
+                    }`}
                 >
                   {openNow ? "Open Now" : "Closed Now"}
                 </p>

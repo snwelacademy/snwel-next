@@ -41,7 +41,9 @@ const EnquiryForm = ({ type, isUnique }: { type: string, isUnique?: boolean }) =
     const handleSubmit = async (value: CreateEnquirySchema) => {
         try {
             setLoading(true);
-            await createEnquiry(value);
+            const cleanPhone = (value.phone || "").toString().replace(/\s+/g, "");
+            const payload = { ...value, phone: cleanPhone.startsWith('+') ? cleanPhone : `+${cleanPhone}` };
+            await createEnquiry(payload);
             toast({ title: 'Enquiry submitted successfully!', variant: 'success' });
             client.invalidateQueries({ queryKey: ['enquiries'] });
             form.reset();
@@ -101,11 +103,11 @@ const EnquiryForm = ({ type, isUnique }: { type: string, isUnique?: boolean }) =
                                     )}
                                 />
                                 {type === 'webinar' && <WebinarEnquirySubForm control={form.control} />}
-                                { (
+                                {(
                                     <div className='mt-2'>
-                                        <VerifyOtp 
-                                            data={{ email: form.watch('email'), phone: form.watch('phone') }} 
-                                            onVerify={() => setOtpVerified(true)} 
+                                        <VerifyOtp
+                                            data={{ email: form.watch('email'), phone: form.watch('phone') }}
+                                            onVerify={() => setOtpVerified(true)}
                                         />
                                     </div>
                                 )}
