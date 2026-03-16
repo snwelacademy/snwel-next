@@ -10,7 +10,7 @@ import Link from 'next/link'
 const content: { title: string, icon: ReactNode, subtitle: string }[] = [
     {
         title: 'Program',
-        subtitle: 'Learn the latest skills in engineering to enhance your skills and become more marketable, productive.',
+        subtitle: 'Learn the latest skills in engineering to enhance your skills and become more marketable and productive.',
         icon: <Calendar className='w-10 h-10' />
     },
     {
@@ -61,11 +61,11 @@ const StatisticsSection = () => {
             <div >
                 <HeadingSubtitle className='text-primary before:bg-primary ' title="Flexible supported learning" />
                 <Typography as="title" className='mb-7'>
-                    Why Choose <HighlightedText>SNWEL Academy ?</HighlightedText>
+                    Why Choose <HighlightedText>SNWEL Academy?</HighlightedText>
                 </Typography>
 
                 <Typography as="lable" className='text-primary'>
-                At SNWEL Academy, we are dedicated to transforming the way you learn and grow in your career. 
+                    At SNWEL Academy, we are dedicated to transforming the way you learn and grow in your career.
                 </Typography>
 
                 <div className='grid gap-5 grid-cols-1 items-center md:grid-cols-2 mt-10 '>
@@ -85,7 +85,7 @@ const StatisticsSection = () => {
                 </div>
 
                 <div className='mt-5'>
-                   <Link href="/about"> <Button size={'lg'} className='w-full '>Learn More</Button></Link>
+                    <Link href="/about"> <Button size={'lg'} className='w-full '>Learn More</Button></Link>
                 </div>
             </div>
         </section>

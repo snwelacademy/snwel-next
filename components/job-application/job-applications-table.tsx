@@ -56,7 +56,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { deleteJobApplication, exportAllJobApplications, getAllJobApplications, updateJobApplication } from "@/services/admin/admin-jobApplication"
 import { ListOptions } from "@/types/ListOptions"
 import { useToast } from "../ui/use-toast"
-import { formatDateInReadable } from "@/lib/utils"
+import { fileUrl, formatDateInReadable } from "@/lib/utils"
 import { DatePickerWithRange } from "../ui/date-range"
 import { DateRangePicker } from "../ui/date-range-picker"
 import { useDebounce } from "@uidotdev/usehooks"
@@ -68,7 +68,7 @@ function JobApplicationTableContent() {
   const canExport = usePermission(JOB_APPLICATION_PERMISSIONS.JOB_APP_EXPORT)
   const canDelete = usePermission(JOB_APPLICATION_PERMISSIONS.JOB_APP_DELETE)
   const canUpdate = usePermission(JOB_APPLICATION_PERMISSIONS.JOB_APP_UPDATE)
-  
+
   const [exporting, setExporting] = useState(false)
   const [search, setSearch] = useState("")
   const debouncedSearch = useDebounce(search, 300)
@@ -77,12 +77,12 @@ function JobApplicationTableContent() {
   const [statusFilter, setStatusFilter] = useState<JobApplication["status"] | "all">("all")
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage] = useState(5);
-  const [options, setOptions] = useState<ListOptions>({page: 1, limit: 10})
-  const { data:applications, isLoading:loading } = useQuery({
+  const [options, setOptions] = useState<ListOptions>({ page: 1, limit: 10 })
+  const { data: applications, isLoading: loading } = useQuery({
     queryKey: ['/job-applications', JSON.stringify(options)],
     queryFn: () => getAllJobApplications(options)
   })
-  const {toast} = useToast();
+  const { toast } = useToast();
   const client = useQueryClient()
 
 
@@ -134,37 +134,37 @@ function JobApplicationTableContent() {
 
   const handleStatusChange = async (id: string, newStatus: JobApplication["status"]) => {
     try {
-        const res = await updateJobApplication(id, {status: newStatus});
-        await client.invalidateQueries({queryKey: ['/job-applications', JSON.stringify(options)]});
-        toast({title: `Change status to ${newStatus} successfully!`, variant: 'success'})
+      const res = await updateJobApplication(id, { status: newStatus });
+      await client.invalidateQueries({ queryKey: ['/job-applications', JSON.stringify(options)] });
+      toast({ title: `Change status to ${newStatus} successfully!`, variant: 'success' })
     } catch (error: any) {
-        toast({title: 'Status update failed', variant: 'destructive', description: error.message || "There is problem is changing the state!"})
+      toast({ title: 'Status update failed', variant: 'destructive', description: error.message || "There is problem is changing the state!" })
     }
   }
 
   const handleDelete = async (id: string) => {
     try {
-        const res = await deleteJobApplication(id);
-        await client.invalidateQueries({queryKey: ['/job-applications', JSON.stringify(options)]});
-        toast({title: `Application deleted successfully!`, variant: 'success'})
+      const res = await deleteJobApplication(id);
+      await client.invalidateQueries({ queryKey: ['/job-applications', JSON.stringify(options)] });
+      toast({ title: `Application deleted successfully!`, variant: 'success' })
     } catch (error: any) {
-        toast({title: 'Application deletion failed', variant: 'destructive', description: error.message || "There is problem while deleting the application!"})
+      toast({ title: 'Application deletion failed', variant: 'destructive', description: error.message || "There is problem while deleting the application!" })
     }
   }
 
   const handleExport = async () => {
-    if(!applications || !applications.docs) return;
+    if (!applications || !applications.docs) return;
     setExporting(true)
     // Simulate API call
     try {
-        const csv = exportAllJobApplications(options);
-        const csvContent = await exportAllJobApplications(options)
-        if(!csvContent) {
-            setExporting(false);
-            return;
-        }
+      const csv = exportAllJobApplications(options);
+      const csvContent = await exportAllJobApplications(options)
+      if (!csvContent) {
+        setExporting(false);
+        return;
+      }
       // Create a Blob with the CSV content
-      const blob = new Blob([csvContent], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
+      const blob = new Blob([csvContent], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
       const url = URL.createObjectURL(blob)
 
       // Create a link and trigger the download
@@ -174,9 +174,9 @@ function JobApplicationTableContent() {
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-    console.log(csvContent)
+      console.log(csvContent)
     } catch (error: any) {
-      toast({title: "Export failed. Please try again later.", description: error.message, variant: 'destructive' });
+      toast({ title: "Export failed. Please try again later.", description: error.message, variant: 'destructive' });
       // In a real application, you would handle this error and show a user-friendly message
     } finally {
       setExporting(false)
@@ -212,7 +212,7 @@ function JobApplicationTableContent() {
           </SelectContent>
         </Select>
 
-        <DateRangePicker onUpdate={value => setOptions(options => ({...options, startDate: value.range.from, endDate: value.range.to}))}/>
+        <DateRangePicker onUpdate={value => setOptions(options => ({ ...options, startDate: value.range.from, endDate: value.range.to }))} />
 
         {canExport && (
           <Button onClick={handleExport} loading={loading}>
@@ -264,8 +264,8 @@ function JobApplicationTableContent() {
                   <TableCell>{application.email}</TableCell>
                   <TableCell>{application.phone || 'N/A'}</TableCell>
                   <TableCell>
-                    <Select 
-                      value={application.status} 
+                    <Select
+                      value={application.status}
                       onValueChange={(value: JobApplication["status"]) => handleStatusChange(application._id, value)}
                     >
                       <SelectTrigger className="w-[120px]">
@@ -279,11 +279,11 @@ function JobApplicationTableContent() {
                       </SelectContent>
                     </Select>
                   </TableCell>
-                  
+
                   <TableCell>{formatDateInReadable(application.appliedDate)}</TableCell>
                   <TableCell>
                     {application.resumeUrl && (
-                      <a href={application.resumeUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                      <a href={fileUrl(application.resumeUrl)} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
                         View Resume
                       </a>
                     )}
@@ -318,7 +318,7 @@ function JobApplicationTableContent() {
                               Complete information about this job application
                             </SheetDescription>
                           </SheetHeader>
-                          
+
                           <div className="space-y-6 mt-6">
                             {/* Applicant Information Card */}
                             <div className="rounded-lg border bg-card p-4 space-y-3">
@@ -354,10 +354,10 @@ function JobApplicationTableContent() {
                                   </div>
                                   {application.jobId?._id && (
                                     <div className="mt-2">
-                                      <a 
-                                        href={`/admin/job-vacancies/${application.jobId._id}`} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer" 
+                                      <a
+                                        href={`/admin/job-vacancies/${application.jobId._id}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="text-sm text-blue-500 hover:underline"
                                       >
                                         View Job Details →
@@ -396,10 +396,10 @@ function JobApplicationTableContent() {
                               <h3 className="font-semibold text-lg mb-3">Documents</h3>
                               <div className="grid gap-3">
                                 {application.resumeUrl ? (
-                                  <a 
-                                    href={application.resumeUrl} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer" 
+                                  <a
+                                    href={fileUrl(application.resumeUrl)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="text-sm text-blue-500 hover:underline flex items-center gap-2"
                                   >
                                     📄 View Resume
@@ -465,9 +465,9 @@ function JobApplicationTableContent() {
         >
           Previous
         </Button>
-        <span>Page {(applications?.currentPage||0)} of {(applications?.totalPages||0)}</span>
+        <span>Page {(applications?.currentPage || 0)} of {(applications?.totalPages || 0)}</span>
         <Button
-          onClick={() => setCurrentPage(page => applications?.nextPage||1)}
+          onClick={() => setCurrentPage(page => applications?.nextPage || 1)}
           disabled={!applications?.hasNext}
         >
           Next

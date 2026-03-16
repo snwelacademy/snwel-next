@@ -52,7 +52,7 @@ export const columns = [
   {
     key: "applicant.phone",
     label: "PHONE",
-    render: (row: CourseEnrollment) => row.applicant?.phone || '-'
+    render: (row: CourseEnrollment) => row.applicant?.phone || (row as any).phone || (row as any).mobile || (row.userId as any)?.phone || '-'
   },
   {
     key: "status",
